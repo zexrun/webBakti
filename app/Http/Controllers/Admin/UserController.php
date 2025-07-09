@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Supervisor;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+
+
 
 class UserController extends Controller
 {
@@ -52,6 +57,18 @@ class UserController extends Controller
         'role' => $request->role,
         'password' => Hash::make($randomPassword),
     ]);
+
+    if ($request->role === 'student') {
+        Student::create([
+            'user_id' => $user->id,
+        ]);
+    }elseif ($request->role === 'supervisor') {
+        $supervisor = new Supervisor(); // Buat instance baru
+        $supervisor->user_id = $user->id;
+        $supervisor->nip = 'NIP-' . $user->id; // Isi NIP secara manual
+        $supervisor->jabatan = 'Supervisor';      // Isi Jabatan secara manual
+        $supervisor->save(); 
+    }
 
     // 4. Redirect dengan pesan sukses yang menyertakan password sementara
     $successMessage = "User '{$user->name}' berhasil dibuat. Password sementara: {$randomPassword}";

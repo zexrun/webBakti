@@ -20,7 +20,11 @@
         <div class="card-body">
             <h5 class="card-title">Selamat Datang, {{ Auth::user()->name }}!</h5>
             <p class="card-text">Anda login sebagai Pembimbing. Gunakan menu di bawah ini untuk mengelola sistem.</p>
-            
+
+            <a href="{{ route('supervisor.tasks.index') }}" class="btn btn-primary mb-3">Lihat Penugasan</a>
+            <a href="{{ route('supervisor.tasks.create') }}" class="btn btn-primary mb-3">Buat Tugas</a>
+            <a href="{{ route('supervisor.students.index') }}" class="btn btn-primary mb-3">Lihat Mahasiswa</a>
+
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}

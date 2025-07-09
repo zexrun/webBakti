@@ -36,4 +36,12 @@ class Student extends Model
     {
         return $this->belongsTo(Supervisor::class);
     }
+
+    public function submissions() {
+    return $this->hasMany(Submission::class);
+    }
+
+    public function tasks() {
+        return $this->belongsToMany(Task::class, 'task_student');
+    }
 }

@@ -16,7 +16,9 @@ class AdminController extends Controller
 
     public function plotting()
     {
-        $students = Student::with('user', 'supervisor.user')->get();
+        $students = Student::with('user', 'supervisor.user')
+        ->get()
+        ->sortBy('user.name');
         $supervisors = Supervisor::with('user')->get();
 
         return view('admin.plotting', [
@@ -30,16 +32,17 @@ class AdminController extends Controller
         // Validasi input
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'supervisor_id' => 'required|exists:supervisors,id',
+            'supervisor_id' => 'nullable|exists:supervisors,id',
         ]);
 
         // Temukan student dan supervisor
         $student = Student::find($request->student_id);
 
         // Assign supervisor ke student
-        $student->supervisor_id = $request->supervisor_id;
+        $student->supervisor_id = $request->supervisor_id ?: null;
+
         $student->save();
 
-        return redirect()->route('admin.plotting')->with('success', 'Pembimbing berhasil ditugaskan ke mahasiswa.');
+        return redirect()->route('admin.plotting')->with('success', 'Status pembimbing mahasiswa berhasil di update.');
     }
 }

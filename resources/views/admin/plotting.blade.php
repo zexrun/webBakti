@@ -41,6 +41,7 @@
                                 @csrf
                                 <input type="hidden" name="student_id" value="{{ $student->id }}">
                                 <select name="supervisor_id" class="form-select me-2">
+                                    <option value="">Pilih Pembimbing</option>
                                     @foreach($supervisors as $supervisor)
                                         <option value="{{ $supervisor->id }}" @if($student->supervisor_id == $supervisor->id) selected @endif>
                                             {{ $supervisor->user->name }}

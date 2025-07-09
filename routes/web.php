@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\StudentController;
 
+use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
+use App\Http\Controllers\Student\TaskController as StudentTaskController;
+
 // Rute untuk Tamu (halaman login)
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('/login', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -26,17 +29,25 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/plotting', [AdminController::class, 'plotting'])->name('plotting');
     Route::post('/plotting/assign', [AdminController::class, 'assign'])->name('plotting.assign');
+
     Route::resource('users', UserController::class);
 });
 
+// Grup Supervisor
 Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorController::class, 'dashboard'])->name('dashboard');
-    // Tambahkan rute lain untuk supervisor di sini
+    Route::post('submissions/{submission}/grade', [SupervisorTaskController::class, 'grade'])->name('submissions.grade');
+    Route::get('/view-student', [SupervisorController::class, 'viewStudent'])->name('students.index');
+
+    Route::resource('tasks', SupervisorTaskController::class);
 });
 
+// Grup Student
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
-    // Tambahkan rute lain untuk mahasiswa di sini
+    Route::post('tasks/{task}/submit', [StudentTaskController::class, 'submit'])->name('tasks.submit');
+
+    Route::resource('tasks', StudentTaskController::class)->only(['index', 'show']);
 });
 
 

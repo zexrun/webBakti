@@ -14,22 +14,28 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Membuat 1 User Admin
-        User::create([
-            'name' => 'Admin Utama',
-            'email' => 'admin@example.com',
-            'role' => 'admin', // Asumsi ada kolom role
-            'password' => Hash::make('password'),
+
+        User::factory()->create([
+            'role' => 'admin',
+            'name' => 'Rifqy',
+            'email' => 'rifqykhuzaini@gmail.com',
+            'password' => Hash::make('12341234'), // Ganti dengan password yang sesuai
         ]);
 
-        // Membuat 1 User Mahasiswa
-        User::create([
-            'name' => 'Mahasiswa Contoh',
-            'email' => 'mahasiswa@example.com',
-            'role' => 'student', // Asumsi ada kolom role
-            'password' => Hash::make('password'),
+        User::factory()->create([
+            'role' => 'supervisor',
+            'name' => 'Caca',
+            'email' => 'caca@gmail.com',
+            'password' => Hash::make('12341234'), // Ganti dengan password yang sesuai
         ]);
 
+        User::factory()->create([
+            'role' => 'student',
+            'name' => 'Keiko',
+            'email' => 'keiko@gmail.com',
+            'password' => Hash::make('12341234'),
+        ]);
+        
         User::factory(20)->create([
             'role' => 'student',
         ]); // Membuat 20 User lainnya dengan factory
