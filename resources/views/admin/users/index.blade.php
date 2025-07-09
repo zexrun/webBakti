@@ -11,6 +11,12 @@
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Tambah User Baru</a>
         </div>
 
+        @if (session('danger'))
+            <div class="alert alert-danger">
+                {{ session('danger') }}
+            </div>
+        @endif
+
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -60,7 +66,6 @@
         <div class="mt-4">
             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Kembali ke Dashboard</a>
         </div>
-
     </div>
 </body>
 </html>

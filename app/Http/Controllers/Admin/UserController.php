@@ -15,10 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('role', '!=', 'admin')
-            ->orderBy('name', 'asc')
+        $users = User::orderBy('role', 'asc')
+            ->orderBy('created_at', 'asc')
             ->paginate(10);
-            
 
         return view('admin.users.index', compact('users'));
     }
@@ -120,6 +119,6 @@ public function update(Request $request, User $user)
         $user->delete();
 
         // Redirect ke halaman daftar user dengan pesan sukses
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus!');
+        return redirect()->route('admin.users.index')->with('danger', "User {$user->name} berhasil dihapus!");
     }
 }

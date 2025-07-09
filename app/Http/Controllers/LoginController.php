@@ -19,6 +19,12 @@ class LoginController extends Controller {
             if ($user->role == 'admin') {
                 return redirect()->route('admin.dashboard');
             }
+            if ($user->role == 'supervisor') {
+                return redirect()->route('supervisor.dashboard');
+            }
+            if ($user->role == 'student') {
+                return redirect()->route('student.dashboard');
+            }
             return redirect()->route('home');
         }
         return back()->withErrors(['email' => 'Email atau Password salah.'])->onlyInput('email');
