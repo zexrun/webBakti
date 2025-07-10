@@ -21,6 +21,8 @@
             <h5 class="card-title">Selamat Datang, {{ Auth::user()->name }}!</h5>
             <p class="card-text">Anda login sebagai Mahasiswa. Gunakan menu di bawah ini untuk mengelola sistem.</p>
             
+            <a href="{{ route('student.tasks.index') }}" class="btn btn-primary">Lihat Tugas Saya</a>
+
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}

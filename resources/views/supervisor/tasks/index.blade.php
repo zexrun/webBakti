@@ -45,7 +45,7 @@
                         <td>{{ $task->created_at->format('d M Y') }}</td>
                         <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M Y') : '-' }}</td>
                         <td>
-                            <a href="#" class="btn btn-secondary btn-sm">Lihat Submission</a>
+                            <a href="{{ route('supervisor.tasks.show', $task->id) }}" class="btn btn-secondary btn-sm">Lihat Submission</a>
                         </td>
                     </tr>
                 @empty

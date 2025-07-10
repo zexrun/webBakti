@@ -78,5 +78,10 @@ class TaskController extends Controller
     return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
     }
 
-    // ... method lainnya akan kita isi nanti ...
+    public function show(Task $task)
+    {
+        $task->load('submissions.tasks.user');
+
+        return view('supervisor.tasks.show', compact('task'));
+    }
 }
