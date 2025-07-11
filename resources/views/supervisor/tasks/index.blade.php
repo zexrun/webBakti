@@ -35,7 +35,7 @@
                         <td>
                             <ul>
                                 @forelse($task->students as $student)
-                                    <span>{{ $student->user->name }}</span>
+                                    <span>{{ $student->user->name }},</span>
                                 @empty
                                     <li>Belum ada mahasiswa yang ditugaskan.</li>
                                 @endforelse

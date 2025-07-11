@@ -46,31 +46,29 @@
                 <input class="form-control" type="file" id="file" name="file">
             </div>
 
-                <div class="mb-3">
-        <label class="form-label">Tugaskan Kepada</label>
-        <div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="assignment_type" id="type_general" value="general" checked>
-                <label class="form-check-label" for="type_general">Semua Mahasiswa Bimbingan</label>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tugaskan Kepada</label>
+                <div class="card p-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="select_all_students">
+                        <label class="form-check-label" for="select_all_students">
+                            <strong>Pilih Semua Mahasiswa</strong>
+                        </label>
+                    </div>
+                    <hr>
+                    @forelse($students as $student)
+                        <div class="form-check">
+                            <input class="form-check-input student-checkbox" type="checkbox" name="student_ids[]" value="{{ $student->id }}">
+                            <label class="form-check-label" for="student_{{ $student->id }}">
+                                {{ $student->user->name }}
+                            </label>
+                        </div>
+                    @empty
+                        <p class="text-muted">Anda belum memiliki mahasiswa bimbingan.</p>
+                    @endforelse
+                </div>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="assignment_type" id="type_specific" value="specific">
-                <label class="form-check-label" for="type_specific">Mahasiswa Spesifik</label>
-            </div>
-        </div>
-    </div>
 
-        <div class="mb-3" id="specific_student_select" style="display: none;">
-            <label for="student_id" class="form-label">Pilih Mahasiswa</label>
-            <select class="form-select" id="student_id" name="student_id">
-                <option value="">-- Pilih Mahasiswa --</option>
-                {{-- Loop melalui data $students yang sudah dikirim dari controller --}}
-                @foreach($students as $student) 
-                    <option value="{{ $student->id }}">{{ $student->user->name }}</option>
-                @endforeach
-            </select>
-        </div>
-                
             <button type="submit" class="btn btn-primary">Simpan Tugas</button>
             <a href="{{-- route('supervisor.dashboard') --}}" class="btn btn-secondary">Batal</a>
         </form>
@@ -79,14 +77,9 @@
 </html>
 
 <script>
-    document.querySelectorAll('input[name="assignment_type"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const studentSelect = document.getElementById('specific_student_select');
-            if (this.value === 'specific') {
-                studentSelect.style.display = 'block';
-            } else {
-                studentSelect.style.display = 'none';
-            }
+    document.getElementById('select_all_students').addEventListener('change', function(e) {
+        document.querySelectorAll('.student-checkbox').forEach(checkbox => {
+            checkbox.checked = e.target.checked;
         });
     });
 </script>

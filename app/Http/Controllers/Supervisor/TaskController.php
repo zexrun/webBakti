@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Supervisor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Submission;
 use App\Models\Task;
 use App\Models\Supervisor; // Import model Supervisor
 use Illuminate\Http\Request;
@@ -46,8 +47,9 @@ class TaskController extends Controller
         'type' => 'required|in:harian,akhir',
         'due_date' => 'nullable|date',
         'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
-        'assignment_type' => 'required|in:general,specific',
-        'student_id' => 'required_if:assignment_type,specific|exists:students,id',
+        // 'assignment_type' => 'required|in:general,specific',
+        'student_ids' => 'required|array    ',
+        'student_ids.*' => 'exists:students,id',
     ]);
 
     // ... (kode untuk upload file dan mencari supervisor tetap sama) ...
@@ -64,15 +66,19 @@ class TaskController extends Controller
         'file_path' => $filePath,
     ]);
 
+    if ($request->has('student_ids')) {
+        $task->students()->attach($request->student_ids);
+    }
+
     // 3. Logika untuk assign tugas
-    if ($request->assignment_type === 'general') {
+/*     if ($request->assignment_type === 'general') {
         // Jika general, assign ke semua mahasiswa bimbingan supervisor ini
         $studentIds = $supervisor->students()->pluck('id');
         $task->students()->attach($studentIds);
     } else {
         // Jika spesifik, assign hanya ke satu mahasiswa yang dipilih
         $task->students()->attach($request->student_id);
-    }
+    } */
 
     // ... (redirect dengan pesan sukses) ...
     return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
@@ -80,8 +86,34 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $task->load('submissions.tasks.user');
+        // 1. Ambil semua mahasiswa yang terhubung dengan tugas ini
+        $assignedStudents = $task->students()->with('user')->get();
 
-        return view('supervisor.tasks.show', compact('task'));
+        // 2. Ambil semua submission untuk tugas ini dan kelompokkan berdasarkan student_id
+        $submissions = $task->submissions()->with('student.user')->get()->keyBy('student_id');
+
+        // 3. Kirim kedua data tersebut ke view
+        return view('supervisor.tasks.show', [
+            'task' => $task,
+            'assignedStudents' => $assignedStudents,
+            'submissions' => $submissions,
+        ]);
+    }
+
+    public function grade(Request $request, Submission $submission)
+    {
+        $request->validate([
+            'grade' => 'required|string|max:10',
+            'comments' => 'nullable|string',
+        ]);
+
+        $submission->update([
+            'grade' => $request->grade,
+            'comments' => $request->comments,
+        ]);
+
+        return redirect()
+            ->route('supervisor.tasks.show', $submission->task_id)
+            ->with('success', 'Nilai dan komentar berhasil diberikan');
     }
 }

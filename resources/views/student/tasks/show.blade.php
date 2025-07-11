@@ -25,15 +25,23 @@
             </div>
             <div class="card-body">
                 @if($submission)
-                    {{-- Jika sudah submit, tampilkan detail submission --}}
-                    <h5>Anda sudah mengumpulkan tugas ini.</h5>
-                    <p><strong>Laporan Teks:</strong><br>{{ $submission->content ?? '-' }}</p>
-                    @if($submission->file_path)
-                        <p><strong>File Terlampir:</strong> <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank">Lihat file</a></p>
-                    @endif
-                    <hr>
+                {{-- Jika sudah submit, tampilkan detail submission --}}
+                <h5>Anda sudah mengumpulkan tugas ini pada {{ $submission->created_at->format('d M Y') }}.</h5>
+                
+                <p><strong>Laporan Anda:</strong><br>
+                    {{ $submission->content ?? '-' }}
+                </p>
+
+                @if($submission->file_path)
+                    <p>
+                        <strong>File Terlampir:</strong> 
+                        <a href="{{ asset('storage/' . $submission->file_path) }}" target="_blank">Lihat file</a>
+                    </p>
+                @endif
+
                     <p><strong>Nilai:</strong> {{ $submission->grade ?? 'Belum dinilai' }}</p>
                     <p><strong>Komentar Pembimbing:</strong> {{ $submission->comments ?? 'Belum ada komentar' }}</p>
+                
                 @else
                     {{-- Jika belum, tampilkan form submission --}}
                     <form action="{{ route('student.tasks.submit', $task->id) }}" method="POST" enctype="multipart/form-data">

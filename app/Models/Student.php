@@ -28,20 +28,17 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Mendefinisikan relasi one-to-one ke model Supervisor.
-     * Satu student dibimbing oleh satu supervisor.
-     */
     public function supervisor()
     {
         return $this->belongsTo(Supervisor::class);
     }
 
-    public function submissions() {
-    return $this->hasMany(Submission::class);
-    }
-
     public function tasks() {
         return $this->belongsToMany(Task::class, 'task_student');
     }
+        
+    public function submissions() {
+        return $this->hasMany(Submission::class);
+    }
+
 }

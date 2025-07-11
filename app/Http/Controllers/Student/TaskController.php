@@ -81,21 +81,25 @@ class TaskController extends Controller
     public function submit(Request $request, Task $task)
     {
         $request->validate([
-            'comtent' => 'nullable|string',
-            'file' => 'required|file|mimes:pdf, docs, pptx, zip, rar|max:20480',
+            'content' => 'required|string',
+            'file' => 'nullable|file|mimes:pdf, docs, pptx, zip, rar|max:20480',
         ]);
     
 
-    $filePath = $request->file('file')->store('submissions', 'public');
-    
-    Submission::create([
-        'task_id' => $task->id,
-        'student_id' => Auth::user()->student->id,
-        'content' => $request->content,
-        'file_path' => $filePath,
-    ]);
-    
-    return redirect()->route('student.tasks.show', $task->id)->with('success', 'Tugas berhasil dikumpulkan');
+        $filePath = null;
+
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('submissions');
+        }
+        
+        Submission::create([
+            'task_id' => $task->id,
+            'student_id' => Auth::user()->student->id,
+            'content' => $request->content,
+            'file_path' => $filePath,
+        ]);
+        
+        return redirect()->route('student.tasks.show', $task->id)->with('success', 'Tugas berhasil dikumpulkan');
 
     }
 }

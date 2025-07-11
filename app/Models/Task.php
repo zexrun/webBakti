@@ -11,14 +11,13 @@ class Task extends Model
     public function supervisor() {
         return $this->belongsTo(Supervisor::class);
     }
-
+    public function students() {
+        return $this->belongsToMany(Student::class, 'task_student');
+    }
     public function submissions() {
         return $this->hasMany(Submission::class);
     }
 
-    public function students() {
-        return $this->belongsToMany(Student::class, 'task_student');
-    }
 
 
 }

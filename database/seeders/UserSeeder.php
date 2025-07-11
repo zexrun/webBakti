@@ -18,30 +18,40 @@ class UserSeeder extends Seeder
         User::factory()->create([
             'role' => 'admin',
             'name' => 'Rifqy',
+            'username' => 'zexrun',
             'email' => 'rifqykhuzaini@gmail.com',
-            'password' => Hash::make('12341234'), // Ganti dengan password yang sesuai
+            'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
 
         User::factory()->create([
             'role' => 'supervisor',
             'name' => 'Caca',
+            'username' => 'chaoclat',
             'email' => 'caca@gmail.com',
-            'password' => Hash::make('12341234'), // Ganti dengan password yang sesuai
+            'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
 
         User::factory()->create([
             'role' => 'student',
             'name' => 'Keiko',
+            'username' => 'keiko',
             'email' => 'keiko@gmail.com',
-            'password' => Hash::make('12341234'),
+            'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
         
-        User::factory(20)->create([
+        User::factory()->create([
             'role' => 'student',
-        ]); // Membuat 20 User lainnya dengan factory
-
-        User::factory(5)->create([
-            'role' => 'supervisor',
+            'name' => 'Hiro',
+            'username' => 'hiro',
+            'email' => 'hiro@gmail.com',
+            'password' => Hash::make('1'),
+        ]);
+        User::factory()->create([
+            'role' => 'student',
+            'name' => 'Kimi',
+            'username' => 'kimi',
+            'email' => 'kimi@gmail.com',
+            'password' => Hash::make('1'),
         ]);
     }
 }
