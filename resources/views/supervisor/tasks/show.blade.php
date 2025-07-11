@@ -15,7 +15,7 @@
                     Tipe: {{ ucfirst($task->type) }} | Tenggat: {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M Y') : 'Tidak ada' }}
                 </h6>
                 <h6 class="card-subtitle mb-2 text-muted">
-                    Pembimbing: {{ $task->supervisor->name }}
+                    Pembimbing: {{ $task->supervisor->user->name }}
                 </h6>
                 <p class="card-text">{{ $task->description }}</p>
                 @if($task->file_path)
@@ -41,7 +41,7 @@
                         @elseif($submission)
                             <span class="d-flex justify-content-center align-items-center badge bg-success">Sudah Mengumpulkan</span>
                         @else
-                            <span class="d-flex justify-content-center align-items-center badge bg-danger text-light">Belum Mengumpulkan</span>
+                            <span class="d-flex justify-content-center align-items-center badge bg-danger text-">Belum Mengumpulkan</span>
                         @endif
                     </div>
                     
