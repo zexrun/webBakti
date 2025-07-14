@@ -1,68 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <title>Plotting Pembimbing Mahasiswa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2>Plotting Pembimbing Mahasiswa</h2>
-        <p>Pilih dosen pembimbing untuk setiap mahasiswa yang tersedia.</p>
-        
+@extends('layouts.admin')
+@section('title', 'Plotting')
+
+@section('content')
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-1">Plotting Pembimbing Mahasiswa</h2>
+        <p class="text-gray-500 mb-6">Pilih dosen pembimbing untuk setiap mahasiswa yang tersedia.</p>
+
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="bg-green-100 text-green-800 px-4 py-3 rounded-lg mb-6 border border-green-300 relative">
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="absolute top-2 right-2 text-green-700" onclick="this.parentElement.remove()">✕</button>
             </div>
         @endif
 
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nama Mahasiswa</th>
-                    <th>NIM</th>
-                    <th>Universitas</th>
-                    <th>Pembimbing Saat Ini</th>
-                    <th>Tugaskan Pembimbing</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($students as $student)
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100 text-gray-700 text-left text-sm uppercase tracking-wider">
                     <tr>
-                        <td>{{ $student->user->name }}</td>
-                        <td>{{ $student->nim }}</td>
-                        <td>{{ $student->universitas }}</td>
-                        <td>
-                            {{-- Tampilkan nama pembimbing jika ada, jika tidak tampilkan pesan --}}
-                            {{ $student->supervisor->user->name ?? 'Belum Ditugaskan' }}
-                        </td>
-                        <td style="width: 40%;">
-                            <form action="{{ route('admin.plotting.assign') }}" method="POST" class="d-flex">
-                                @csrf
-                                <input type="hidden" name="student_id" value="{{ $student->id }}">
-                                <select name="supervisor_id" class="form-select me-2">
-                                    <option value="">Pilih Pembimbing</option>
-                                    @foreach($supervisors as $supervisor)
-                                        <option value="{{ $supervisor->id }}" @if($student->supervisor_id == $supervisor->id) selected @endif>
-                                            {{ $supervisor->user->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </form>
-                        </td>
+                        <th class="px-6 py-3">Nama Mahasiswa</th>
+                        <th class="px-6 py-3">NIM</th>
+                        <th class="px-6 py-3">Universitas</th>
+                        <th class="px-6 py-3">Pembimbing Saat Ini</th>
+                        <th class="px-6 py-3">Tugaskan Pembimbing</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center">Tidak ada data mahasiswa.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    @forelse($students as $student)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">{{ $student->user->name }}</td>
+                            <td class="px-6 py-4">{{ $student->nim }}</td>
+                            <td class="px-6 py-4">{{ $student->universitas }}</td>
+                            <td class="px-6 py-4">
+                                {{ $student->supervisor->user->name ?? 'Belum Ditugaskan' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <form action="{{ route('admin.plotting.assign') }}" method="POST" class="flex flex-col sm:flex-row gap-2 sm:items-center">
+                                    @csrf
+                                    <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                    <select name="supervisor_id" class="rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 w-full sm:w-auto">
+                                        <option value="">Pilih Pembimbing</option>
+                                        @foreach($supervisors as $supervisor)
+                                            <option value="{{ $supervisor->id }}" @if($student->supervisor_id == $supervisor->id) selected @endif>
+                                                {{ $supervisor->user->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-200">
+                                        Simpan
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data mahasiswa.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary mt-3">Kembali ke Dashboard</a>
+        <div class="mt-6">
+            <a href="{{ route('admin.dashboard') }}" class="inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-200">
+                Kembali ke Dashboard
+            </a>
+        </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

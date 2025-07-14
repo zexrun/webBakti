@@ -1,45 +1,55 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <title>Daftar Tugas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Daftar Tugas Anda</h2>
+@extends('layouts.student')
 
-        <table class="table table-bordered table-hover">
-            <thead class="table-light">
+@section('title', 'Tugas')
+
+@section('content')
+
+<div class="max-w-6xl mx-auto px-4 py-10">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">📋 Daftar Tugas Anda</h2>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100 text-gray-700 text-left">
                 <tr>
-                    <th>Judul Tugas</th>
-                    <th>Tipe</th>
-                    <th>Diberikan oleh</th>
-                    <th>Tenggat Waktu</th>
-                    <th>Aksi</th>
+                    <th class="px-6 py-4 font-semibold">Judul Tugas</th>
+                    <th class="px-6 py-4 font-semibold">Tipe</th>
+                    <th class="px-6 py-4 font-semibold">Diberikan Oleh</th>
+                    <th class="px-6 py-4 font-semibold">Tenggat Waktu</th>
+                    <th class="px-6 py-4 font-semibold">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-100">
                 @forelse($tasks as $task)
-                    <tr>
-                        <td>{{ $task->title }}</td>
-                        <td><span class="badge bg-primary">{{ ucfirst($task->type) }}</span></td>
-                        <td>{{ $task->supervisor->user->name }}</td>
-                        <td>{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M Y H:i') : '-' }}</td>
-                        <td>
-                            <a href="{{ route('student.tasks.show', $task->id) }}" class="btn btn-info btn-sm">Lihat Detail & Submit</a>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-gray-800 font-medium">{{ $task->title }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-blue-600 rounded">
+                                {{ ucfirst($task->type) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-700">{{ $task->supervisor->user->name }}</td>
+                        <td class="px-6 py-4 text-gray-600">
+                            {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M Y H:i') : '-' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ route('student.tasks.show', $task->id) }}"
+                               class="inline-flex items-center text-sm px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition">
+                                📄 Lihat Detail & Submit
+                            </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">Belum ada tugas yang diberikan kepada Anda.</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada tugas yang diberikan kepada Anda.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-
-        <div class="d-flex justify-content-center">
-            {{ $tasks->links() }}
-        </div>
     </div>
-</body>
-</html>
+
+    <div class="mt-6 flex justify-center">
+        {{ $tasks->links() }}
+    </div>
+</div>
+
+@endsection

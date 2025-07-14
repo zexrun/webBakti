@@ -45,3 +45,38 @@
         </div>
     </form>
 </x-guest-layout>
+
+
+
+<div class="flex flex-col w-full overflow-hidden relative min-h-screen radial-gradient items-center justify-center g-0 px-4">
+    <div class="justify-center items-center w-full lg:flex max-w-md">
+        <div class="w-full card-body">
+            <form>
+                <div class="mb-4">
+                    <label for="login"
+                           class="block text-sm mb-2 text-gray-400">Username/Email</label>
+                    <input type="text" id="login"
+                           class="py-3 px-4 block w-full border-gray-200 rounded-sm text-sm focus:border-blue-600 focus:ring-0" aria-describedby="hs-input-helper-text">
+                </div>
+                <div class="mb-6">
+                    <label for="password"
+                           class="block text-sm mb-2 text-gray-400">Password</label>
+                    <input type="password" id="password"
+                           class="py-3 px-4 block w-full border-gray-200 rounded-sm text-sm focus:border-blue-600 focus:ring-0" aria-describedby="hs-input-helper-text">
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex">
+                        <input type="checkbox" class="shrink-0 mt-0.5 border-gray-200 rounded-[4px] text-blue-600 focus:ring-blue-500" id="hs-default-checkbox" checked>
+                        <label for="hs-default-checkbox" class="text-sm text-gray-500 ms-3">Remember this Device</label>
+                    </div>
+                        <a href="../" class="text-sm font-semibold text-blue-600 hover:text-blue-700">Forgot Password?</a>
+                </div>
+
+                    <div class="grid my-6">
+                        <a href="../" class="btn py-[10px] text-base text-white font-medium hover:bg-blue-700">Sign In</a>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

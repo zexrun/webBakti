@@ -8,12 +8,25 @@ use Illuminate\Support\Facades\App;
 use App\Models\Student;
 use App\Models\Supervisor;
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function dashboard() { return view('admin.dashboard'); }
+    public function dashboard() 
+    {
+        // Ambil data statistik untuk ditampilkan di kartu
+        $studentCount = Student::count();
+        $supervisorCount = Supervisor::count();
+        $taskCount = Task::count();
 
+        // Kirim data ke view
+        return view('admin.dashboard', [
+            'studentCount' => $studentCount,
+            'supervisorCount' => $supervisorCount,
+            'taskCount' => $taskCount,
+        ]);
+    }
     public function plotting()
     {
         $students = Student::with('user', 'supervisor.user')

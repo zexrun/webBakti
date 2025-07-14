@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Submission;
 use App\Models\Task;
 use App\Models\Supervisor; // Import model Supervisor
+use App\Models\Student;
+use App\Notifications\NewTaskAssigned;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,6 +70,11 @@ class TaskController extends Controller
 
     if ($request->has('student_ids')) {
         $task->students()->attach($request->student_ids);
+
+        $assignedStudents = Student::whereIn('id', $request->student_ids)->with('user')->get();
+            foreach ($assignedStudents as $student) {
+                $student->user->notify(new NewTaskAssigned($task));
+            }
     }
 
     // 3. Logika untuk assign tugas
