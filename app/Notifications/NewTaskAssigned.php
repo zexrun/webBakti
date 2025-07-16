@@ -13,28 +13,15 @@ class NewTaskAssigned extends Notification
     use Queueable;
 
     public $task;
-
-    /**
-     * Create a new notification instance.
-     */
+    
     public function __construct(Task $task)
     {
         $this->task = $task;
     }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['database', 'mail'];
     }
-
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
@@ -44,12 +31,6 @@ class NewTaskAssigned extends Notification
             ->action('Lihat Tugas', url('/student/tasks' . $this->task->id))
             ->line('Selamat mengerjakan tugas anda!');
     }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
         return [

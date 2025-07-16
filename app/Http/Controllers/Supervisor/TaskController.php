@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use App\Models\Submission;
 use App\Models\Task;
-use App\Models\Supervisor; // Import model Supervisor
+use App\Models\Supervisor;
 use App\Models\Student;
 use App\Notifications\NewTaskAssigned;
 use Illuminate\Http\Request;
@@ -20,14 +20,12 @@ class TaskController extends Controller
     public function index(){
         $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
 
-        $tasks = Task::where('supervisor_id', $supervisor->id)
-            ->latest()
-            ->paginate(10); // Ambil 10 tugas terbaru
+        $students = $supervisor->students()
+                                ->with('user', 'tasks')
+                                ->paginate(5);
         
-        
-        return view('supervisor.tasks.index', compact('tasks'));
+        return view('supervisor.tasks.index', compact('students'));
     }
-
 
     public function create()
     {
@@ -37,28 +35,29 @@ class TaskController extends Controller
         return view('supervisor.tasks.create', compact('students'));
     }
 
-    /**
-     * Menyimpan tugas baru ke database.
-     */
     public function store(Request $request)
     {
-    // 1. Validasi, tambahkan assignment_type dan student_id
     $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
         'type' => 'required|in:harian,akhir',
         'due_date' => 'nullable|date',
-        'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
-        // 'assignment_type' => 'required|in:general,specific',
-        'student_ids' => 'required|array    ',
+        'student_ids' => 'required|array',
         'student_ids.*' => 'exists:students,id',
+        'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
     ]);
 
-    // ... (kode untuk upload file dan mencari supervisor tetap sama) ...
-    $filePath = $request->hasFile('file') ? $request->file('file')->store('task_attachments', 'public') : null;
-    $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
+    $filePath = null;
+    if($request->hasFile('file')) {
+        $filePath = $request->file('file')->store('task_attachments', 'public');
+    }else if ($request->hasFile('file')) {
+        dd('File not valid');
+    }
+    
+    $supervisor = Supervisor::where('user_id', auth()->id())->firstOrFail();
 
-    // 2. Buat tugas baru
+    dd($request->file('file'));
+
     $task = Task::create([
         'supervisor_id' => $supervisor->id,
         'title' => $request->title,
@@ -77,17 +76,6 @@ class TaskController extends Controller
             }
     }
 
-    // 3. Logika untuk assign tugas
-/*     if ($request->assignment_type === 'general') {
-        // Jika general, assign ke semua mahasiswa bimbingan supervisor ini
-        $studentIds = $supervisor->students()->pluck('id');
-        $task->students()->attach($studentIds);
-    } else {
-        // Jika spesifik, assign hanya ke satu mahasiswa yang dipilih
-        $task->students()->attach($request->student_id);
-    } */
-
-    // ... (redirect dengan pesan sukses) ...
     return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
     }
 

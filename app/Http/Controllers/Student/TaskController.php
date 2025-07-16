@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Submission;
 use App\Models\Task;
 
+use App\Notifications\TaskSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,7 +85,6 @@ class TaskController extends Controller
             'content' => 'required|string',
             'file' => 'nullable|file|mimes:pdf, docs, pptx, zip, rar|max:20480',
         ]);
-    
 
         $filePath = null;
 
@@ -92,13 +92,16 @@ class TaskController extends Controller
             $filePath = $request->file('file')->store('submissions');
         }
         
-        Submission::create([
+        $submission =  Submission::create([
             'task_id' => $task->id,
             'student_id' => Auth::user()->student->id,
             'content' => $request->content,
             'file_path' => $filePath,
         ]);
         
+        $supervisorUser = $task->supervisor->user;
+        $supervisorUser->notify(new TaskSubmitted($submission));
+
         return redirect()->route('student.tasks.show', $task->id)->with('success', 'Tugas berhasil dikumpulkan');
 
     }
