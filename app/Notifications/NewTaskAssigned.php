@@ -36,7 +36,7 @@ class NewTaskAssigned extends Notification
         return [
             'task_id' => $this->task->id,
             'title' => $this->task->title,
-            'message'=> 'Anda mendapatkan tugas baru dari pembimbing anda',
+            'message'=> 'Anda mendapatkan tugas baru dari pembimbing ' . $this->task->supervisor->user->name,
         ];
     }
 }
