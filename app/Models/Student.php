@@ -9,9 +9,6 @@ class Student extends Model
 {
     use HasFactory;
 
-    /**
-     * Atribut yang boleh diisi secara massal.
-     */
     protected $fillable = [
         'user_id',
         'supervisor_id',
@@ -19,10 +16,6 @@ class Student extends Model
         'universitas',
     ];
 
-    /**
-     * Mendefinisikan relasi one-to-one ke model User.
-     * Satu data student dimiliki oleh satu user.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -33,12 +26,19 @@ class Student extends Model
         return $this->belongsTo(Supervisor::class);
     }
 
-    public function tasks() {
+    public function tasks() 
+    {
         return $this->belongsToMany(Task::class, 'task_student');
     }
         
-    public function submissions() {
+    public function submissions() 
+    {
         return $this->hasMany(Submission::class);
+    }
+
+    public function dailyReports()
+    {
+        return $this->hasMany(DailyReport::class)->orderBy('activity_date', 'desc');
     }
 
 }

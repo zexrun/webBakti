@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\StudentController;
 
+use App\Http\Controllers\Student\DailyReportController as StudentDailyReportController;
 use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
 use App\Http\Controllers\Student\TaskController as StudentTaskController;
 
@@ -40,7 +41,8 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
     Route::post('tasks/{task}/submit', [StudentTaskController::class, 'submit'])->name('tasks.submit');
-
+    
+    Route::resource('daily-reports', StudentDailyReportController::class);
     Route::resource('tasks', StudentTaskController::class)->only(['index', 'show']);
 });
 
