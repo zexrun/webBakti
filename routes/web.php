@@ -11,9 +11,10 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\StudentController;
 
-use App\Http\Controllers\Student\DailyReportController as StudentDailyReportController;
-use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
 use App\Http\Controllers\Student\TaskController as StudentTaskController;
+use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
+use App\Http\Controllers\Student\DailyReportController as StudentDailyReportController;
+use App\Http\Controllers\Supervisor\DailyReportController as SupervisorDailyReportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -32,7 +33,9 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorController::class, 'dashboard'])->name('dashboard');
     Route::post('submissions/{submission}/grade', [SupervisorTaskController::class, 'grade'])->name('submissions.grade');
-    Route::get('/view-student', [SupervisorController::class, 'viewStudent'])->name('students.index');
+    Route::get('/view-student', [SupervisorController::class, 'viewStudent'])->name('students.index');    
+    Route::get('/daily-reports', [SupervisorDailyReportController::class, 'index'])->name('daily-reports.index');
+    Route::get('/daily-reports/{report}', [SupervisorDailyReportController::class, 'show'])->name('daily-reports.show');    
 
     Route::resource('tasks', SupervisorTaskController::class);
 });

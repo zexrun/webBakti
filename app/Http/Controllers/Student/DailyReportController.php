@@ -12,7 +12,9 @@ class DailyReportController extends Controller
 {
     public function index()
     {
-        //
+        $reports = Auth::user()->student->dailyReports()->paginate(10);
+
+        return view('student.daily-reports.index', compact('reports'));
     }
 
     public function create()
@@ -52,9 +54,13 @@ class DailyReportController extends Controller
         return redirect()->route('student.daily-reports.index')->with('success', 'Laporan harian berhasil disimpan!');
     }
 
-    public function show(string $id)
+    public function show(DailyReport $dailyReport)
     {
-        //
+        if ($dailyReport->student_id !== Auth::user()->student->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        return view('student.daily-reports.show', ['report' => $dailyReport]);
     }
 
     public function edit(string $id)

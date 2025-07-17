@@ -33,6 +33,10 @@
                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md transition text-sm">
                    Lihat Mahasiswa
                 </a>
+                <a href="{{ route('supervisor.daily-reports.index') }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md transition text-sm">
+                   Lihat Laporan Harian Mahasiswa
+                </a>
             </div>
 
             @if(session('success'))
