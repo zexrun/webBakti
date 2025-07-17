@@ -56,7 +56,7 @@ class TaskController extends Controller
     
     $supervisor = Supervisor::where('user_id', auth()->id())->firstOrFail();
 
-    dd($request->file('file'));
+    //dd($request->file('file'));
 
     $task = Task::create([
         'supervisor_id' => $supervisor->id,
