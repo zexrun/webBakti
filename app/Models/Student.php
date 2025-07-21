@@ -14,6 +14,10 @@ class Student extends Model
         'supervisor_id',
         'nim',
         'universitas',
+        'program_studi',
+        'semester',
+        'periode_mulai',
+        'periode_selesai',
     ];
 
     public function user()

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('supervisor_id')->nullable()->constrained('supervisors')->onDelete('set null');
             $table->string('nim', 25)->unique()->nullable();
             $table->string('universitas', 100)->nullable();
+            $table->string('program_studi')->nullable();
+            $table->integer('semester')->nullable();
+            $table->date('periode_mulai')->nullable();
+            $table->date('periode_selesai')->nullable();
             $table->timestamps();
         });
     }

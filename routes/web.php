@@ -16,6 +16,8 @@ use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
 use App\Http\Controllers\Student\DailyReportController as StudentDailyReportController;
 use App\Http\Controllers\Supervisor\DailyReportController as SupervisorDailyReportController;
 
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -47,6 +49,9 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     
     Route::resource('daily-reports', StudentDailyReportController::class);
     Route::resource('tasks', StudentTaskController::class)->only(['index', 'show']);
+
+    Route::get('/profile', [StudentProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [StudentProfileController::class, 'update'])->name('profile.update');
 });
 
 
