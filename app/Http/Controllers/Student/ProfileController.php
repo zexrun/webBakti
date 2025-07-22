@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Http;
 
 class ProfileController extends Controller
 {
-    public function edit()
+    public function edit(Request $request)
     {
+        $user = $request->user();
         $student = auth()->user()->student;
         $universities = [];
 
@@ -27,7 +28,7 @@ class ProfileController extends Controller
         }
 
         // Kirim KEDUA variabel ('student' dan 'universities') ke view
-        return view('student.profile.edit', compact('student', 'universities'));
+        return view('student.info.edit', compact('user', 'student', 'universities'));
     }
 
     public function update(Request $request)
@@ -52,7 +53,6 @@ class ProfileController extends Controller
             'periode_selesai' => $request->periode_selesai,
         ]);
 
-        return redirect()->route('student.profile.edit')->with('success', "Data status mahasiswa berhasil diperbarui");
+        return redirect()->route('student.info.edit')->with('success', "Data status mahasiswa berhasil diperbarui");
     }
-
 }

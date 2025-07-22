@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -50,8 +49,8 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::resource('daily-reports', StudentDailyReportController::class);
     Route::resource('tasks', StudentTaskController::class)->only(['index', 'show']);
 
-    Route::get('/profile', [StudentProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [StudentProfileController::class, 'update'])->name('profile.update');
+    Route::get('/info', [StudentProfileController::class, 'edit'])->name('info.edit');
+    Route::patch('/info', [StudentProfileController::class, 'update'])->name('info.update');
 });
 
 
