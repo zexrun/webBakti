@@ -2,4 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.input-form {
+    @apply border block w-full text-sm rounded-md p-2 border-gray-200 bg-gray-50 focus:outline-none;
+}
+
+.btn-primary {
+    @apply w-full h-full rounded-md font-medium px-5 py-2.5 text-white bg-blue-500
+}
 
