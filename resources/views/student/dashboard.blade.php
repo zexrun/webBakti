@@ -27,9 +27,9 @@
                class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition">
                 📚 Laporan Harian
             </a>
-            <a href="{{ route('student.profile.edit') }}"
+            <a href="{{ route('student.info.edit') }}"
                class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition">
-                📚 Profile Mahasiswa
+                📚 Informasi Magang
             </a>
             
             @if(session('success'))
