@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('title', 'Plotting')
 
 @section('content')
@@ -58,12 +58,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="mt-6">
-            <a href="{{ route('admin.dashboard') }}" class="inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-200">
-                Kembali ke Dashboard
-            </a>
         </div>
     </div>
 @endsection
