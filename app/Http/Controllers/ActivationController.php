@@ -1,0 +1,49 @@
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Notifications\WelcomeEmail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+
+class ActivationController extends Controller
+{
+    public function showActivationForm(string $token)
+    {
+        $hashedToken = hash('sha256', $token);
+        $user = User::where('activation_token', $hashedToken)->whereNull('email_verified_at')->first();
+
+        if (!$user) {
+            return redirect('/login')->withErrors(['email' => 'Link aktivasi tidak valid atau sudah kedaluwarsa.']);
+        }
+
+        return view('auth.activate', ['token' => $token, 'email' => $user->email]);
+    }
+
+    public function activateAccount(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'alpha_dash', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $hashedToken = hash('sha256', $request->token);
+        $user = User::where('activation_token', $hashedToken)->firstOrFail();
+
+        $user->update([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'email_verified_at' => now(),
+            'activation_token' => null,
+        ]);
+
+        $user->notify(new WelcomeEmail($user));
+
+        auth()->login($user);
+
+        return redirect('/home')->with('success', 'Akun Anda berhasil diaktifkan!');
+    }
+}

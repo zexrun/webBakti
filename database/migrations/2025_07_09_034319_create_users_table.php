@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->unique()->nullable();
             $table->string('email')->unique();
-            $table->string('role'); // isinya: 'admin', 'supervisor', 'student'
+            $table->string('role');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
+            $table->string('activation_token')->unique()->nullable();
             $table->timestamps();
         });
     }

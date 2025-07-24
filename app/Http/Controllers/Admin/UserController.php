@@ -6,18 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Supervisor;
-
+use App\Notifications\SendAccountActivationEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
 
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $users = User::orderBy('role', 'asc')
@@ -27,35 +25,26 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
 {
-    // 1. Validasi input (tanpa password)
     $request->validate([
-        'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'role' => ['required', 'string', 'in:admin,supervisor,student'],
     ]);
 
-    // 2. Buat password acak 5 digit
-    $randomPassword = mt_rand(10000, 99999);
+    $token = Str::random(60);
 
-    // 3. Buat user baru dengan password yang di-hash
     $user = User::create([
-        'name' => $request->name,
+        'name' => 'Pengguna Baru',
         'email' => $request->email,
         'role' => $request->role,
-        'password' => Hash::make($randomPassword),
+        'activation_token' => hash('sha256', $token),
+        'password' => null,
     ]);
 
     if ($request->role === 'student') {
@@ -63,79 +52,72 @@ class UserController extends Controller
             'user_id' => $user->id,
         ]);
     }elseif ($request->role === 'supervisor') {
-        $supervisor = new Supervisor(); // Buat instance baru
+        $supervisor = new Supervisor();
         $supervisor->user_id = $user->id;
-        $supervisor->nip = 'NIP-' . $user->id; // Isi NIP secara manual
-        $supervisor->jabatan = 'Supervisor';      // Isi Jabatan secara manual
+        $supervisor->nip = 'NIP-' . $user->id;
+        $supervisor->jabatan = 'Supervisor';     
         $supervisor->save(); 
     }
 
-    // 4. Redirect dengan pesan sukses yang menyertakan password sementara
-    $successMessage = "User '{$user->name}' berhasil dibuat. Password sementara: {$randomPassword}";
+    $user->notify(new SendAccountActivationEmail($token));
 
-    return redirect()->route('admin.users.index')->with('success', $successMessage);
+    return redirect()->route('admin.users.index')->with('success', 'Undangan aktivasi berhasil dikirim ke ' . $user->email);
 }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(User $user)
     {
         return view('admin.users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-public function update(Request $request, User $user)
-{
-    // 1. Validasi input
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
-        'role' => ['required', 'string', 'in:admin,supervisor,student'],
-        'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
-    ]);
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', Rule::unique('users')->ignore($user->id)],
+            'role' => ['required', 'string', 'in:admin,supervisor,student'],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+        ]);
 
-    // 2. Perbarui properti dari objek $user yang ada
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->role = $request->role;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = $request->role;
 
-    // 3. HANYA perbarui password jika diisi di form
-    if (!empty($request->password)) {
-        $user->password = Hash::make($request->password);
+        if (!empty($request->password)) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui!');
     }
 
-    // 4. Simpan perubahan pada user yang ada
-    $user->save();
-
-    // 5. Kembali ke halaman daftar user
-    return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui!');
-}
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
         {
-        // Cek agar admin tidak bisa menghapus dirinya sendiri
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
-        // Hapus user
         $user->delete();
 
-        // Redirect ke halaman daftar user dengan pesan sukses
         return redirect()->route('admin.users.index')->with('danger', "User {$user->name} berhasil dihapus!");
+    }
+
+    public function resendActivation(User $user) {
+        if ($user->email_verified_at) {
+            return redirect()->route('admin.users.index')->with('error', 'User ini sudah aktif');
+        }
+
+        $token = Str::random(60);
+        $user->activation_token = hash('sha256', $token);
+        $user->save();
+
+        $user->notify(new SendAccountActivationEmail($token));
+
+        return redirect()->route('admin.users.index')->with('success', 'Link aktivasi berhasil dikirim ke ' . $user->email);
     }
 }
