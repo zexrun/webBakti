@@ -13,9 +13,7 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+
     public function edit(Request $request): View
     {
         $user = $request->user();
@@ -78,5 +76,18 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function show()
+    {
+        // Ambil data pengguna yang sedang login
+        $user = Auth::user();
+
+        // Pastikan pengguna sudah login sebelum menampilkan profil
+        if (!$user) {
+            return redirect()->route('login'); // Atau halaman lain jika belum login
+        }
+
+        return view('profile.show', compact('user'));
     }
 }

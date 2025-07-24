@@ -77,7 +77,7 @@
             </li>
 
             <li>
-                <a href="{{ route('admin.plotting') }}" class="icon-button">
+                <a href="{{ route('profile.show') }}" class="icon-button">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="icon-svg"
