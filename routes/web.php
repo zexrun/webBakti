@@ -9,6 +9,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ActivationController;
+
+
 
 use App\Http\Controllers\Student\TaskController as StudentTaskController;
 use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
@@ -26,6 +29,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/plotting', [AdminController::class, 'plotting'])->name('plotting');
     Route::post('/plotting/assign', [AdminController::class, 'assign'])->name('plotting.assign');
+    Route::post('/users/{user}/resend-activation', [UserController::class, 'resendActivation'])->name('users.resend_activation');
 
     Route::resource('users', UserController::class);
 });
@@ -65,6 +69,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::post('/logout', [LoginController::class, 'actionlogout'])->name('logout');
+});
+
+Route::get('/activate/{token}', [ActivationController::class, 'showActivationForm'])->name('activation.form');
+Route::post('/activate', [ActivationController::class, 'activateAccount'])->name('activation.activate');
 
 require __DIR__.'/auth.php';
 
@@ -74,11 +85,7 @@ require __DIR__.'/auth.php';
 Route::get('/', [LoginController::class, 'login'])->name('login');
 Route::post('/', [LoginController::class, 'actionlogin'])->name('actionlogin'); */
 
-/* // Rute untuk semua pengguna yang sudah login
-Route::middleware('auth')->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::post('/logout', [LoginController::class, 'actionlogout'])->name('logout');
-}); */
+// Rute untuk semua pengguna yang sudah login
 
 /* 
 Route::get('/dashboard', function () {
