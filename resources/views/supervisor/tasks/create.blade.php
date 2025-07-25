@@ -1,4 +1,4 @@
-@extends('layouts.supervisor')
+@extends('layouts.app')
 @section('title', 'Buat Tugas Baru')
 
 @section('content')

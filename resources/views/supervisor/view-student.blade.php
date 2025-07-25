@@ -1,4 +1,4 @@
-@extends('layouts.supervisor')
+@extends('layouts.app')
 @section('title', 'Dashboard')
 
 @section('content')
@@ -35,13 +35,6 @@
 
     <div class="mt-6 flex justify-center">
         {{ $students->links() }}
-    </div>
-
-    <div class="mt-8">
-        <a href="{{-- route('supervisor.dashboard') --}}"
-           class="inline-block bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-md text-sm transition">
-            Kembali ke Dashboard
-        </a>
     </div>
 </div>
 

@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <title>Detail Tugas: {{ $task->title }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Daftar Penugasan')
+
+@section('content')
+
     <div class="container mt-5">
         <div class="card mb-4">
             <div class="card-header">
@@ -101,7 +99,9 @@
 
         <a href="{{ route('supervisor.tasks.index') }}" class="btn btn-secondary mt-3">Kembali</a>
     </div>
-    <script>
+
+
+<script>
     function toggleForm(formId) {
         const form = document.getElementById(formId);
         if (form.style.display === "none") {
@@ -111,5 +111,3 @@
         }
     }
 </script>
-</body>
-</html>
