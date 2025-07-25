@@ -11,11 +11,11 @@
 <body>
     <div class="flex">
         @if(auth()->check())
-            @if(auth()->user()->role === 'admin')
+            @if(auth()->user()->role == 'admin')
                 @include('components.sidebar.admin')
-            @elseif(auth()->user()->role === 'supervisor')
+            @elseif(auth()->user()->role == 'supervisor')
                 @include('components.sidebar.supervisor')
-            @elseif(auth()->user()->role === 'student')
+            @elseif(auth()->user()->role == 'student')
                 @include('components.sidebar.student')
             @endif
         @endif
