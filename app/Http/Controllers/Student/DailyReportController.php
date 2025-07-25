@@ -41,7 +41,7 @@ class DailyReportController extends Controller
         }
 
         DailyReport::create([
-            'student_id' => auth()->user()->student()->first()->id,
+            'student_id' => auth()->user()->student->id,
             'title' => $request->title,
             'activity_date' => $request->activity_date,
             'start_time' => $request->start_time,

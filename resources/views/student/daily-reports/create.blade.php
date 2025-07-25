@@ -1,4 +1,4 @@
-@extends('layouts.student') {{-- Pastikan Anda punya layout untuk student --}}
+@extends('layouts.app')
 @section('title', 'Buat Laporan Harian')
 
 @section('content')

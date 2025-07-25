@@ -1,4 +1,4 @@
-@extends('layouts.student')
+@extends('layouts.app')
 @section('title', 'Informasi Magang Saya')
 
 @push('scripts')
@@ -30,30 +30,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-8">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Informasi Magang</h2>
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" disabled readonly>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" value="{{ $user->username }}" class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm" disabled readonly>
-            </div>
-                
-            {{-- Bagian Ubah Password --}}
-            <h3 class="text-lg font-medium text-gray-900 border-b pb-2 mt-6">Ubah Password (Opsional)</h3>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password Baru</label>
-                <input type="password" name="password" id="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
-            <div>
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-            </div>
+    
     <h2 class="text-2xl font-semibold text-gray-800 mb-6">Informasi Magang</h2>
 
     @if(session('success'))

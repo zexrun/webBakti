@@ -1,44 +1,58 @@
-@extends('layouts.student')
+@extends('layouts.app')
 
 @section('title', 'Student')
 
 @section('content')
 
-<div class="max-w-4xl mx-auto px-4 py-10">
-    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
-        <div class="flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4">
-            <h4 class="text-lg font-semibold text-white">Dashboard Mahasiswa</h4>
+<div class="max-w-5xl mx-auto px-4 py-10">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <!-- Header -->
+        <div class="flex items-center justify-between bg-gradient-to-r from-blue-600 to-indigo-500 px-6 py-5">
+            <h4 class="text-xl font-semibold text-white tracking-wide">🎓 Dashboard Mahasiswa</h4>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-1.5 rounded-md transition">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-md shadow-md transition duration-200">
                     Logout
                 </button>
             </form>
         </div>
-        <div class="px-6 py-6">
-            <h5 class="text-xl font-bold text-gray-800 mb-2">Selamat Datang, {{ Auth::user()->name }}!</h5>
-            <p class="text-gray-600 mb-6">Anda login sebagai Mahasiswa. Gunakan menu di bawah ini untuk mengelola sistem.</p>
 
-            <a href="{{ route('student.tasks.index') }}"
-               class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition">
-                📚 Tugas Saya
-            </a>
-            <a href="{{ route('student.daily-reports.index') }}"
-               class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition">
-                📚 Laporan Harian
-            </a>
-            <a href="{{ route('student.info.edit') }}"
-               class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-sm transition">
-                📚 Informasi Akun
-            </a>
-            
+        <!-- Body -->
+        <div class="px-8 py-8">
+            <h5 class="text-2xl font-bold text-gray-800 mb-2">Halo, {{ Auth::user()->name }}! 👋</h5>
+            <p class="text-gray-600 mb-8 text-sm">Kamu login sebagai Mahasiswa. Silakan pilih menu di bawah ini untuk mengakses fitur.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Card: Tugas -->
+                <a href="{{ route('student.tasks.index') }}" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
+                    <div class="text-3xl mb-3">📝</div>
+                    <div class="text-lg font-semibold text-blue-700">Tugas Saya</div>
+                    <p class="text-sm text-gray-600 mt-1">Lihat dan kerjakan tugas yang diberikan.</p>
+                </a>
+
+                <!-- Card: Laporan Harian -->
+                <a href="{{ route('student.daily-reports.index') }}" class="bg-green-50 hover:bg-green-100 border border-green-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
+                    <div class="text-3xl mb-3">📅</div>
+                    <div class="text-lg font-semibold text-green-700">Laporan Harian</div>
+                    <p class="text-sm text-gray-600 mt-1">Kelola laporan kegiatan harian kamu.</p>
+                </a>
+
+                <!-- Card: Info Akun -->
+                <a href="{{ route('student.info.edit') }}" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
+                    <div class="text-3xl mb-3">👤</div>
+                    <div class="text-lg font-semibold text-purple-700">Informasi Akun</div>
+                    <p class="text-sm text-gray-600 mt-1">Edit profil dan informasi akunmu.</p>
+                </a>
+            </div>
+
+            <!-- Success Alert -->
             @if(session('success'))
-                <div class="mt-4 p-4 bg-green-100 text-green-700 border border-green-300 rounded-md">
-                    {{ session('success') }}
+                <div class="p-4 bg-green-100 text-green-800 border border-green-300 rounded-md text-sm">
+                    ✅ {{ session('success') }}
                 </div>
             @endif
 
-            <hr class="my-6 border-gray-200">
+            <hr class="mt-10 border-gray-200">
         </div>
     </div>
 </div>

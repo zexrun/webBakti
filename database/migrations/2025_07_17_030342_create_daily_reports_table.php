@@ -20,7 +20,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->text('description');
             $table->string('feeling');
-            $table->string('photo_path')->nullable();
+            $table->string('file_path')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });

@@ -18,13 +18,18 @@ class DailyReport extends Model
         'end_time',
         'description',
         'feeling',
-        'photo_path',
+        'file_path',
         'is_verified',
     ];
 
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
     
 }

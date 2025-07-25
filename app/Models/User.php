@@ -47,11 +47,11 @@ class User extends Authenticatable
         ];
     }
 
-    public function student() {
-        return $this->hasOne(Student::class);
-    }
-
     public function supervisor() {
         return $this->hasOne(Supervisor::class);
+    }
+
+        public function student() {
+        return $this->hasOne(Student::class);
     }
 }
