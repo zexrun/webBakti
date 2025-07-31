@@ -77,6 +77,80 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.plotting') }}" class="icon-button">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon-svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    >
+                                <path
+                                d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z"
+                                />
+                            </svg>
+                            <span class="icon-text">Plotting Pembimbing</span>
+                        </a>
+                    </li>
+            </li>
+                
+                <li>
+                    <button
+                    type="button"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    aria-controls="dropdown-example"
+                    data-collapse-toggle="dropdown-example"
+                    >
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon-svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    >
+                        <path
+                        fill-rule="evenodd"
+                        d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75ZM4.117 19.125a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z"
+                        clip-rule="evenodd"
+                        />
+                    </svg>
+                    <span
+                    class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap"
+                    >Manajemen Pengguna</span
+                    >
+                    <svg
+                    class="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                    >
+                    <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 4 4 4-4"
+                    />
+                </svg>
+            </button>
+            
+            <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                <li>
+                    <a
+                    href="{{ route('admin.users.index')}}"
+                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >Daftar Pengguna</a
+                    >
+                  </li>
+                    <li>
+                        <a
+                            href="{{ route('admin.users.create')}}"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                            >Tambah Pengguna</a
+                        >
+                </li>
+            </ul>
+
+            <li>
                 <a href="{{ route('profile.show') }}" class="icon-button">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -92,78 +166,8 @@
                       </svg>
                       <span class="icon-text">Profile</span>
                     </a>
-                    <li>
-                        <a href="{{ route('admin.plotting') }}" class="icon-button">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="icon-svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z"
-                                />
-                            </svg>
-                            <span class="icon-text">Plotting Pembimbing</span>
-                        </a>
-                    </li>
-                  </li>
-                  
-            <li>
-                <button
-                    type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                    aria-controls="dropdown-example"
-                    data-collapse-toggle="dropdown-example"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M12 6.75a5.25 5.25 0 0 1 6.775-5.025.75.75 0 0 1 .313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 0 1 1.248.313 5.25 5.25 0 0 1-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 1 1 2.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0 1 12 6.75ZM4.117 19.125a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span
-                        class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap"
-                        >Manajemen Pengguna</span
-                    >
-                    <svg
-                        class="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                    >
-                        <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="m1 1 4 4 4-4"
-                        />
-                    </svg>
-                </button>
-                <ul id="dropdown-example" class="hidden py-2 space-y-2">
-                  <li>
-                      <a
-                          href="{{ route('admin.users.index')}}"
-                          class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                          >Daftar Pengguna</a
-                      >
-                  </li>
-                    <li>
-                        <a
-                            href="{{ route('admin.users.create')}}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                            >Tambah Pengguna</a
-                        >
-                    </li>
-                </ul>
+            </li>   
+
             </li>
 
 

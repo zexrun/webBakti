@@ -17,7 +17,7 @@
             <!-- Kiri -->
             <div class="flex items-center space-x-4">
                 <a href="{{ route('supervisor.dashboard') }}" class="font-semibold text-lg">Supervisor Panel</a>
-                <a href="{{ route('supervisor.students.index') }}" class="hover:text-blue-300">Lihat Mahasiswa</a>
+                <a href="{{ route('supervisor.students.list.index') }}" class="hover:text-blue-300">Lihat Mahasiswa</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="hover:text-red-700">Logout</button>

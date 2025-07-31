@@ -6,17 +6,21 @@
     <title>Aplikasi Monitoring Magang</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+
 </head>
 
 <body>
     <div class="flex">
         @if(auth()->check())
             @if(auth()->user()->role == 'admin')
-                @include('components.sidebar.admin')
+                @include('partials.admin')
             @elseif(auth()->user()->role == 'supervisor')
-                @include('components.sidebar.supervisor')
+                @include('partials.supervisor')
             @elseif(auth()->user()->role == 'student')
-                @include('components.sidebar.student')
+                @include('partials.student')
             @endif
         @endif
     </div>
