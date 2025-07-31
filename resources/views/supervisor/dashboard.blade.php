@@ -38,14 +38,14 @@
                 </a>
 
                 <!-- Mahasiswa -->
-                <a href="{{ route('supervisor.students.index') }}" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
+                <a href="{{ route('supervisor.students.list.index') }}" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
                     <div class="text-3xl mb-3">👨‍🎓</div>
                     <div class="text-lg font-semibold text-blue-700">Lihat Mahasiswa</div>
                     <p class="text-sm text-gray-600 mt-1">Daftar dan informasi mahasiswa bimbingan.</p>
                 </a>
 
                 <!-- Laporan Harian -->
-                <a href="{{ route('supervisor.daily-reports.index') }}" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
+                <a href="{{ route('supervisor.logbooks.index') }}" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl p-5 shadow-sm transition transform hover:-translate-y-1">
                     <div class="text-3xl mb-3">📅</div>
                     <div class="text-lg font-semibold text-purple-700">Laporan Harian</div>
                     <p class="text-sm text-gray-600 mt-1">Lihat aktivitas harian mahasiswa.</p>

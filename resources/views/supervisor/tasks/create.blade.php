@@ -2,7 +2,7 @@
 @section('title', 'Buat Tugas Baru')
 
 @section('content')
-    <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="base-div">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="p-6 sm:p-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Buat Tugas Baru</h2>
