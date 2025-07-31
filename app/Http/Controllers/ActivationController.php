@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Notifications\WelcomeEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Auth;
 
 class ActivationController extends Controller
 {
@@ -42,7 +43,7 @@ class ActivationController extends Controller
 
         $user->notify(new WelcomeEmail($user));
 
-        auth()->login($user);
+        Auth::login($user);
 
         return redirect('/home')->with('success', 'Akun Anda berhasil diaktifkan!');
     }

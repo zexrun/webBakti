@@ -40,7 +40,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $submission = $task->submissions()
-                            ->where('student_id', auth()->user()->student->id)
+                            ->where('student_id', Auth::user()->student->id)
                             ->first();
 
         return view('student.tasks.show', compact('task', 'submission'));
@@ -68,7 +68,7 @@ class TaskController extends Controller
             'file' => 'nullable|file|mimes:pdf, docs, pptx, zip, rar|max:20480',
         ]);
 
-        $filePath = null;
+        $filePath = $request->file('file')->store('submissions', 'public');
 
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('submissions');
@@ -80,8 +80,10 @@ class TaskController extends Controller
             'content' => $request->content,
             'file_path' => $filePath,
         ]);
+
+        $submission->load('task.supervisor.user', 'student.user');
         
-        $supervisorUser = $task->supervisor->user;
+        $supervisorUser = $submission->task->supervisor->user;
         $supervisorUser->notify(new TaskSubmitted($submission));
 
         return redirect()->route('student.tasks.show', $task->id)->with('success', 'Tugas berhasil dikumpulkan');

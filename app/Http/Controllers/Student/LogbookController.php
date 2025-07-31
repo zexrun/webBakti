@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\DailyReport;
+use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use function Laravel\Prompts\alert;
 
-class DailyReportController extends Controller
+class LogbookController extends Controller
 {
     public function index()
     {
-        $reports = Auth::user()->student->dailyReports()->paginate(10);
+        $logbook = Auth::user()->student->logbooks()->paginate(10);
 
-        return view('student.daily-reports.index', compact('reports'));
+        return view('student.logbooks.index', compact('logbook'));
     }
 
     public function create()
     {
-        return view('student.daily-reports.create');
+        return view('student.logbooks.create');
     }
 
     public function store(Request $request)
@@ -32,35 +32,35 @@ class DailyReportController extends Controller
         'end_time' => 'required|date_format:H:i|after:start_time',
         'feeling' => 'required|string',
         'description' => 'required|string',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'file' => 'nullable|mimes:jpeg,png,jpg, pdf, docx, pptx, zip, rar|max:2048',
         ]);
 
-        $photoPath = null;
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('daily_reports_photo', 'public');
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('logbook_files', 'public');
         }
 
-        DailyReport::create([
-            'student_id' => auth()->user()->student->id,
+        Logbook::create([
+            'student_id' => Auth::user()->student->id,
             'title' => $request->title,
             'activity_date' => $request->activity_date,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'description' => $request->description,
             'feeling' => $request->feeling,
-            'photo_path' => $photoPath,
+            'file_path' => $filePath,
         ]);
 
-        return redirect()->route('student.daily-reports.index')->with('success', 'Laporan harian berhasil disimpan!');
+        return redirect()->route('student.logbooks.index')->with('success', 'Laporan harian berhasil disimpan!');
     }
 
-    public function show(DailyReport $dailyReport)
+    public function show(Logbook $logbook)
     {
-        if ($dailyReport->student_id !== Auth::user()->student->id) {
+        if ($logbook->student_id !== Auth::user()->student->id) {
             abort(403, 'AKSES DITOLAK');
         }
 
-        return view('student.daily-reports.show', ['report' => $dailyReport]);
+        return view('student.logbooks.show', compact('logbook'));
     }
 
     public function edit(string $id)

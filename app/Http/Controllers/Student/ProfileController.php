@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileController extends Controller
 {
     public function edit(Request $request)
     {
         $user = $request->user();
-        $student = auth()->user()->student;
+        $student = Auth::user()->student;
         $universities = [];
 
         try {
@@ -54,5 +54,35 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('student.info.edit')->with('success', "Data status mahasiswa berhasil diperbarui");
+    }
+
+    public function generateCertificate()
+    {
+        // Ambil data student dari user yang login
+        $student = Auth::user()->student;
+
+        if (!$student) {
+        // Tangani error, misalnya kembali dengan pesan
+        return back()->with('error', 'Detail mahasiswa tidak ditemukan.');
+        }
+        
+        // Muat relasi-relasi yang dibutuhkan
+        $student->load('user', 'finalAssessment.supervisor.user');
+
+        // Otorisasi
+        if (!$student->finalAssessment || !$student->finalAssessment->certificate_generated_at) {
+            abort(403, 'Sertifikat belum tersedia.');
+        }
+
+        // Siapkan data untuk PDF
+        $data = [
+            'student' => $student,
+            'assessment' => $student->finalAssessment,
+            'supervisorName' => $student->finalAssessment->supervisor->user->name,
+        ];
+
+        // Render dan download PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('supervisor.pdf.certificate-pdf', $data);
+        return $pdf->download('sertifikat-magang-' . $student->user->name . '.pdf');
     }
 }
