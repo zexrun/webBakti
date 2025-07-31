@@ -6,6 +6,10 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10;
 }
 
+.base-div {
+    @apply max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8
+}
+
 .input-form {
     @apply border block w-full text-sm rounded-md p-2 border-gray-200 bg-gray-50 focus:outline-none;
 }
@@ -19,7 +23,7 @@
 }
 
 .icon-svg {
-    @apply shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white;
+    @apply w-5 h-5 text-gray-500 group-hover:text-gray-900;
 }
 
 .icon-text {
