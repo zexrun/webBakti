@@ -11,17 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logbooks', function (Blueprint $table) {
+        Schema::create('final_assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->string('title');
-            $table->date('activity_date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->text('description');
-            $table->string('feeling');
-            $table->string('file_path')->nullable();
-            $table->boolean('is_verified')->default(false);
+            $table->foreignId('supervisor_id')->constrained('supervisors')->onDelete('cascade');
+            $table->string('final_grade'); // Nilai akhir (misal: A, B+, 85)
+            $table->text('overall_comments'); // Komentar atau feedback keseluruhan
             $table->timestamps();
         });
     }
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logbooks');
+        Schema::dropIfExists('final_assessments');
     }
 };

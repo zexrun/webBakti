@@ -11,26 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logbooks', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->string('title');
-            $table->date('activity_date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->text('description');
-            $table->string('feeling');
-            $table->string('file_path')->nullable();
-            $table->boolean('is_verified')->default(false);
+            $table->string('document_name');
+            $table->string('file_path');
+            $table->enum('type', ['proposal', 'laporan_akhir', 'lainnya']);
             $table->timestamps();
         });
-    }
+    }   
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('logbooks');
+        Schema::dropIfExists('documents');
     }
 };
