@@ -145,21 +145,6 @@
                             Upload Dokumen
                         </a>
                     </li>
-                    <li>
-                        @if(isset($student) && $student && $student->finalAssessment && $student->finalAssessment->certificate_generated_at)
-                        <a
-                            href="#"
-                            class="btn btn-success"
-                        >
-                            Download Sertifikat
-                        </a>
-                        @else
-                        <p class="text-danger">
-                            Sertifikat belum tersedia. Silakan tunggu pembimbing
-                            generate sertifikat.
-                        </p>
-                        @endif
-                    </li>
                 </ul>
             </li>
 
