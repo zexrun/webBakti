@@ -27,6 +27,11 @@ class Supervisor extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class);
-}
+        return $this->hasMany(Task::class); 
+    }
+
+    public function logbook()
+    {
+        return $this->hasMany(Logbook::class)->orderBy('activity_date', 'desc');
+    }
 }

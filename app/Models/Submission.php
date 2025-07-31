@@ -8,7 +8,7 @@ class Submission extends Model
 {
     protected $fillable = ['task_id', 'student_id', 'content', 'file_path', 'grade', 'comments'];
 
-    public function tasks() {
+    public function task() {
         return $this->belongsTo(Task::class);
     }
 

@@ -40,9 +40,18 @@ class Student extends Model
         return $this->hasMany(Submission::class);
     }
 
-    public function dailyReports()
+    public function logbooks()
     {
-        return $this->hasMany(DailyReport::class)->orderBy('activity_date', 'desc');
+        return $this->hasMany(Logbook::class)->orderBy('activity_date', 'desc');
     }
-
+    
+    public function finalAssessment()
+    {
+        return $this->hasOne(FinalAssessment::class);
+    }
+    
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }
