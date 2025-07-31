@@ -3,11 +3,11 @@
 @section('title', 'Profil Pengguna')
 
 @section('content')
-<div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
+<div class="base-div">
     <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
         <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center mb-6">Profil Pengguna</h2>
 
-        <div class="space-y-4">
+        <div class="space-y-2">
             {{-- Username --}}
             <div>
                 <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Username</p>
