@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="max-w-4xl mx-auto px-4 py-10">
+<div class="base-div">
     {{-- Detail Tugas --}}
     <div class="bg-white shadow-md rounded-lg mb-6 border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-100">

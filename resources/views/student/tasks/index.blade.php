@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="max-w-6xl mx-auto px-4 py-10">
+<div class="base-div">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">📋 Daftar Tugas Anda</h2>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg border border-gray-200">
