@@ -17,19 +17,20 @@ class TaskController extends Controller
      * Menampilkan form untuk membuat tugas baru.
      */
 
-    public function index(){
+    public function index()
+    {
         $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
 
         $students = $supervisor->students()
-                                ->with('user', 'tasks')
-                                ->paginate(5);
-        
+            ->with('user', 'tasks')
+            ->paginate(5);
+
         return view('supervisor.tasks.index', compact('students'));
     }
 
     public function create()
     {
-        $supervisor = Supervisor::where('user_id', auth()->id())->firstOrFail();
+        $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
         $students = $supervisor->students()->with('user')->get();
 
         return view('supervisor.tasks.create', compact('students'));
@@ -37,50 +38,57 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'type' => 'required|in:harian,akhir',
-        'due_date' => 'nullable|date',
-        'student_ids' => 'required|array',
-        'student_ids.*' => 'exists:students,id',
-        'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
-    ]);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => 'required|in:harian,akhir',
+            'due_date' => 'nullable|date',
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id',
+            'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
+        ]);
 
-    $filePath = null;
-    if($request->hasFile('file')) {
-        $filePath = $request->file('file')->store('task_attachments', 'public');
-    }else if ($request->hasFile('file')) {
-        dd('File not valid');
-    }
-    
-    $supervisor = Supervisor::where('user_id', auth()->id())->firstOrFail();
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('task_attachments', 'public');
+        } else if ($request->hasFile('file')) {
+            dd('File not valid');
+        }
 
-    //dd($request->file('file'));
+        $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
 
-    $task = Task::create([
-        'supervisor_id' => $supervisor->id,
-        'title' => $request->title,
-        'description' => $request->description,
-        'type' => $request->type,
-        'due_date' => $request->due_date,
-        'file_path' => $filePath,
-    ]);
+        //dd($request->file('file'));
 
-    if ($request->has('student_ids')) {
-        $task->students()->attach($request->student_ids);
+        $task = Task::create([
+            'supervisor_id' => $supervisor->id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'type' => $request->type,
+            'due_date' => $request->due_date,
+            'file_path' => $filePath,
+        ]);
 
-        $assignedStudents = Student::whereIn('id', $request->student_ids)->with('user')->get();
+        if ($request->has('student_ids')) {
+            $task->students()->attach($request->student_ids);
+
+            $assignedStudents = Student::whereIn('id', $request->student_ids)->with('user')->get();
             foreach ($assignedStudents as $student) {
                 $student->user->notify(new NewTaskAssigned($task));
             }
-    }
+        }
 
-    return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
+        return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
     }
 
     public function show(Task $task)
     {
+        if (Auth::user() === 'admin') {
+            return view('supervisor.tasks.show', [
+                'task' => $task,
+                'assignedStudents' => $assignedStudents,
+                'submissions' => $submissions,
+            ]);
+        }
         // 1. Ambil semua mahasiswa yang terhubung dengan tugas ini
         $assignedStudents = $task->students()->with('user')->get();
 

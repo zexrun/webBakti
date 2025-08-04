@@ -14,15 +14,20 @@ class LogbookController extends Controller
         $studentIds = Auth::user()->supervisor->students()->pluck('id');
 
         $logbooks = Logbook::whereIn('student_id', $studentIds)
-                            ->with('student.user')
-                            ->latest('activity_date')
-                            ->paginate(15);
+            ->with('student.user')
+            ->latest('activity_date')
+            ->paginate(15);
 
         return view('supervisor.logbooks.index', compact('logbooks'));
     }
 
     public function show(Logbook $logbook)
     {
+
+        if (Auth::user() === 'admin') {
+            return view('supervisor.students.assessment.create', compact('student'));
+        }
+
         $logbook->load('student');
 
         $isAuthorized = Auth::user()->supervisor->students()->where('id', $logbook->student_id)->exists();
