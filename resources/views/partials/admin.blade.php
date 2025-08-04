@@ -53,10 +53,10 @@
 
 <aside
     id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
     aria-label="Sidebar"
 >
-    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+    <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
         <ul class="space-y-2 font-medium">
             <li>
                 <a href="{{ route('admin.dashboard') }}" class="icon-button">
@@ -125,7 +125,7 @@
             <li>
                 <button
                     type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 "
                     aria-controls="dropdown-example"
                     data-collapse-toggle="dropdown-example"
                 >
@@ -166,14 +166,14 @@
                     <li>
                         <a
                             href="{{ route('admin.users.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
                             >Daftar Pengguna</a
                         >
                     </li>
                     <li>
                         <a
                             href="{{ route('admin.users.create') }}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
                             >Tambah Pengguna</a
                         >
                     </li>
@@ -183,14 +183,14 @@
             {{-- Tambahkan Statistik Admin --}}
             @if(isset($adminStats))
             <li class="px-3 py-2">
-                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                <div class="bg-gray-50 rounded-lg p-3">
                     <h4
-                        class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                        class="text-sm font-semibold text-gray-700 mb-2"
                     >
                         Statistik Sistem
                     </h4>
                     <div
-                        class="space-y-1 text-xs text-gray-600 dark:text-gray-400"
+                        class="space-y-1 text-xs text-gray-600"
                     >
                         <div class="flex justify-between">
                             <span>Total Users:</span>
@@ -250,11 +250,11 @@
                     @csrf
                     <button
                         type="submit"
-                        class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                            class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
                             viewBox="0 0 24 24"
                             fill="currentColor"
                         >

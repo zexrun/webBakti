@@ -1,5 +1,5 @@
 <nav
-    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200"
 >
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
@@ -9,7 +9,7 @@
                     data-drawer-toggle="logo-sidebar"
                     aria-controls="logo-sidebar"
                     type="button"
-                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                 >
                     <span class="sr-only">Open sidebar</span>
                     <svg
@@ -36,7 +36,7 @@
                         alt="Logo BAKTI"
                     />
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap"
                         >Magang BAKTI</span
                     >
                 </a>
@@ -55,10 +55,10 @@
 
 <aside
     id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
     aria-label="Sidebar"
 >
-    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+    <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
         <ul class="space-y-2 font-medium">
             <li>
                 <a
@@ -100,7 +100,7 @@
             <li>
                 <button
                 type="button"
-                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 text-white"
                 aria-controls="dropdown-example"
                 data-collapse-toggle="dropdown-example"
                 >
@@ -140,21 +140,21 @@
                     <li>
                         <a
                             href="{{ route('supervisor.tasks.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
                             >Tugas Mahasiswa</a
                         >
                     </li>
                 <li>
                     <a
                     href="{{ route('supervisor.students.list.index') }}"
-                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
                     >Daftar Mahasiswa</a
                     >
                 </li>
                 <li>
                     <a
                     href="{{ route('supervisor.logbooks.index') }}"
-                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100"
                         >Logbook Mahasiswa</a
                     >
                 </li>
@@ -184,11 +184,11 @@
                     @csrf
                     <button
                         type="submit"
-                        class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                        class="flex items-center w-full p-2 text-base text-gray-900 rounded-lg group hover:bg-gray-100"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                            class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
                             viewBox="0 0 24 24"
                             fill="currentColor"
                         >
