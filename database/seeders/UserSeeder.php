@@ -17,25 +17,25 @@ class UserSeeder extends Seeder
 
         User::factory()->create([
             'role' => 'admin',
-            'name' => 'Rifqy',
-            'username' => 'zexrun',
+            'name' => 'Admin Bakti',
+            'username' => 'Admin',
             'email' => 'rifqykhuzaini@gmail.com',
             'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
 
         User::factory()->create([
             'role' => 'supervisor',
-            'name' => 'Caca',
-            'username' => 'chaoclat',
-            'email' => 'caca@gmail.com',
+            'name' => 'SPV 1',
+            'username' => 'spv1',
+            'email' => 'spv1@testemail.com',
             'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
         
         User::factory()->create([
             'role' => 'supervisor',
-            'name' => 'Charissa',
-            'username' => 'cacaw',
-            'email' => 'cacaw@gmail.com',
+            'name' => 'SPV 2',
+            'username' => 'spv2',
+            'email' => 'spv2@testemail.com',
             'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
 
@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             'role' => 'student',
             'name' => 'Hiro',
             'username' => 'hiro',
-            'email' => 'hiro@gmail.com',
+            'email' => 'zexrun2005@gmail.com',
             'password' => Hash::make('1'),
         ]);
         User::factory()->create([
@@ -63,8 +63,8 @@ class UserSeeder extends Seeder
         ]);
         User::factory()->create([
             'role' => 'student',
-            'name' => 'Rifqy',
-            'username' => 'iki',
+            'name' => 'Boots',
+            'username' => 'boots',
             'email' => 'mrifqy821@gmail.com',
             'password' => Hash::make('1'),
         ]);
