@@ -144,27 +144,9 @@
             </button>
         </div>
     </form>
-
-    <!-- Register Link -->
-    @if (Route::has('register'))
-        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
-            <p class="text-sm text-gray-600">
-                Belum punya akun?
-                <a href="{{ route('register') }}" 
-                   class="font-medium text-blue-600 hover:text-blue-800">
-                    Daftar sekarang
-                </a>
-            </p>
-        </div>
-    @endif
 </div>
 
-<!-- Footer -->
-<div class="text-center mt-6">
-    <p class="text-xs text-gray-500">
-        © {{ date('Y') }} Sistem Monitoring Magang
-    </p>
-</div>
+
 
 @push('scripts')
 <script>
