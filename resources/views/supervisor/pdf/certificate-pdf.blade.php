@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Sertifikat Magang - {{ $student->user->name }}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&family=Garamond:wght@400;700&display=swap');
         
         * {
             margin: 0;
@@ -13,556 +13,623 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Times New Roman', serif;
+            background: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            padding: 20px;
         }
         
-        .certificate-wrapper {
+        .certificate-container {
+            max-width: 297mm; /* A4 landscape width */
+            height: 210mm; /* A4 landscape height */
+            margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            max-width: 900px;
-            width: 100%;
             position: relative;
+            border: 4px solid #000000;
+            padding: 20mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
-        /* Decorative border pattern */
-        .certificate-wrapper::before {
+        /* Decorative Border */
+        .certificate-container::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(45deg, transparent 30%, rgba(103, 126, 234, 0.1) 30%, rgba(103, 126, 234, 0.1) 70%, transparent 70%),
-                linear-gradient(-45deg, transparent 30%, rgba(118, 75, 162, 0.1) 30%, rgba(118, 75, 162, 0.1) 70%, transparent 70%);
-            background-size: 20px 20px;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 2px solid #000000;
             pointer-events: none;
         }
         
-        .certificate-border {
-            border: 8px solid transparent;
-            border-image: linear-gradient(45deg, #667eea, #764ba2, #667eea) 1;
-            margin: 20px;
-            border-radius: 15px;
-            background: white;
-            position: relative;
-            z-index: 1;
+        .certificate-container::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            border: 1px solid #666666;
+            pointer-events: none;
         }
         
-        .certificate-content {
-            padding: 60px 50px;
+        /* Official Header */
+        .certificate-header {
             text-align: center;
+            margin-bottom: 25px;
             position: relative;
+            z-index: 10;
         }
         
-        /* Header Section */
-        .header {
-            margin-bottom: 40px;
-            position: relative;
-        }
-        
-        .logo-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 20px;
-            box-shadow: 0 10px 25px rgba(103, 126, 234, 0.3);
-        }
-        
-        .logo-icon::before {
-            content: '🏛️';
-            font-size: 32px;
-        }
-        
-        .organization-info {
-            text-align: left;
-        }
-        
-        .organization-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
+        .republic-header {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 5px;
-            letter-spacing: -0.5px;
+            color: #000000;
         }
         
-        .organization-subtitle {
-            font-size: 16px;
-            color: #7f8c8d;
-            font-weight: 400;
+        .ministry-name {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            color: #000000;
+        }
+        
+        .institution-name {
+            font-size: 16pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #000000;
+        }
+        
+        .institution-subtitle {
+            font-size: 12pt;
+            margin-bottom: 3px;
+            color: #000000;
+        }
+        
+        .institution-address {
+            font-size: 10pt;
+            color: #333333;
+            margin-bottom: 15px;
             line-height: 1.4;
         }
         
+        .divider-line {
+            width: 100%;
+            height: 3px;
+            background: #000000;
+            margin: 10px 0;
+        }
+        
         /* Certificate Title */
-        .certificate-title {
-            margin: 40px 0 30px;
+        .certificate-title-section {
+            text-align: center;
+            margin: 20px 0;
             position: relative;
         }
         
-        .certificate-title::before,
-        .certificate-title::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #667eea, transparent);
-        }
-        
-        .certificate-title::before {
-            left: -120px;
-        }
-        
-        .certificate-title::after {
-            right: -120px;
-        }
-        
-        .title-main {
-            font-family: 'Playfair Display', serif;
-            font-size: 42px;
-            font-weight: 700;
-            color: #2c3e50;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .certificate-number {
+            font-size: 10pt;
+            color: #000000;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: bold;
         }
         
-        .title-subtitle {
-            font-size: 20px;
-            color: #7f8c8d;
-            font-weight: 300;
-            letter-spacing: 1px;
+        .certificate-title {
+            font-family: 'Garamond', serif;
+            font-size: 28pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000000;
+            margin-bottom: 8px;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 8px;
         }
         
-        /* Content Section */
+        .certificate-subtitle {
+            font-size: 14pt;
+            color: #000000;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        /* Certificate Content */
+        .certificate-content {
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 15px 0;
+        }
+        
         .certificate-statement {
-            font-size: 18px;
-            color: #34495e;
-            margin: 30px 0 20px;
-            font-weight: 400;
+            font-size: 12pt;
+            color: #000000;
+            margin-bottom: 15px;
+            line-height: 1.8;
         }
         
         .student-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: #e74c3c;
-            margin: 30px 0;
+            font-family: 'Garamond', serif;
+            font-size: 24pt;
+            font-weight: bold;
+            color: #000000;
+            margin: 20px 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            display: inline-block;
+            letter-spacing: 2px;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 8px;
         }
         
-        .student-name::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #e74c3c, transparent);
-        }
-        
-        /* Student Details Table */
+        /* Student Details */
         .student-details {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 40px 0;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin: 20px auto;
+            max-width: 600px;
         }
         
         .details-table {
             width: 100%;
-            font-size: 16px;
-            border-collapse: separate;
-            border-spacing: 0 15px;
+            border-collapse: collapse;
+            font-size: 11pt;
+            color: #000000;
         }
         
         .details-table td {
-            padding: 8px 0;
+            padding: 4px 0;
             vertical-align: top;
         }
         
         .details-table td:first-child {
-            font-weight: 600;
-            color: #2c3e50;
-            width: 200px;
+            width: 150px;
+            font-weight: bold;
             text-align: left;
         }
         
         .details-table td:nth-child(2) {
-            color: #7f8c8d;
             width: 20px;
             text-align: center;
         }
         
         .details-table td:last-child {
-            color: #34495e;
-            text-align: left;
-            font-weight: 500;
-        }
-        
-        /* Achievement Section */
-        .achievement-text {
-            font-size: 18px;
-            color: #34495e;
-            line-height: 1.6;
-            margin: 30px 0;
-            font-weight: 400;
-        }
-        
-        .achievement-text strong {
-            color: #2c3e50;
-            font-weight: 600;
-        }
-        
-        /* Grade Section */
-        .final-grade {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 40px 0;
-            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
-        }
-        
-        .grade-label {
-            font-size: 18px;
-            font-weight: 400;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-        
-        .grade-value {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        
-        /* Comments Section */
-        .supervisor-comments {
-            background: #fff8e1;
-            border-left: 5px solid #ffc107;
-            padding: 25px;
-            margin: 30px 0;
-            border-radius: 0 15px 15px 0;
             text-align: left;
         }
         
-        .comments-label {
-            font-weight: 600;
-            color: #f57c00;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .comments-text {
-            font-style: italic;
-            color: #5d4037;
-            font-size: 16px;
+        /* Achievement Statement */
+        .achievement-statement {
+            font-size: 11pt;
+            color: #000000;
             line-height: 1.6;
-            position: relative;
+            margin: 20px 0;
+            text-align: justify;
+            text-align-last: center;
         }
         
-        .comments-text::before,
-        .comments-text::after {
-            font-size: 24px;
-            color: #ffc107;
+        .achievement-statement strong {
             font-weight: bold;
         }
         
-        .comments-text::before {
-            content: '"';
-            margin-right: 5px;
+        /* Grade Section */
+        .grade-section {
+            margin: 20px 0;
+            text-align: center;
         }
         
-        .comments-text::after {
-            content: '"';
-            margin-left: 5px;
+        .grade-statement {
+            font-size: 12pt;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+        
+        .final-grade {
+            font-family: 'Garamond', serif;
+            font-size: 18pt;
+            font-weight: bold;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 8px 16px;
+            display: inline-block;
+            margin: 8px 0;
+        }
+        
+        /* Comments Section */
+        .comments-section {
+            margin: 15px 0;
+            font-size: 10pt;
+            color: #000000;
+            font-style: italic;
+            text-align: center;
         }
         
         /* Signature Section */
         .signature-section {
-            margin-top: 60px;
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-        }
-        
-        .signature-box {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .signature-space {
-            height: 80px;
-            border-bottom: 2px solid #34495e;
-            margin-bottom: 15px;
+            display: table;
+            width: 100%;
+            margin-top: 30px;
             position: relative;
         }
         
-        .signature-space::before {
-            content: '✓';
-            position: absolute;
-            right: 10px;
-            bottom: 5px;
-            color: #27ae60;
-            font-size: 20px;
-            font-weight: bold;
+        .signature-left {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-right: 30px;
+            position: relative;
         }
         
-        .signature-name {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 16px;
+        .signature-right {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .signature-box {
+            text-align: center;
+        }
+        
+        .signature-location-date {
+            font-size: 11pt;
+            color: #000000;
             margin-bottom: 5px;
         }
         
         .signature-title {
-            color: #7f8c8d;
-            font-size: 14px;
-            font-weight: 400;
+            font-size: 11pt;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 50px;
         }
         
-        /* Footer */
+        .signature-line {
+            border-bottom: 1px solid #000000;
+            margin-bottom: 8px;
+            height: 1px;
+        }
+        
+        .signature-name {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 3px;
+        }
+        
+        .signature-position {
+            font-size: 10pt;
+            color: #000000;
+            margin-bottom: 2px;
+        }
+        
+        .signature-nip {
+            font-size: 9pt;
+            color: #000000;
+        }
+        
+        /* Official Stamps - Positioned over signatures */
+        .stamp-area-left {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-15deg);
+            width: 50mm;
+            height: 50mm;
+            border: 2px dashed #666666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7pt;
+            color: #666666;
+            text-align: center;
+            line-height: 1.1;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 5;
+        }
+        
+        .stamp-area-right {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(15deg);
+            width: 50mm;
+            height: 50mm;
+            border: 2px dashed #666666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7pt;
+            color: #666666;
+            text-align: center;
+            line-height: 1.1;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 5;
+        }
+        
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 36pt;
+            color: rgba(0, 0, 0, 0.03);
+            font-weight: bold;
+            z-index: 1;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+        }
+        
+        /* Certificate Footer */
         .certificate-footer {
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 1px solid #ecf0f1;
-            font-size: 12px;
-            color: #95a5a6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
+            font-size: 8pt;
+            color: #666666;
+            margin-top: 15px;
+            border-top: 1px solid #cccccc;
+            padding-top: 8px;
         }
         
-        .generation-date {
-            display: flex;
-            align-items: center;
-        }
-        
-        .generation-date::before {
-            content: '📅';
-            margin-right: 8px;
-        }
-        
-        .certificate-id {
+        /* Security Features */
+        .security-code {
+            position: absolute;
+            bottom: 8mm;
+            right: 15mm;
+            font-size: 7pt;
+            color: #999999;
             font-family: 'Courier New', monospace;
-            background: #ecf0f1;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 11px;
+        }
+        
+        .qr-placeholder {
+            position: absolute;
+            bottom: 6mm;
+            left: 15mm;
+            width: 12mm;
+            height: 12mm;
+            border: 1px solid #cccccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5pt;
+            color: #999999;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .certificate-container {
+                border-color: #000000;
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .stamp-area-left,
+            .stamp-area-right {
+                border-color: #333333;
+                color: #333333;
+            }
+            
+            .watermark {
+                color: rgba(0, 0, 0, 0.02);
+            }
         }
         
         /* Decorative Elements */
-        .decorative-corner {
+        .corner-ornament {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            opacity: 0.1;
+            width: 25mm;
+            height: 25mm;
+            background-image: 
+                radial-gradient(circle at center, transparent 40%, #000000 40%, #000000 45%, transparent 45%),
+                linear-gradient(45deg, transparent 48%, #000000 48%, #000000 52%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, #000000 48%, #000000 52%, transparent 52%);
+            opacity: 0.08;
         }
         
-        .decorative-corner.top-left {
-            top: 0;
-            left: 0;
-            border-radius: 0 0 60px 0;
+        .corner-ornament.top-left {
+            top: 15mm;
+            left: 15mm;
         }
         
-        .decorative-corner.top-right {
-            top: 0;
-            right: 0;
-            border-radius: 0 0 0 60px;
+        .corner-ornament.top-right {
+            top: 15mm;
+            right: 15mm;
+            transform: rotate(90deg);
         }
         
-        .decorative-corner.bottom-left {
-            bottom: 0;
-            left: 0;
-            border-radius: 0 60px 0 0;
+        .corner-ornament.bottom-left {
+            bottom: 15mm;
+            left: 15mm;
+            transform: rotate(-90deg);
         }
         
-        .decorative-corner.bottom-right {
-            bottom: 0;
-            right: 0;
-            border-radius: 60px 0 0 0;
+        .corner-ornament.bottom-right {
+            bottom: 15mm;
+            right: 15mm;
+            transform: rotate(180deg);
         }
         
-        /* Responsive adjustments for PDF */
-        @media print {
-            body {
-                background: white;
-                padding: 0;
+        /* Responsive for smaller screens */
+        @media (max-width: 1200px) {
+            .certificate-container {
+                max-width: 100%;
+                height: auto;
+                min-height: 210mm;
             }
             
-            .certificate-wrapper {
-                box-shadow: none;
-                border-radius: 0;
+            .certificate-title {
+                font-size: 24pt;
             }
             
-            .certificate-border {
-                margin: 0;
+            .student-name {
+                font-size: 20pt;
+            }
+            
+            .stamp-area-left,
+            .stamp-area-right {
+                width: 40mm;
+                height: 40mm;
+                font-size: 6pt;
             }
         }
-        
-        /* Animation for web preview */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .certificate-content > * {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .certificate-content > *:nth-child(2) { animation-delay: 0.1s; }
-        .certificate-content > *:nth-child(3) { animation-delay: 0.2s; }
-        .certificate-content > *:nth-child(4) { animation-delay: 0.3s; }
-        .certificate-content > *:nth-child(5) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
-    <div class="certificate-wrapper">
-        <div class="certificate-border">
-            <div class="certificate-content">
-                <!-- Decorative Corners -->
-                <div class="decorative-corner top-left"></div>
-                <div class="decorative-corner top-right"></div>
-                <div class="decorative-corner bottom-left"></div>
-                <div class="decorative-corner bottom-right"></div>
-                
-                <!-- Header Section -->
-                <div class="header">
-                    <div class="logo-section">
-                        <div class="logo-icon"></div>
-                        <div class="organization-info">
-                            <div class="organization-name">BAKTI KOMINFO</div>
-                            <div class="organization-subtitle">
-                                Balai Besar Pengkajian dan Pengembangan<br>
-                                Komunikasi dan Informatika
-                            </div>
-                        </div>
-                    </div>
+    <div class="certificate-container">
+        <!-- Watermark -->
+        <div class="watermark">BAKTI KOMINFO</div>
+        
+        <!-- Corner Ornaments -->
+        <div class="corner-ornament top-left"></div>
+        <div class="corner-ornament top-right"></div>
+        <div class="corner-ornament bottom-left"></div>
+        <div class="corner-ornament bottom-right"></div>
+        
+        <!-- Certificate Header -->
+        <div class="certificate-header">
+            <div class="ministry-name">Kementerian Komunikasi dan Informatika</div>
+            <div class="republic-header">Republik Indonesia</div>
+            <div class="institution-name">BAKTI KOMINFO</div>
+            <div class="institution-subtitle">Badan Aksesibilitas Telekomunikasi dan Informasi</div>
+            <div class="institution-address">
+                Centennial Tower Lt.42-45, Jakarta Selatan<br>
+                Telp: (021) 31936590, Fax: (021) 31936590<br>
+                Website: www.baktikomdigi.id | Email: humas@baktikominfo.id
+            </div>
+            <div class="divider-line"></div>
+        </div>
+        
+        <!-- Certificate Title -->
+        <div class="certificate-title-section">
+            <div class="certificate-number">
+                Nomor: {{ sprintf('%03d', rand(100, 999)) }}/BAKTI-SERTIFIKAT/{{ date('m/Y') }}
+            </div>
+            <div class="certificate-title">Sertifikat</div>
+            <div class="certificate-subtitle">Program Magang Industri</div>
+        </div>
+        
+        <!-- Certificate Content -->
+        <div class="certificate-content">
+            <div class="certificate-statement">
+                Dengan ini menyatakan bahwa:
+            </div>
+            
+            <div class="student-name">{{ strtoupper($student->user->name) }}</div>
+            
+            <div class="student-details">
+                <table class="details-table">
+                    <tr>
+                        <td>Nomor Induk Mahasiswa</td>
+                        <td>:</td>
+                        <td>{{ $student->nim ?? 'Tidak tercantum' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Perguruan Tinggi</td>
+                        <td>:</td>
+                        <td>{{ $student->universitas ?? 'Tidak tercantum' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Program Studi</td>
+                        <td>:</td>
+                        <td>{{ $student->program_studi ?? 'Tidak tercantum' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Periode Pelaksanaan</td>
+                        <td>:</td>
+                        <td>
+                            @if(isset($student->periode_mulai) && isset($student->periode_selesai))
+                                {{ date('d F Y', strtotime($student->periode_mulai)) }} sampai dengan {{ date('d F Y', strtotime($student->periode_selesai)) }}
+                            @else
+                                Tidak tercantum
+                            @endif
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="achievement-statement">
+                telah <strong>BERHASIL MENYELESAIKAN</strong> Program Magang Industri di lingkungan 
+                <strong>Badan Aksesibilitas Telekomunikasi dan Informasi (BAKTI KOMINFO)</strong> 
+                dengan memenuhi seluruh persyaratan yang telah ditetapkan dan menunjukkan dedikasi, 
+                kompetensi, serta profesionalisme yang tinggi selama periode pelaksanaan magang.
+            </div>
+            
+            <div class="grade-section">
+                <div class="grade-statement">dengan predikat nilai akhir:</div>
+                <div class="final-grade">{{ strtoupper($assessment->final_grade) }}</div>
+            </div>
+            
+            @if($assessment->overall_comments)
+                <div class="comments-section">
+                    <strong>Catatan Pembimbing:</strong><br>
+                    "{{ $assessment->overall_comments }}"
                 </div>
-                
-                <!-- Certificate Title -->
-                <div class="certificate-title">
-                    <div class="title-main">Sertifikat Kelulusan</div>
-                    <div class="title-subtitle">Program Magang Industri</div>
+            @endif
+        </div>
+        
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-left">
+                <!-- Official Stamp for Supervisor -->
+                <div class="stamp-area-left">
+                    STEMPEL<br>
+                    PEMBIMBING<br>
+                    LAPANGAN
                 </div>
-                
-                <!-- Certificate Statement -->
-                <div class="certificate-statement">
-                    Dengan ini menyatakan bahwa:
-                </div>
-                
-                <!-- Student Name -->
-                <div class="student-name">{{ $student->user->name }}</div>
-                
-                <!-- Student Details -->
-                <div class="student-details">
-                    <table class="details-table">
-                        <tr>
-                            <td>NIM</td>
-                            <td>:</td>
-                            <td>{{ $student->nim ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Universitas</td>
-                            <td>:</td>
-                            <td>{{ $student->universitas ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Program Studi</td>
-                            <td>:</td>
-                            <td>{{ $student->program_studi ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Periode Magang</td>
-                            <td>:</td>
-                            <td>{{ date('d F Y', strtotime($student->periode_mulai)) }} - {{ date('d F Y', strtotime($student->periode_selesai)) }}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <!-- Achievement Text -->
-                <div class="achievement-text">
-                    telah berhasil menyelesaikan program magang di <strong>BAKTI KOMINFO</strong> 
-                    dengan memenuhi semua persyaratan yang telah ditetapkan dan menunjukkan 
-                    dedikasi serta kompetensi yang excellent selama periode magang.
-                </div>
-                
-                <!-- Final Grade -->
-                <div class="final-grade">
-                    <div class="grade-label">Nilai Akhir</div>
-                    <div class="grade-value">{{ $assessment->final_grade }}</div>
-                </div>
-                
-                <!-- Supervisor Comments -->
-                @if($assessment->overall_comments)
-                    <div class="supervisor-comments">
-                        <div class="comments-label">Catatan Pembimbing:</div>
-                        <div class="comments-text">{{ $assessment->overall_comments }}</div>
-                    </div>
-                @endif
-                
-                <!-- Signature Section -->
-                <div class="signature-section">
-                    <div class="signature-box">
-                        <div class="signature-space"></div>
-                        <div class="signature-name">{{ $supervisorName }}</div>
-                        <div class="signature-title">Pembimbing Lapangan</div>
-                    </div>
-                    <div class="signature-box">
-                        <div class="signature-space"></div>
-                        <div class="signature-name">Kepala BAKTI</div>
-                        <div class="signature-title">Kepala Balai</div>
-                    </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="certificate-footer">
-                    <div class="generation-date">
-                        Sertifikat ini di-generate pada: {{ $generatedDate }}
-                    </div>
-                    <div class="certificate-id">
-                        ID: CERT-{{ strtoupper(substr(md5($student->user->name . $generatedDate), 0, 8)) }}
-                    </div>
+                <div class="signature-box">
+                    <div class="signature-location-date">Jakarta, {{ date('d F Y') }}</div>
+                    <div class="signature-title">Pembimbing Lapangan</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-name">{{ strtoupper($supervisorName) }}</div>
+                    <div class="signature-position">{{ $supervisor->position ?? 'Pembimbing Lapangan' }}</div>
+                    <div class="signature-nip">NIP. {{ $supervisor->nip ?? '________________' }}</div>
                 </div>
             </div>
+            <div class="signature-right">
+                <!-- Official Stamp for Head -->
+                <div class="stamp-area-right">
+                    STEMPEL<br>
+                    KEPALA<br>
+                    BALAI
+                </div>
+                <div class="signature-box">
+                    <div class="signature-location-date">Jakarta, {{ date('d F Y') }}</div>
+                    <div class="signature-title">Kepala Balai</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-name">DR. [NAMA KEPALA BAKTI]</div>
+                    <div class="signature-position">Kepala BAKTI</div>
+                    <div class="signature-nip">NIP. ________________</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Features -->
+        <div class="qr-placeholder">QR</div>
+        <div class="security-code">
+            SEC: {{ strtoupper(substr(md5($student->user->name . $generatedDate), 0, 12)) }}
+        </div>
+        
+        <!-- Certificate Footer -->
+        <div class="certificate-footer">
+            Sertifikat ini diterbitkan secara resmi pada {{ $generatedDate }} dan telah terdaftar dalam sistem database BAKTI KOMINFO
         </div>
     </div>
 </body>

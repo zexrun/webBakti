@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Rekap Nilai Magang - {{ $student->user->name }}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&family=Arial:wght@400;600&display=swap');
         
         * {
             margin: 0;
@@ -13,569 +13,579 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-            color: #2c3e50;
+            font-family: 'Times New Roman', serif;
+            background: #ffffff;
+            color: #000000;
             line-height: 1.6;
+            padding: 40px;
+            font-size: 12pt;
         }
         
         .report-container {
-            max-width: 900px;
+            max-width: 210mm; /* A4 width */
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            min-height: 297mm; /* A4 height */
             position: relative;
+            border: 2px solid #000000;
+            padding: 30mm 25mm 25mm 25mm; /* Top, Right, Bottom, Left margins */
         }
         
-        /* Header Section */
-        .report-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
+        /* Official Header */
+        .official-header {
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px double #000000;
         }
         
-        .report-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255, 255, 255, 0.05) 10px,
-                rgba(255, 255, 255, 0.05) 20px
-            );
-            animation: movePattern 20s linear infinite;
-        }
-        
-        @keyframes movePattern {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .report-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .report-subtitle {
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        
-        .header-icon {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Student Information Section */
-        .student-info {
-            padding: 40px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            position: relative;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        
-        .info-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #667eea;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-        
-        .info-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #7f8c8d;
+        .institution-name {
+            font-size: 18pt;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 5px;
+            color: #000000;
         }
         
-        .info-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c3e50;
+        .institution-subtitle {
+            font-size: 14pt;
+            margin-bottom: 3px;
+            color: #000000;
         }
         
-        /* Grades Table Section */
-        .grades-section {
-            padding: 40px;
+        .institution-address {
+            font-size: 11pt;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+        
+        .document-title {
+            font-size: 16pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: underline;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            color: #000000;
+        }
+        
+        .document-subtitle {
+            font-size: 12pt;
+            font-style: italic;
+            color: #000000;
+        }
+        
+        /* Document Number */
+        .document-number {
+            text-align: right;
+            margin-bottom: 30px;
+            font-size: 11pt;
+            color: #000000;
+        }
+        
+        /* Student Information */
+        .student-information {
+            margin-bottom: 30px;
         }
         
         .section-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 30px;
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #000000;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 3px;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .info-table td {
+            padding: 8px 0;
+            vertical-align: top;
+            font-size: 11pt;
+            color: #000000;
+        }
+        
+        .info-table td:first-child {
+            width: 180px;
+            font-weight: bold;
+        }
+        
+        .info-table td:nth-child(2) {
+            width: 20px;
             text-align: center;
-            position: relative;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 2px;
+        .info-table td:last-child {
+            font-weight: normal;
         }
         
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e9ecef;
+        /* Grades Table */
+        .grades-section {
+            margin-bottom: 40px;
         }
         
         .grades-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            border: 2px solid #000000;
+            margin-bottom: 20px;
         }
         
-        .table-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .table-header th {
-            padding: 20px 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 14px;
+        .grades-table th {
+            background-color: #f5f5f5;
+            border: 1px solid #000000;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11pt;
+            color: #000000;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: none;
-        }
-        
-        .table-header th:first-child {
-            border-radius: 0;
-        }
-        
-        .table-header th:last-child {
-            border-radius: 0;
-        }
-        
-        .grades-table tbody tr {
-            transition: background-color 0.3s ease;
-            border-bottom: 1px solid #f1f3f4;
-        }
-        
-        .grades-table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .grades-table tbody tr:last-child {
-            border-bottom: none;
         }
         
         .grades-table td {
-            padding: 18px 15px;
+            border: 1px solid #000000;
+            padding: 10px 8px;
             vertical-align: top;
-            border: none;
+            font-size: 10pt;
+            color: #000000;
         }
         
-        .task-name {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
+        .grades-table tbody tr:nth-child(even) {
+            background-color: #fafafa;
         }
         
-        .task-description {
-            font-size: 12px;
-            color: #7f8c8d;
-            font-style: italic;
+        .task-name-cell {
+            text-align: left;
+            font-weight: bold;
         }
         
-        .grade-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 50px;
-            height: 35px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 14px;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        .grade-cell {
+            text-align: center;
+            font-weight: bold;
+            font-size: 11pt;
         }
         
-        .grade-a { background: linear-gradient(135deg, #27ae60, #2ecc71); }
-        .grade-b { background: linear-gradient(135deg, #3498db, #5dade2); }
-        .grade-c { background: linear-gradient(135deg, #f39c12, #f1c40f); }
-        .grade-d { background: linear-gradient(135deg, #e67e22, #f39c12); }
-        .grade-e { background: linear-gradient(135deg, #e74c3c, #ec7063); }
-        .grade-default { background: linear-gradient(135deg, #95a5a6, #bdc3c7); }
-        
-        .comment-text {
-            color: #34495e;
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 250px;
+        .comment-cell {
+            text-align: left;
+            font-size: 10pt;
+            line-height: 1.4;
         }
         
-        .no-comment {
-            color: #bdc3c7;
-            font-style: italic;
-            font-size: 12px;
+        /* Grade Classification */
+        .grade-excellent { color: #006400; } /* Dark Green */
+        .grade-good { color: #0066cc; } /* Blue */
+        .grade-satisfactory { color: #cc6600; } /* Orange */
+        .grade-needs-improvement { color: #cc0000; } /* Red */
+        
+        /* Summary Section */
+        .summary-section {
+            margin-bottom: 40px;
+            border: 1px solid #000000;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .summary-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .summary-table td {
+            padding: 5px 10px;
+            font-size: 11pt;
+            color: #000000;
+        }
+        
+        .summary-table td:first-child {
+            font-weight: bold;
+            width: 200px;
+        }
+        
+        .summary-table td:nth-child(2) {
+            width: 20px;
+            text-align: center;
         }
         
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #7f8c8d;
+            padding: 40px;
+            font-style: italic;
+            color: #666666;
+            border: 1px dashed #cccccc;
+            background-color: #f9f9f9;
         }
         
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        /* Signature Section */
+        .signature-section {
+            margin-top: 50px;
+            display: table;
+            width: 100%;
         }
         
-        .empty-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #95a5a6;
+        .signature-left {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-right: 20px;
         }
         
-        .empty-description {
-            font-size: 14px;
-            color: #bdc3c7;
+        .signature-right {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-left: 20px;
         }
         
-        /* Statistics Section */
-        .statistics-section {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 30px 40px;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
+        .signature-box {
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f1f3f4;
         }
         
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #667eea;
+        .signature-title {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 60px;
+            color: #000000;
+        }
+        
+        .signature-line {
+            border-bottom: 1px solid #000000;
             margin-bottom: 5px;
+            height: 1px;
         }
         
-        .stat-label {
-            font-size: 12px;
-            color: #7f8c8d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
+        .signature-name {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #000000;
+        }
+        
+        .signature-position {
+            font-size: 10pt;
+            color: #000000;
         }
         
         /* Footer */
-        .report-footer {
-            background: #2c3e50;
-            color: white;
-            padding: 25px 40px;
+        .document-footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 25mm;
+            right: 25mm;
             text-align: center;
-            font-size: 12px;
+            font-size: 9pt;
+            color: #666666;
+            border-top: 1px solid #cccccc;
+            padding-top: 10px;
         }
         
-        .footer-content {
+        /* Official Stamp Area */
+        .stamp-area {
+            position: absolute;
+            top: 50mm;
+            right: 30mm;
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #cccccc;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .generation-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .report-id {
-            font-family: 'Courier New', monospace;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 11px;
+            justify-content: center;
+            font-size: 8pt;
+            color: #999999;
+            text-align: center;
+            line-height: 1.2;
         }
         
         /* Print Styles */
         @media print {
             body {
-                background: white;
                 padding: 0;
+                background: white;
             }
             
             .report-container {
+                border: none;
                 box-shadow: none;
-                border-radius: 0;
+                margin: 0;
+                padding: 20mm;
             }
             
-            .report-header::before {
-                display: none;
-            }
-            
-            .info-card:hover,
-            .grades-table tbody tr:hover {
-                transform: none;
-                background-color: transparent;
+            .stamp-area {
+                border-color: #000000;
+                color: #000000;
             }
         }
         
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-            
-            .report-header,
-            .student-info,
-            .grades-section {
-                padding: 25px 20px;
-            }
-            
-            .report-title {
-                font-size: 24px;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .grades-table {
-                font-size: 12px;
-            }
-            
-            .table-header th,
-            .grades-table td {
-                padding: 12px 8px;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
+        /* Page Break */
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Formal Table Numbering */
+        .table-number {
+            font-size: 11pt;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+        
+        /* Classification Legend */
+        .grade-legend {
+            margin-top: 15px;
+            font-size: 9pt;
+            color: #333333;
+        }
+        
+        .grade-legend-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .legend-item {
+            margin-bottom: 2px;
         }
     </style>
 </head>
 <body>
     <div class="report-container">
-        <!-- Header Section -->
-        <div class="report-header">
-            <div class="header-icon">📊</div>
-            <div class="header-content">
-                <h1 class="report-title">Rekap Nilai Magang</h1>
-                <p class="report-subtitle">Laporan Penilaian Komprehensif</p>
-            </div>
+        <!-- Official Stamp Area -->
+        <div class="stamp-area">
+            STEMPEL<br>
+            RESMI<br>
+            INSTANSI
         </div>
         
-        <!-- Student Information Section -->
-        <div class="student-info">
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="info-label">Nama Mahasiswa</div>
-                    <div class="info-value">{{ $student->user->name }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Nomor Induk Mahasiswa</div>
-                    <div class="info-value">{{ $student->nim }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Universitas</div>
-                    <div class="info-value">{{ $student->universitas }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Pembimbing Lapangan</div>
-                    <div class="info-value">{{ $supervisor->name }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Tanggal Cetak</div>
-                    <div class="info-value">{{ $date }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="info-label">Status Laporan</div>
-                    <div class="info-value">✅ Lengkap</div>
-                </div>
+        <!-- Official Header -->
+        <div class="official-header">
+            <div class="institution-name">BAKTI KOMINFO</div>
+            <div class="institution-subtitle">Badan Aksesibilitas Telekomunikasi dan Informasi</div>
+            <div class="institution-address">
+                Centennial Tower Lt.42-45, Jakarta Selatan<br>
+                Telp: (021) 31936590, Fax: (021) 31936590
             </div>
+            <div class="document-title">Rekap Nilai Magang</div>
+            <div class="document-subtitle">Program Magang Industri Tahun {{ date('Y') }}</div>
+        </div>
+        
+        <!-- Document Number -->
+        <div class="document-number">
+            Nomor: {{ sprintf('%03d', rand(100, 999)) }}/BAKTI/{{ date('m/Y') }}
+        </div>
+        
+        <!-- Student Information -->
+        <div class="student-information">
+            <div class="section-title">Data Mahasiswa</div>
+            <table class="info-table">
+                <tr>
+                    <td>Nama Lengkap</td>
+                    <td>:</td>
+                    <td>{{ $student->user->name }}</td>
+                </tr>
+                <tr>
+                    <td>Nomor Induk Mahasiswa</td>
+                    <td>:</td>
+                    <td>{{ $student->nim }}</td>
+                </tr>
+                <tr>
+                    <td>Perguruan Tinggi</td>
+                    <td>:</td>
+                    <td>{{ $student->universitas }}</td>
+                </tr>
+                <tr>
+                    <td>Program Studi</td>
+                    <td>:</td>
+                    <td>{{ $student->program_studi ?? 'Tidak tercantum' }}</td>
+                </tr>
+                <tr>
+                    <td>Pembimbing Lapangan</td>
+                    <td>:</td>
+                    <td>{{ $supervisor->name }}</td>
+                </tr>
+                <tr>
+                    <td>Periode Magang</td>
+                    <td>:</td>
+                    <td>
+                        @if(isset($student->periode_mulai) && isset($student->periode_selesai))
+                            {{ date('d F Y', strtotime($student->periode_mulai)) }} s.d. {{ date('d F Y', strtotime($student->periode_selesai)) }}
+                        @else
+                            Tidak tercantum
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tanggal Cetak Laporan</td>
+                    <td>:</td>
+                    <td>{{ $date }}</td>
+                </tr>
+            </table>
         </div>
         
         <!-- Grades Section -->
         <div class="grades-section">
-            <h2 class="section-title">Detail Penilaian Tugas</h2>
+            <div class="section-title">Rincian Penilaian Tugas</div>
+            <div class="table-number">Tabel 1. Daftar Nilai Tugas Magang</div>
             
-            <div class="table-container">
-                <table class="grades-table">
-                    <thead class="table-header">
+            <table class="grades-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No.</th>
+                        <th style="width: 45%;">Nama Tugas</th>
+                        <th style="width: 10%;">Nilai</th>
+                        <th style="width: 40%;">Komentar Pembimbing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($submissions as $index => $submission)
                         <tr>
-                            <th style="width: 40%;">Nama Tugas</th>
-                            <th style="width: 15%;">Nilai</th>
-                            <th style="width: 45%;">Komentar & Feedback</th>
+                            <td style="text-align: center; font-weight: bold;">{{ $index + 1 }}</td>
+                            <td class="task-name-cell">{{ $submission->task->title }}</td>
+                            <td class="grade-cell">
+                                @php
+                                    $grade = $submission->grade;
+                                    $gradeClass = '';
+                                    if (is_numeric($grade)) {
+                                        if ($grade >= 85) $gradeClass = 'grade-excellent';
+                                        elseif ($grade >= 75) $gradeClass = 'grade-good';
+                                        elseif ($grade >= 65) $gradeClass = 'grade-satisfactory';
+                                        else $gradeClass = 'grade-needs-improvement';
+                                    } elseif (in_array(strtoupper($grade), ['A', 'A+', 'A-'])) {
+                                        $gradeClass = 'grade-excellent';
+                                    } elseif (in_array(strtoupper($grade), ['B', 'B+', 'B-'])) {
+                                        $gradeClass = 'grade-good';
+                                    } elseif (in_array(strtoupper($grade), ['C', 'C+', 'C-'])) {
+                                        $gradeClass = 'grade-satisfactory';
+                                    } else {
+                                        $gradeClass = 'grade-needs-improvement';
+                                    }
+                                @endphp
+                                <span class="{{ $gradeClass }}">{{ $grade }}</span>
+                            </td>
+                            <td class="comment-cell">
+                                {{ $submission->comments ?? 'Tidak ada komentar khusus.' }}
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($submissions as $submission)
-                            <tr>
-                                <td>
-                                    <div class="task-name">{{ $submission->task->title }}</div>
-                                    @if($submission->task->description)
-                                        <div class="task-description">{{ Str::limit($submission->task->description, 100) }}</div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @php
-                                        $grade = $submission->grade;
-                                        $gradeClass = 'grade-default';
-                                        if (is_numeric($grade)) {
-                                            if ($grade >= 85) $gradeClass = 'grade-a';
-                                            elseif ($grade >= 75) $gradeClass = 'grade-b';
-                                            elseif ($grade >= 65) $gradeClass = 'grade-c';
-                                            elseif ($grade >= 55) $gradeClass = 'grade-d';
-                                            else $gradeClass = 'grade-e';
-                                        } elseif (in_array(strtoupper($grade), ['A', 'A+', 'A-'])) {
-                                            $gradeClass = 'grade-a';
-                                        } elseif (in_array(strtoupper($grade), ['B', 'B+', 'B-'])) {
-                                            $gradeClass = 'grade-b';
-                                        } elseif (in_array(strtoupper($grade), ['C', 'C+', 'C-'])) {
-                                            $gradeClass = 'grade-c';
-                                        } elseif (in_array(strtoupper($grade), ['D', 'D+', 'D-'])) {
-                                            $gradeClass = 'grade-d';
-                                        } elseif (in_array(strtoupper($grade), ['E', 'F'])) {
-                                            $gradeClass = 'grade-e';
-                                        }
-                                    @endphp
-                                    <span class="grade-badge {{ $gradeClass }}">{{ $grade }}</span>
-                                </td>
-                                <td>
-                                    @if($submission->comments)
-                                        <div class="comment-text">{{ $submission->comments }}</div>
-                                    @else
-                                        <div class="no-comment">Tidak ada komentar</div>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3">
-                                    <div class="empty-state">
-                                        <div class="empty-icon">📝</div>
-                                        <div class="empty-title">Belum Ada Penilaian</div>
-                                        <div class="empty-description">
-                                            Belum ada nilai yang diberikan untuk mahasiswa ini.
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <strong>BELUM ADA PENILAIAN</strong><br>
+                                    Belum terdapat nilai yang diberikan untuk mahasiswa yang bersangkutan.
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            
+            <!-- Grade Legend -->
+            @if($submissions->count() > 0)
+                <div class="grade-legend">
+                    <div class="grade-legend-title">Keterangan Klasifikasi Nilai:</div>
+                    <div class="legend-item"><span class="grade-excellent">■</span> Sangat Baik (A/85-100)</div>
+                    <div class="legend-item"><span class="grade-good">■</span> Baik (B/75-84)</div>
+                    <div class="legend-item"><span class="grade-satisfactory">■</span> Cukup (C/65-74)</div>
+                    <div class="legend-item"><span class="grade-needs-improvement">■</span> Perlu Perbaikan (D/< 65)</div>
+                </div>
+            @endif
         </div>
         
-        <!-- Statistics Section -->
+        <!-- Summary Section -->
         @if($submissions->count() > 0)
-            <div class="statistics-section">
+            <div class="summary-section">
+                <div class="summary-title">Ringkasan Penilaian</div>
                 @php
                     $totalTasks = $submissions->count();
                     $gradedTasks = $submissions->whereNotNull('grade')->count();
-                    $averageGrade = $submissions->whereNotNull('grade')->avg('grade');
-                    $completionRate = $totalTasks > 0 ? round(($gradedTasks / $totalTasks) * 100) : 0;
+                    $numericGrades = $submissions->whereNotNull('grade')->filter(function($item) {
+                        return is_numeric($item->grade);
+                    });
+                    $averageGrade = $numericGrades->count() > 0 ? $numericGrades->avg('grade') : null;
+                    $completionRate = $totalTasks > 0 ? round(($gradedTasks / $totalTasks) * 100, 1) : 0;
+                    
+                    // Grade distribution
+                    $excellentCount = $submissions->filter(function($item) {
+                        $grade = $item->grade;
+                        return (is_numeric($grade) && $grade >= 85) || in_array(strtoupper($grade), ['A', 'A+', 'A-']);
+                    })->count();
+                    
+                    $goodCount = $submissions->filter(function($item) {
+                        $grade = $item->grade;
+                        return (is_numeric($grade) && $grade >= 75 && $grade < 85) || in_array(strtoupper($grade), ['B', 'B+', 'B-']);
+                    })->count();
                 @endphp
                 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">{{ $totalTasks }}</div>
-                        <div class="stat-label">Total Tugas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">{{ $gradedTasks }}</div>
-                        <div class="stat-label">Tugas Dinilai</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">{{ $completionRate }}%</div>
-                        <div class="stat-label">Tingkat Penyelesaian</div>
-                    </div>
+                <table class="summary-table">
+                    <tr>
+                        <td>Total Tugas yang Diberikan</td>
+                        <td>:</td>
+                        <td>{{ $totalTasks }} tugas</td>
+                    </tr>
+                    <tr>
+                        <td>Tugas yang Telah Dinilai</td>
+                        <td>:</td>
+                        <td>{{ $gradedTasks }} tugas ({{ $completionRate }}%)</td>
+                    </tr>
                     @if($averageGrade)
-                        <div class="stat-card">
-                            <div class="stat-value">{{ number_format($averageGrade, 1) }}</div>
-                            <div class="stat-label">Rata-rata Nilai</div>
-                        </div>
+                        <tr>
+                            <td>Rata-rata Nilai</td>
+                            <td>:</td>
+                            <td>{{ number_format($averageGrade, 1) }}</td>
+                        </tr>
                     @endif
-                </div>
+                    <tr>
+                        <td>Nilai Sangat Baik (A)</td>
+                        <td>:</td>
+                        <td>{{ $excellentCount }} tugas</td>
+                    </tr>
+                    <tr>
+                        <td>Nilai Baik (B)</td>
+                        <td>:</td>
+                        <td>{{ $goodCount }} tugas</td>
+                    </tr>
+                </table>
             </div>
         @endif
         
-        <!-- Footer -->
-        <div class="report-footer">
-            <div class="footer-content">
-                <div class="generation-info">
-                    <span>📅</span>
-                    <span>Laporan dibuat pada: {{ $date }}</span>
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-left">
+                <div class="signature-box">
+                    <div class="signature-title">Mengetahui,<br>Pembimbing Lapangan</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-name">{{ $supervisor->name }}</div>
+                    <div class="signature-position">NIP. {{ $supervisor->nip ?? '________________' }}</div>
                 </div>
-                <div class="report-id">
-                    ID: RPT-{{ strtoupper(substr(md5($student->user->name . $date), 0, 8)) }}
+            </div>
+            <div class="signature-right">
+                <div class="signature-box">
+                    <div class="signature-title">Jakarta, {{ date('d F Y') }}<br>Kepala BAKTI</div>
+                    <div class="signature-line"></div>
+                    <div class="signature-name">Dr. [Nama Kepala BAKTI]</div>
+                    <div class="signature-position">NIP. ________________</div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Document Footer -->
+        <div class="document-footer">
+            <div>
+                Dokumen ini dicetak secara otomatis pada {{ $date }} | 
+                ID Dokumen: RPT-{{ strtoupper(substr(md5($student->user->name . $date), 0, 8)) }}
             </div>
         </div>
     </div>
