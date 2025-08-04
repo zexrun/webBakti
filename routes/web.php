@@ -2,16 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Supervisor\SupervisorController;
+use App\Http\Controllers\Student\StudentController;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\SupervisorController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ActivationController;
+use App\Http\Controllers\Admin\MonitoringController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DirectorateController;
 
+use App\Http\Controllers\Admin\SettingController;
 
 
 use App\Http\Controllers\Supervisor\FinalAssessmentController;
@@ -23,6 +27,8 @@ use App\Http\Controllers\Supervisor\LogbookController as SupervisorLogbookContro
 
 use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -33,6 +39,23 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/plotting', [AdminController::class, 'plotting'])->name('plotting');
     Route::post('/plotting/assign', [AdminController::class, 'assign'])->name('plotting.assign');
     Route::post('/users/{user}/resend-activation', [UserController::class, 'resendActivation'])->name('users.resend_activation');
+
+    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
+    Route::get('/monitoring/supervisor/{supervisor}', [MonitoringController::class, 'showSupervisor'])->name('monitoring.supervisor.show');
+    Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings/directorates', [SettingController::class, 'storeDirectorate'])->name('settings.storeDirectorate');
+    Route::put('/settings/directorates/{id}', [SettingController::class, 'updateDirectorate'])->name('settings.updateDirectorate');
+    Route::delete('/settings/directorates/{id}', [SettingController::class, 'deleteDirectorate'])->name('settings.deleteDirectorate');
+
+    // Jabatan
+    Route::post('/settings/positions', [SettingController::class, 'storePosition'])->name('settings.storePosition');
+    Route::put('/settings/positions/{id}', [SettingController::class, 'updatePosition'])->name('settings.updatePosition');
+    Route::delete('/settings/positions/{id}', [SettingController::class, 'deletePosition'])->name('settings.deletePosition');
 
     Route::resource('users', UserController::class);
 });
@@ -73,7 +96,9 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 
 // Grup Student
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
-    Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+
     Route::post('tasks/{task}/submit', [StudentTaskController::class, 'submit'])->name('tasks.submit');
 
     Route::resource('logbooks', StudentLogbookController::class);
@@ -89,20 +114,14 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
 
 
 Route::middleware('auth')->group(function () {
-
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LoginController::class, 'actionlogout'])->name('logout');
 });
 
@@ -110,19 +129,3 @@ Route::get('/activate/{token}', [ActivationController::class, 'showActivationFor
 Route::post('/activate', [ActivationController::class, 'activateAccount'])->name('activation.activate');
 
 require __DIR__ . '/auth.php';
-
-
-
-/* // Rute untuk Tamu (halaman login)
-Route::get('/', [LoginController::class, 'login'])->name('login');
-Route::post('/', [LoginController::class, 'actionlogin'])->name('actionlogin'); */
-
-// Rute untuk semua pengguna yang sudah login
-
-/* 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
- */
-
- // Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
