@@ -16,6 +16,7 @@ class Student extends Model
         'universitas',
         'program_studi',
         'semester',
+        'direktorat',
         'periode_mulai',
         'periode_selesai',
     ];
@@ -30,12 +31,12 @@ class Student extends Model
         return $this->belongsTo(Supervisor::class);
     }
 
-    public function tasks() 
+    public function tasks()
     {
         return $this->belongsToMany(Task::class, 'task_student');
     }
-        
-    public function submissions() 
+
+    public function submissions()
     {
         return $this->hasMany(Submission::class);
     }
@@ -44,14 +45,19 @@ class Student extends Model
     {
         return $this->hasMany(Logbook::class)->orderBy('activity_date', 'desc');
     }
-    
+
     public function finalAssessment()
     {
         return $this->hasOne(FinalAssessment::class);
     }
-    
+
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function directorate()
+    {
+        return $this->belongsTo(Directorate::class);
     }
 }
