@@ -1,13 +1,17 @@
-<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
+<!-- Navigation Header -->
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
+            <!-- Left Section -->
             <div class="flex items-center justify-start rtl:justify-end">
+                <!-- Mobile Menu Toggle -->
                 <button
+                    id="sidebar-toggle"
                     data-drawer-target="logo-sidebar"
                     data-drawer-toggle="logo-sidebar"
                     aria-controls="logo-sidebar"
                     type="button"
-                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors duration-200"
                 >
                     <span class="sr-only">Open sidebar</span>
                     <svg
@@ -24,26 +28,43 @@
                         ></path>
                     </svg>
                 </button>
+
+                <!-- Logo and Brand -->
                 <a
                     href="{{ route('student.dashboard') }}"
-                    class="flex ms-2 md:me-24"
+                    class="flex items-center ms-2 md:me-24 group"
                 >
                     <img
                         src="https://baktikomdigi.id/assets/images/Logo_Bakti_Komdigi.jpg"
-                        class="h-8 me-3"
+                        class="h-8 me-3 rounded transition-transform duration-200 group-hover:scale-105"
                         alt="Logo BAKTI"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                     />
-                    <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-black"
-                    >
+                    <!-- Fallback logo -->
+                    <div class="h-8 w-8 bg-blue-600 rounded me-3 flex items-center justify-center text-white font-bold text-sm" style="display: none;">
+                        B
+                    </div>
+                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                         Magang BAKTI
                     </span>
                 </a>
             </div>
+
+            <!-- Right Section -->
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
-                    <div>
-                        <span>Halo, {{ Auth::user()->name}}</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm text-gray-700">
+                            Halo, <span class="font-medium text-gray-900">{{ Auth::user()->name }}</span>
+                        </span>
+                        <!-- User Avatar -->
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <a href="{{ route('profile.show')}}">
+                                <span class="text-sm font-medium text-white">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,21 +72,23 @@
     </div>
 </nav>
 
+<!-- Sidebar -->
 <aside
     id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 shadow-lg"
     aria-label="Sidebar"
 >
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
-        <ul class="space-y-2 font-medium">
-            <li>
+        <nav class="space-y-2 font-medium">
+            <!-- Dashboard -->
+            <div>
                 <a
                     href="{{ route('student.dashboard') }}"
-                    class="icon-button group"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.dashboard') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.dashboard') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -73,20 +96,20 @@
                             d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z"
                         />
                     </svg>
-                    <span class="icon-text">Dashboard</span>
+                    <span class="ms-3 font-medium">Dashboard</span>
                 </a>
-            </li>
+            </div>
 
-            <li>
+            <!-- Aktivitas Magang (Dropdown) -->
+            <div>
                 <button
                     type="button"
-                    class="group flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100"
-                    aria-controls="dropdown-example"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('student.tasks.*') || request()->routeIs('student.logbooks.*') || request()->routeIs('student.documents.create') ? 'bg-blue-50 text-blue-700' : '' }}"
                     data-collapse-toggle="dropdown-example"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.tasks.*') || request()->routeIs('student.logbooks.*') || request()->routeIs('student.documents.create') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -100,15 +123,13 @@
                             d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z"
                         />
                     </svg>
-                    <span
-                        class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap"
-                        >Aktivitas Magang</span
-                    >
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-medium">
+                        Aktivitas Magang
+                    </span>
                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
+                        class="w-3 h-3 ml-auto transition-transform duration-200"
+                        viewBox="0 0 10 6"
+                        fill="none"
                     >
                         <path
                             stroke="currentColor"
@@ -119,12 +140,15 @@
                         />
                     </svg>
                 </button>
-
-                <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                
+                <ul 
+                    id="dropdown-example" 
+                    class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('student.tasks.*') || request()->routeIs('student.logbooks.*') || request()->routeIs('student.documents.create') ? '' : 'hidden' }}"
+                >
                     <li>
                         <a
                             href="{{ route('student.tasks.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 rounded-lg pl-11 group hover:bg-gray-100"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('student.tasks.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
                         >
                             Daftar Tugas
                         </a>
@@ -132,30 +156,23 @@
                     <li>
                         <a
                             href="{{ route('student.logbooks.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 rounded-lg pl-11 group hover:bg-gray-100"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('student.logbooks.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
                         >
                             Laporan Harian
                         </a>
                     </li>
-                    <li>
-                        <a
-                            href="{{ route('student.documents.create') }}"
-                            class="flex items-center w-full p-2 text-gray-900 rounded-lg pl-11 group hover:bg-gray-100"
-                        >
-                            Upload Dokumen
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                    </ul>
+            </div>
 
-            <li>
+            <!-- Informasi Magang -->
+            <div>
                 <a
                     href="{{ route('student.info.edit') }}"
-                    class="icon-button group"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.info.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.info.*') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -165,36 +182,47 @@
                             clip-rule="evenodd"
                         />
                     </svg>
-                    <span class="icon-text">Informasi Magang</span>
+                    <span class="ms-3 font-medium">Informasi Magang</span>
                 </a>
-            </li>
+            </div>
 
-            <li>
+            <!-- Dokumen -->
+            <div>
                 <a
                     href="{{ route('student.documents.index') }}"
-                    class="icon-button group"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.documents.index') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.documents.index') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
                         <path
                             fill-rule="evenodd"
-                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                            d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z"
                             clip-rule="evenodd"
                         />
+                        <path
+                            d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z"
+                        />
                     </svg>
-                    <span class="icon-text">Dokumen</span>
+                    <span class="ms-3 font-medium">Dokumen</span>
                 </a>
-            </li>
+            </div>
 
-            <li>
-                <a href="{{ route('profile.show') }}" class="icon-button group">
+            <!-- Divider -->
+            <div class="border-t border-gray-200 my-4"></div>
+
+            <!-- Profile -->
+            <div>
+                <a 
+                    href="{{ route('profile.show') }}" 
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('profile.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="icon-svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('profile.*') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -204,20 +232,22 @@
                             clip-rule="evenodd"
                         />
                     </svg>
-                    <span class="icon-text">Profile</span>
+                    <span class="ms-3 font-medium">Profile</span>
                 </a>
-            </li>
+            </div>
 
-            <li>
-                <form method="POST" action="{{ route('logout') }}">
+            <!-- Logout -->
+            <div>
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
                     <button
                         type="submit"
-                        class="group flex items-center w-full p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100"
+                        class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 focus:text-red-700"
+                        onclick="return confirm('Apakah Anda yakin ingin logout?')"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="icon-svg"
+                            class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0"
                             viewBox="0 0 24 24"
                             fill="currentColor"
                         >
@@ -227,10 +257,68 @@
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        <span class="ms-3">Logout</span>
+                        <span class="ms-3 font-medium">Logout</span>
                     </button>
                 </form>
-            </li>
-        </ul>
+            </div>
+        </nav>
     </div>
 </aside>
+
+<!-- Overlay for mobile -->
+<div 
+    id="sidebar-overlay" 
+    class="fixed inset-0 z-30 bg-black bg-opacity-50 hidden sm:hidden"
+></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar toggle functionality
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('logo-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay?.classList.toggle('hidden');
+        });
+    }
+
+    // Close sidebar when clicking overlay
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            sidebar?.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+    }
+
+    // Dropdown functionality
+    const dropdownToggles = document.querySelectorAll('[data-collapse-toggle]');
+
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-collapse-toggle');
+            const target = document.getElementById(targetId);
+            
+            if (target) {
+                target.classList.toggle('hidden');
+                
+                // Rotate arrow
+                const arrow = this.querySelector('svg:last-child');
+                if (arrow) {
+                    arrow.style.transform = target.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            }
+        });
+    });
+
+    // Close sidebar on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar && !sidebar.classList.contains('-translate-x-full')) {
+            sidebar.classList.add('-translate-x-full');
+            overlay?.classList.add('hidden');
+        }
+    });
+});
+</script>
