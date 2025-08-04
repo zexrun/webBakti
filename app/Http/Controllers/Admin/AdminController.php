@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\App;
-
+use App\Http\Controllers\Controller;
 
 use App\Models\Student;
 use App\Models\Supervisor;
-use App\Models\User;
 use App\Models\Task;
 use Illuminate\Http\Request;
+
+use App\Models\User;
+use Illuminate\Support\Facades\App;
 
 class AdminController extends Controller
 {
@@ -51,9 +52,16 @@ class AdminController extends Controller
         // Temukan student dan supervisor
         $student = Student::find($request->student_id);
 
-        // Assign supervisor ke student
-        $student->supervisor_id = $request->supervisor_id ?: null;
+        if ($request->filled('supervisor_id')) {
+            $supervisor = Supervisor::find($request->supervisor_id);
 
+            $student->supervisor_id = $supervisor->id;
+            $student->direktorat = $supervisor->direktorat;
+        } else {
+            $student->supervisor_id = null;
+            $student->direktorat = null;
+            
+        }
         $student->save();
 
         return redirect()->route('admin.plotting')->with('success', 'Status pembimbing mahasiswa berhasil di update.');
