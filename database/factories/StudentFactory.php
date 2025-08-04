@@ -18,7 +18,7 @@ class StudentFactory extends Factory
     {
         return [
             'nim' => null,
-            'universitas' => 'Belum Diisi',
+            'universitas' => null,
         ];
     }
 }

@@ -30,6 +30,14 @@ class UserSeeder extends Seeder
             'email' => 'caca@gmail.com',
             'password' => Hash::make('1'), // Ganti dengan password yang sesuai
         ]);
+        
+        User::factory()->create([
+            'role' => 'supervisor',
+            'name' => 'Charissa',
+            'username' => 'cacaw',
+            'email' => 'cacaw@gmail.com',
+            'password' => Hash::make('1'), // Ganti dengan password yang sesuai
+        ]);
 
         User::factory()->create([
             'role' => 'student',

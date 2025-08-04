@@ -18,7 +18,7 @@ class SupervisorFactory extends Factory
     {
         return [
             'nip' => fake()->unique()->numerify('90######'),
-            'jabatan' => 'Staf Ahli',
+            'jabatan' => 'CEO',
         ];
     }
 }
