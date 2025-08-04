@@ -137,6 +137,13 @@
                     </svg>
                 </button>
                 <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                    <li>
+                        <a
+                            href="{{ route('supervisor.tasks.index') }}"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                            >Tugas Mahasiswa</a
+                        >
+                    </li>
                 <li>
                     <a
                     href="{{ route('supervisor.students.list.index') }}"
@@ -148,21 +155,7 @@
                     <a
                     href="{{ route('supervisor.logbooks.index') }}"
                     class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >Laporan Mahasiswa</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="{{ route('supervisor.tasks.index') }}"
-                        class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >Tugas Mahasiswa</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="#"
-                        class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                        >Dokumen Mahasiswa</a
+                        >Logbook Mahasiswa</a
                     >
                 </li>
             </ul>
