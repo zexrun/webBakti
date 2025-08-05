@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model
 {
+    use HasFactory;
+    
     protected $fillable = ['supervisor_id', 'title', 'description', 'file_path', 'type', 'due_date'];
 
     public function supervisor() {

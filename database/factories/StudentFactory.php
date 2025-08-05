@@ -17,8 +17,9 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'nim' => null,
-            'universitas' => null,
+            'nim' => fake()->unique()->numerify('##########'),
+            'universitas' => 'Telkom University',
+            // Biarkan supervisor_id null dulu, kita akan assign nanti
         ];
     }
 }
