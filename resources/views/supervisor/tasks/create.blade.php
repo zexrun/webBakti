@@ -84,8 +84,8 @@
                                         required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                     <option value="">Pilih tipe tugas</option>
-                                    <option value="harian" {{ old('type') == 'harian' ? 'selected' : '' }}>Laporan Harian</option>
-                                    <option value="akhir" {{ old('type') == 'akhir' ? 'selected' : '' }}>Laporan Akhir</option>
+                                    <option value="harian" {{ old('type') == 'harian' ? 'selected' : '' }}>Tugas Harian</option>
+                                    <option value="akhir" disabled {{ old('type') == 'akhir' ? 'selected' : '' }}>Laporan Akhir</option>
                                 </select>
                             </div>
 

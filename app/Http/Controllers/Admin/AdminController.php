@@ -17,8 +17,16 @@ class AdminController extends Controller
     public function dashboard() 
     {
         // Ambil data statistik untuk ditampilkan di kartu
-        $studentCount = Student::count();
-        $supervisorCount = Supervisor::count();
+        $studentCount = Student::join('users', 'students.user_id', '=', 'users.id')
+            ->whereNotNull('users.username')
+            ->where('users.username', '!=', '')
+            ->count();
+
+        $supervisorCount = Supervisor::join('users', 'supervisors.user_id', '=', 'users.id')
+            ->whereNotNull('users.username')
+            ->where('users.username', '!=', '')
+            ->count();
+
         $taskCount = Task::count();
 
         // Kirim data ke view

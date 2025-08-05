@@ -33,13 +33,6 @@
                         </svg>
                         Monitoring
                     </a>
-                    <a href="#" 
-                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                        </svg>
-                        Jadwalkan Pertemuan
-                    </a>
                 </div>
             </div>
         </div>
@@ -163,28 +156,20 @@
                             Tambah Pengguna Baru
                         </a>
                         
-                        <a href="#" 
+                        <a href="{{ route('admin.plotting')}}" 
                            class="flex items-center p-3 text-sm text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-200">
                             <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                             Plotting Pembimbing
                         </a>
-                        
-                        <a href="#" 
-                           class="flex items-center p-3 text-sm text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-200">
-                            <svg class="w-5 h-5 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            Jadwalkan Pertemuan
-                        </a>
-                        
-                        <a href="#" 
+
+                        <a href="{{ route('admin.users.index')}}" 
                            class="flex items-center p-3 text-sm text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-200">
                             <svg class="w-5 h-5 text-yellow-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
-                            Lihat Laporan
+                            Lihat Pengguna
                         </a>
                     </div>
                 </div>
