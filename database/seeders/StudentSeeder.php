@@ -4,6 +4,7 @@ namespace Database\Seeders; // Tambahkan baris ini
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class StudentSeeder extends Seeder
 {
@@ -12,9 +13,26 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        // Membuat 20 user Mahasiswa secara acak
-        User::factory(20)->create([
+        User::factory()->create([
+            'name' => 'Rifqy',
+            'email' => 'mrifqy821@gmail.com',
+            'username' => 'rifqy',
             'role' => 'student',
+            'password' => Hash::make('1'),
+        ]);
+        User::factory()->create([
+            'name' => 'Devin',
+            'email' => 'test1@email.com',
+            'username' => 'devin',
+            'role' => 'student',
+            'password' => Hash::make('1'),
+        ]);
+        User::factory()->create([
+            'name' => 'Nibras',
+            'email' => 'test2@email.com',
+            'username' => 'nibras',
+            'role' => 'student',
+            'password' => Hash::make('1'),
         ]);
     }
 }

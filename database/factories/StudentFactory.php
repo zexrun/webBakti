@@ -4,9 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
- */
 class StudentFactory extends Factory
 {
     /**
@@ -19,7 +16,8 @@ class StudentFactory extends Factory
         return [
             'nim' => fake()->unique()->numerify('##########'),
             'universitas' => 'Telkom University',
-            // Biarkan supervisor_id null dulu, kita akan assign nanti
+            'program_studi' => 'S1 Informatika',
+            'semester' => '6',
         ];
     }
 }
