@@ -59,7 +59,7 @@ class DocumentController extends Controller
         $request->validate([
             'document_name' => 'required|string|max:255',
             'type' => 'required|string|in:proposal,laporan_akhir,lainnya',
-            'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB
+            'file' => 'required|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240', // 10MB
         ]);
 
         // Handle file upload

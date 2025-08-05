@@ -32,7 +32,7 @@ class LogbookController extends Controller
         'end_time' => 'required|date_format:H:i|after:start_time',
         'feeling' => 'required|string',
         'description' => 'required|string',
-        'file' => 'nullable|mimes:jpeg,png,jpg, pdf, docx, pptx, zip, rar|max:2048',
+        'file' => 'nullable|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
         ]);
 
         $filePath = null;

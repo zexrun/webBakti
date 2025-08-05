@@ -17,7 +17,7 @@ class UploadController extends Controller
     {
         // 1. Validasi file
         $request->validate([
-            'file' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            'file' => 'required|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
         ]);
 
         // 2. Simpan file

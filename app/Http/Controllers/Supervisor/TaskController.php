@@ -45,7 +45,7 @@ class TaskController extends Controller
             'due_date' => 'nullable|date',
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
-            'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:10240',
+            'file' => 'nullable|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
         ]);
 
         $filePath = null;

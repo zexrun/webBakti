@@ -43,7 +43,7 @@ class TaskController extends Controller
             // Validasi input
             $request->validate([
                 'content' => 'required|string',
-                'file' => 'nullable|file|mimes:pdf,docx,pptx,zip,rar|max:20480',
+                'file' => 'nullable|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
             ]);
 
             $filePath = null;
