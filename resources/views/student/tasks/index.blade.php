@@ -48,17 +48,6 @@
                             <option value="overdue">Terlambat</option>
                         </select>
                     </div>
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a1.994 1.994 0 01-1.414.586H7a4 4 0 01-4-4V7a4 4 0 014-4z"/>
-                        </svg>
-                        <select class="border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500" onchange="filterByType(this.value)">
-                            <option value="all">Semua Tipe</option>
-                            <option value="individual">Individual</option>
-                            <option value="group">Kelompok</option>
-                            <option value="project">Proyek</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="relative">
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
