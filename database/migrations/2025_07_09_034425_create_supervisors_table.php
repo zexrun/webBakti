@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('supervisors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('nip', 30)->unique();
-            $table->string('jabatan', 100);
+            $table->string('nip', 30)->unique()->nullable();
+            $table->string('jabatan', 100)->nullable();
             $table->timestamps();
         });
     }

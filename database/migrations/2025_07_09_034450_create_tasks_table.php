@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('file_path')->nullable();
             $table->enum('type', ['harian', 'akhir']);
-            $table->date('due_date')->nullable();
+            $table->datetimes('due_date')->nullable();
             $table->timestamps();
         });
     }
