@@ -64,11 +64,11 @@ class UserController extends Controller
                 'user_id' => $user->id,
             ]);
         } elseif ($request->role === 'supervisor') {
-            $supervisor = new Supervisor();
-            $supervisor->user_id = $user->id;
-            $supervisor->nip = 'NIP-' . $user->id;
-            $supervisor->jabatan = 'Supervisor';
-            $supervisor->save();
+            Supervisor::create([
+                'user_id' => $user->id,
+                'nip' => null,
+                'jabatan' => null,
+            ]);
         }
 
         $user->notify(new SendAccountActivationEmail($token));
