@@ -10,6 +10,9 @@ class Task extends Model
     use HasFactory;
     
     protected $fillable = ['supervisor_id', 'title', 'description', 'file_path', 'type', 'due_date'];
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
 
     public function supervisor() {
         return $this->belongsTo(Supervisor::class);

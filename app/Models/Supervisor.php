@@ -17,6 +17,11 @@ class Supervisor extends Model
         'direktorat'
     ];
 
+    protected $casts = [
+        'nip',
+        'jabatan'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
