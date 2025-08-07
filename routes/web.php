@@ -57,6 +57,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::put('/settings/positions/{id}', [SettingController::class, 'updatePosition'])->name('settings.updatePosition');
     Route::delete('/settings/positions/{id}', [SettingController::class, 'deletePosition'])->name('settings.deletePosition');
 
+    Route::post('/settings/universities', [SettingController::class, 'storeUniversity'])->name('settings.storeUniversity');
+    Route::put('/settings/universities/{id}', [SettingController::class, 'updateUniversity'])->name('settings.updateUniversity');
+    Route::delete('/settings/universities/{id}', [SettingController::class, 'deleteUniversity'])->name('settings.deleteUniversity');
+    
     Route::resource('users', UserController::class);
 });
 

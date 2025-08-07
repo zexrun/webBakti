@@ -8,6 +8,7 @@ use Database\Seeders\PositionSeeder; // Menggunakan namespace yang benar
 use Database\Seeders\SupervisorSeeder; // Menggunakan namespace yang benar
 use Database\Seeders\StudentSeeder; 
 use Database\Seeders\TaskSeeder; 
+use Database\Seeders\UniversitySeeder; 
 
 use Illuminate\Database\Seeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SupervisorSeeder::class,
             StudentSeeder::class,
             TaskSeeder::class,
+            UniversitySeeder::class,
         ]);
     }
 }
