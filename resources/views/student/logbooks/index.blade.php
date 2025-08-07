@@ -3,7 +3,7 @@
 @section('title', 'Detail Laporan')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- Header -->
@@ -11,7 +11,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900">Detail Laporan Logbook</h1>
-                    <p class="text-gray-600 mt-1">Kelola laporan harian kegiatan magang Anda 📋</p>
+                    <p class="text-gray-600 mt-1">Kelola logbook magang Anda 📋</p>
                     <p class="text-sm text-gray-500 mt-1">{{ now()->format('l, d F Y') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -25,7 +25,7 @@
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                         </svg>
-                        Buat Laporan Baru
+                        Buat Laporan
                     </button>
                 </div>
             </div>
@@ -39,6 +39,18 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <p class="font-medium">{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
+
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm" role="alert">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="font-medium">{{ session('error') }}</p>
                 </div>
             </div>
         @endif
@@ -61,7 +73,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -124,7 +136,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($entry->is_verified)
+                                    @if($entry->is_verified ?? false)
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -178,7 +190,7 @@
                     </tbody>
                 </table>
             </div>
-
+            
             <!-- Pagination -->
             @if ($logbook instanceof \Illuminate\Pagination\LengthAwarePaginator)
                 <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
@@ -213,7 +225,7 @@
                 </button>
             </div>
         </div>
-
+        
         <!-- Modal Body -->
         <div class="p-8">
             <form id="createLogbookForm" action="{{ route('student.logbooks.store') }}" method="POST" enctype="multipart/form-data">
@@ -238,7 +250,7 @@
                             placeholder="Contoh: Membuat dokumentasi API"
                         />
                     </div>
-
+                    
                     <!-- Date and Feeling -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -259,7 +271,6 @@
                                 class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                             />
                         </div>
-
                         <div>
                             <label for="feeling" class="block text-sm font-medium text-gray-700 mb-2">
                                 <div class="flex items-center">
@@ -282,7 +293,7 @@
                             </select>
                         </div>
                     </div>
-
+                    
                     <!-- Time Range -->
                     <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
                         <div class="flex items-center mb-4">
@@ -315,7 +326,6 @@
                                     class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 shadow-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
                                 />
                             </div>
-
                             <div>
                                 <label for="end_time" class="block text-sm font-medium text-gray-700 mb-2">
                                     <div class="flex items-center">
@@ -335,7 +345,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
@@ -355,10 +365,10 @@
                             placeholder="Jelaskan secara detail kegiatan yang Anda lakukan hari ini..."
                         ></textarea>
                     </div>
-
+                    
                     <!-- Photo Upload -->
                     <div>
-                        <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
                             <div class="flex items-center">
                                 <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -372,9 +382,9 @@
                                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                                 <div class="flex text-sm text-gray-600">
-                                    <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                                        <span>Upload foto</span>
-                                        <input id="photo" name="photo" type="file" accept="image/*" class="sr-only" onchange="previewImage(this)">
+                                    <label for="file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                        <span>Upload file</span>
+                                        <input id="file" name="file" type="file" class="sr-only" onchange="previewImage(this)">
                                     </label>
                                     <p class="pl-1">atau drag and drop</p>
                                 </div>
@@ -386,7 +396,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Modal Footer -->
                 <div class="flex justify-end space-x-4 pt-6 mt-8 border-t border-gray-200">
                     <button
@@ -412,6 +422,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
 // Modal Functions
 function openCreateModal() {
@@ -457,7 +468,7 @@ function previewImage(input) {
     }
 }
 
-// Form Submission with AJAX
+// **PERBAIKAN UTAMA: Form Submission dengan Error Handling yang Benar**
 document.getElementById('createLogbookForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -485,13 +496,22 @@ document.getElementById('createLogbookForm').addEventListener('submit', function
         body: formData,
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        // **PERBAIKAN: Cek status response terlebih dahulu**
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data); // Debug log
+        
         if (data.success) {
             // Show success message
-            showSuccessMessage('Laporan berhasil disimpan!');
+            showSuccessMessage(data.message || 'Laporan berhasil disimpan!');
             
             // Close modal
             closeCreateModal();
@@ -501,12 +521,21 @@ document.getElementById('createLogbookForm').addEventListener('submit', function
                 window.location.reload();
             }, 1000);
         } else {
-            throw new Error(data.message || 'Terjadi kesalahan');
+            // Handle validation errors
+            if (data.errors) {
+                let errorMessage = 'Validasi gagal:\n';
+                Object.keys(data.errors).forEach(key => {
+                    errorMessage += `- ${data.errors[key].join(', ')}\n`;
+                });
+                showErrorMessage(errorMessage);
+            } else {
+                showErrorMessage(data.message || 'Terjadi kesalahan');
+            }
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showErrorMessage('Terjadi kesalahan saat menyimpan laporan');
+        showErrorMessage('Terjadi kesalahan saat menyimpan laporan: ' + error.message);
     })
     .finally(() => {
         // Reset button
@@ -542,7 +571,9 @@ function showSuccessMessage(message) {
     setTimeout(() => {
         alertDiv.classList.add('translate-x-full');
         setTimeout(() => {
-            document.body.removeChild(alertDiv);
+            if (document.body.contains(alertDiv)) {
+                document.body.removeChild(alertDiv);
+            }
         }, 300);
     }, 3000);
 }
@@ -556,7 +587,7 @@ function showErrorMessage(message) {
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            ${message}
+            <div style="white-space: pre-line;">${message}</div>
         </div>
     `;
     
@@ -569,9 +600,11 @@ function showErrorMessage(message) {
     setTimeout(() => {
         alertDiv.classList.add('translate-x-full');
         setTimeout(() => {
-            document.body.removeChild(alertDiv);
+            if (document.body.contains(alertDiv)) {
+                document.body.removeChild(alertDiv);
+            }
         }, 300);
-    }, 3000);
+    }, 5000); // Error message ditampilkan lebih lama
 }
 
 // Close modal when clicking outside
@@ -588,4 +621,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 </script>
+@endpush
+
 @endsection

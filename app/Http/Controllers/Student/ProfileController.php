@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\University;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -14,7 +15,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $student = Auth::user()->student;
-        $universities = [];
+        /* $universities = [];
 
         try {
             $jsonPath = public_path('data/universities.json');
@@ -25,7 +26,10 @@ class ProfileController extends Controller
             
         } catch (\Exception $e) {
             // Biarkan array kosong jika file tidak ditemukan atau ada error
-        }
+        } */
+            $universities = University::orderBy('name')
+                                        ->pluck('name')
+                                        ->toArray();
 
         // Kirim KEDUA variabel ('student' dan 'universities') ke view
         return view('student.info.edit', compact('user', 'student', 'universities'));
