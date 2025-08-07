@@ -75,17 +75,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        if (!is_null($user->username)) {
-        $absenUser = AbsenUser::where('username', $user->username)->first();
-
-        if ($absenUser) {
-            $absenUser->update([
-                'name' => $user->name,
-                'email' => $user->email,
-            ]);
-        }
-    }
-
         // Update data tambahan sesuai role
         if ($user->role === 'student' && $user->student) {
             $user->student->nim = $request->input('nim');
