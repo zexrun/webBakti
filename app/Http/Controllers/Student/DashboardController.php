@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Student;
 
 class DashboardController extends Controller
 {
@@ -19,7 +20,7 @@ class DashboardController extends Controller
         // 2. Ambil SEMUA tugas yang ditugaskan ke mahasiswa ini
         // Urutkan berdasarkan tenggat waktu terdekat
         $tasks = $student->task()
-            ->with('supervisor.user')
+            ->with('supervisor.users')
             ->orderBy('due_date', 'asc')
             ->get();
 
