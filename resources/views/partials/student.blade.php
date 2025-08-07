@@ -165,7 +165,7 @@
                             href="{{ route('student.tasks.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('student.tasks.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
                         >
-                            Daftar Tugas
+                            Tugas
                         </a>
                     </li>
                     <li>
@@ -173,35 +173,58 @@
                             href="{{ route('student.logbooks.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('student.logbooks.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
                         >
-                            Laporan Harian
+                            Logbook
                         </a>
                     </li>
                 </ul>
             </div>
 
+            
             <!-- Informasi Magang -->
             <div>
                 <a
-                    href="{{ route('student.info.edit') }}"
-                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.info.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
+                href="{{ route('student.info.edit') }}"
+                class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.info.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.info.*') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                    >
+                        >
                         <path
                             fill-rule="evenodd"
                             d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
                             clip-rule="evenodd"
-                        />
-                    </svg>
-                    <span class="ms-3 font-medium">Informasi Magang</span>
-                </a>
-            </div>
+                            />
+                        </svg>
+                        <span class="ms-3 font-medium">Informasi Magang</span>
+                    </a>
+                </div>
+                
+                <!-- Absen Magang -->
+                <div>
+                    <a
+                        href="{{ route('student.attendance.index') }}"
+                        class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('student.info.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('student.info.*') ? 'text-blue-600' : '' }}"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M1.5 5.625c0-1.036.84-1.875 1.875-1.875h17.25c1.035 0 1.875.84 1.875 1.875v12.75c0 1.035-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 18.375V5.625ZM21 9.375A.375.375 0 0 0 20.625 9h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5Zm0 3.75a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5Zm0 3.75a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5a.375.375 0 0 0 .375-.375v-1.5ZM10.875 18.75a.375.375 0 0 0 .375-.375v-1.5a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375h7.5ZM3.375 15h7.5a.375.375 0 0 0 .375-.375v-1.5a.375.375 0 0 0-.375-.375h-7.5a.375.375 0 0 0-.375.375v1.5c0 .207.168.375.375.375Zm0-3.75h7.5a.375.375 0 0 0 .375-.375v-1.5A.375.375 0 0 0 10.875 9h-7.5A.375.375 0 0 0 3 9.375v1.5c0 .207.168.375.375.375Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <span class="ms-3 font-medium">Presensi</span>
+                    </a>
+                </div>
 
-            <!-- Dokumen -->
+                <!-- Dokumen -->
             <div>
                 <a
                     href="{{ route('student.documents.index') }}"
