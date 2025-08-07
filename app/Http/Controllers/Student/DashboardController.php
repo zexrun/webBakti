@@ -20,7 +20,7 @@ class DashboardController extends Controller
         // 2. Ambil SEMUA tugas yang ditugaskan ke mahasiswa ini
         // Urutkan berdasarkan tenggat waktu terdekat
         $tasks = $student->tasks()
-            ->with('supervisor.users')
+            ->with('supervisor.user')
             ->orderBy('due_date', 'asc')
             ->get();
 
