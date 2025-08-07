@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\AbsenUser;
 use App\Notifications\WelcomeEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -40,6 +41,16 @@ class ActivationController extends Controller
             'email_verified_at' => now(),
             'activation_token' => null,
         ]);
+
+        $absenUser = AbsenUser::where('email', $user->email)->first();
+        if ($absenUser) {
+            $absenUser->update([
+            'name' => $user->name,
+            'username' => $user->username,
+            'password' => $user->password,
+        ]);
+    }
+
 
         $user->notify(new WelcomeEmail($user));
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Directorate;
 use App\Models\Position;
+use App\Models\AbsenUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class ProfileController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:256'],
             'email' => ['required', 'string', 'email', 'max:256', Rule::unique('users')->ignore($request->user()->id)],
-            'direktorat' => ['required', 'exists:directorates,id'],
+            'direktorat' => ['nullable', 'exists:directorates,id'],
             'jabatan' => ['nullable', 'exists:positions,id'],
         ]);
 
@@ -74,6 +75,17 @@ class ProfileController extends Controller
 
         $user->save();
 
+        if (!is_null($user->username)) {
+        $absenUser = AbsenUser::where('username', $user->username)->first();
+
+        if ($absenUser) {
+            $absenUser->update([
+                'name' => $user->name,
+                'email' => $user->email,
+            ]);
+        }
+    }
+
         // Update data tambahan sesuai role
         if ($user->role === 'student' && $user->student) {
             $user->student->nim = $request->input('nim');
@@ -88,7 +100,7 @@ class ProfileController extends Controller
 
         } elseif ($user->role === 'supervisor' && $user->supervisor) {
             $user->supervisor->nip = $request->input('nip');
-
+/* 
             $position = Position::find($request->input('jabatan'));
             if ($position) {
                 $user->supervisor->jabatan = $position->name;
@@ -97,7 +109,7 @@ class ProfileController extends Controller
             $directorate = Directorate::find($request->input('direktorat'));
             if ($directorate) {
                 $user->supervisor->direktorat = $directorate->name;
-            }
+            } */
 
             $user->supervisor->save();
         }
