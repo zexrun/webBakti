@@ -41,7 +41,7 @@ class ActivationController extends Controller
             'email_verified_at' => now(),
             'activation_token' => null,
         ]);
-    }
+    
 
 
         $user->notify(new WelcomeEmail($user));
