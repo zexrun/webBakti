@@ -59,12 +59,6 @@ class UserController extends Controller
             'password' => null,
             'activation_token' => hash('sha256', $token),
         ]);
-        
-        AbsenUser::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => $user->password,
-        ]);
 
         if ($request->role === 'student') {
             Student::create([
@@ -154,15 +148,6 @@ class UserController extends Controller
 
         $user->save();
 
-        $absenUser = AbsenUser::where('username', $user->username)->first();
-        if ($absenUser) {
-            $absenUser->update([
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => $user->password,
-            ]);
-        }
-
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui!');
     }
 
@@ -172,8 +157,6 @@ class UserController extends Controller
         if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
-
-        AbsenUser::where('username', $user->username)->delete();
 
         $user->delete();
 

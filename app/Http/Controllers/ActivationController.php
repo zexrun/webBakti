@@ -41,14 +41,6 @@ class ActivationController extends Controller
             'email_verified_at' => now(),
             'activation_token' => null,
         ]);
-
-        $absenUser = AbsenUser::where('email', $user->email)->first();
-        if ($absenUser) {
-            $absenUser->update([
-            'name' => $user->name,
-            'username' => $user->username,
-            'password' => $user->password,
-        ]);
     }
 
 
