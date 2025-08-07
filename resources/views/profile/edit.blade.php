@@ -68,15 +68,15 @@
                                 <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
-                                <div class="absolute bottom-0 right-0 w-6 h-6 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
+<!--                                 <div class="absolute bottom-0 right-0 w-6 h-6 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
                                     <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                                     </svg>
-                                </div>
+                                </div> -->
                             </div>
                             
                             <!-- Upload Button -->
-                            <div class="mb-4">
+<!--                             <div class="mb-4">
                                 <label for="profile_picture" class="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
@@ -88,7 +88,7 @@
                             
                             <p class="text-xs text-gray-500">
                                 JPG, PNG atau GIF. Maksimal 2MB.
-                            </p>
+                            </p> -->
                         </div>
                     </div>
 
@@ -208,132 +208,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Student Information -->
-                            @if ($user->role === 'student' && $user->student)
-                                <div class="pt-6 border-t border-gray-200">
-                                    <h4 class="text-sm font-medium text-gray-900 mb-4">Informasi Mahasiswa</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <!-- NIM -->
-                                        <div>
-                                            <label for="nim" class="block text-sm font-medium text-gray-700 mb-2">
-                                                NIM
-                                            </label>
-                                            <input type="text" 
-                                                   name="nim" 
-                                                   id="nim" 
-                                                   value="{{ old('nim', $user->student->nim) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('nim') border-red-300 @enderror">
-                                            @error('nim')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Universitas -->
-                                        <div>
-                                            <label for="universitas" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Universitas
-                                            </label>
-                                            <input type="text" 
-                                                   name="universitas" 
-                                                   id="universitas" 
-                                                   value="{{ old('universitas', $user->student->universitas) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('universitas') border-red-300 @enderror">
-                                            @error('universitas')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Program Studi -->
-                                        <div>
-                                            <label for="program_studi" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Program Studi
-                                            </label>
-                                            <input type="text" 
-                                                   name="program_studi" 
-                                                   id="program_studi" 
-                                                   value="{{ old('program_studi', $user->student->program_studi) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('program_studi') border-red-300 @enderror">
-                                            @error('program_studi')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Semester -->
-                                        <div>
-                                            <label for="semester" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Semester
-                                            </label>
-                                            <select name="semester" 
-                                                    id="semester"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('semester') border-red-300 @enderror">
-                                                <option value="">Pilih Semester</option>
-                                                @for($i = 1; $i <= 8; $i++)
-                                                    <option value="{{ $i }}" {{ old('semester', $user->student->semester) == $i ? 'selected' : '' }}>
-                                                        Semester {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                            @error('semester')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Direktorat -->
-                                        <div>
-                                            <label for="direktorat" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Direktorat
-                                            </label>
-                                            <select name="direktorat" 
-                                                    id="direktorat"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('direktorat') border-red-300 @enderror">
-                                                <option value="">Pilih Direktorat</option>
-                                                <option value="Direktorat Jenderal Pajak" {{ old('direktorat', $user->student->direktorat) == 'Direktorat Jenderal Pajak' ? 'selected' : '' }}>
-                                                    Direktorat Jenderal Pajak
-                                                </option>
-                                                <option value="Direktorat Jenderal Bea dan Cukai" {{ old('direktorat', $user->student->direktorat) == 'Direktorat Jenderal Bea dan Cukai' ? 'selected' : '' }}>
-                                                    Direktorat Jenderal Bea dan Cukai
-                                                </option>
-                                                <option value="Direktorat Jenderal Kekayaan Negara" {{ old('direktorat', $user->student->direktorat) == 'Direktorat Jenderal Kekayaan Negara' ? 'selected' : '' }}>
-                                                    Direktorat Jenderal Kekayaan Negara
-                                                </option>
-                                            </select>
-                                            @error('direktorat')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Periode Magang -->
-                                        <div>
-                                            <label for="periode_mulai" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Periode Mulai
-                                            </label>
-                                            <input type="date" 
-                                                   name="periode_mulai" 
-                                                   id="periode_mulai" 
-                                                   value="{{ old('periode_mulai', $user->student->periode_mulai) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('periode_mulai') border-red-300 @enderror">
-                                            @error('periode_mulai')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <div>
-                                            <label for="periode_selesai" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Periode Selesai
-                                            </label>
-                                            <input type="date" 
-                                                   name="periode_selesai" 
-                                                   id="periode_selesai" 
-                                                   value="{{ old('periode_selesai', $user->student->periode_selesai) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('periode_selesai') border-red-300 @enderror">
-                                            @error('periode_selesai')
-                                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
 
                             <!-- Supervisor Information -->
                             @if ($user->role === 'supervisor' && $user->supervisor)

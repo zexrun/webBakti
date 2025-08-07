@@ -65,7 +65,7 @@
                         
                         <!-- Username -->
                         @if($user->username)
-                            <p class="text-gray-600 mt-2">{{ $user->username }}</p>
+                            <p class="text-gray-600 mt-2">{{ '@' . $user->username }}</p>
                         @endif
                     </div>
                 </div>
@@ -176,8 +176,8 @@
                                     
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Direktorat</label>
-                                        <div class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900">
-                                            {{ $user->student->direktorat ?? '-' }}
+                                        <div class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm {{ $user->student->program_studi ? 'text-gray-900' : 'text-gray-400' }}">
+                                            {{ $user->student->direktorat ?? 'Belum ditentukan' }}
                                         </div>
                                     </div>
                                     

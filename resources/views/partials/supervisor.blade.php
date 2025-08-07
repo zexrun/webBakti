@@ -1,5 +1,7 @@
 <!-- Navigation Header -->
-<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
+<nav
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm"
+>
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
             <!-- Left Section -->
@@ -41,10 +43,15 @@
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                     />
                     <!-- Fallback logo -->
-                    <div class="h-8 w-8 bg-blue-600 rounded me-3 flex items-center justify-center text-white font-bold text-sm" style="display: none;">
+                    <div
+                        class="h-8 w-8 bg-blue-600 rounded me-3 flex items-center justify-center text-white font-bold text-sm"
+                        style="display: none"
+                    >
                         B
                     </div>
-                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                    <span
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-900 group-hover:text-blue-600 transition-colors duration-200"
+                    >
                         Magang BAKTI
                     </span>
                 </a>
@@ -55,11 +62,17 @@
                 <div class="flex items-center ms-3">
                     <div class="flex items-center space-x-3">
                         <span class="text-sm text-gray-700">
-                            Halo, <span class="font-medium text-gray-900">{{ Auth::user()->name }}</span>
+                            Halo,
+                            <span
+                                class="font-medium text-gray-900"
+                                >{{ Auth::user()->name }}</span
+                            >
                         </span>
                         <!-- User Avatar -->
-                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                            <a href="{{ route('profile.show')}}">
+                        <div
+                            class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"
+                        >
+                            <a href="{{ route('profile.show') }}">
                                 <span class="text-sm font-medium text-white">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                 </span>
@@ -112,8 +125,14 @@
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
-                        <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z" clip-rule="evenodd" />
-                        <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                        <path
+                            fill-rule="evenodd"
+                            d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875ZM12.75 12a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V18a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V12Z"
+                            clip-rule="evenodd"
+                        />
+                        <path
+                            d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z"
+                        />
                     </svg>
                     <span class="ms-3 font-medium">Buat Tugas</span>
                 </a>
@@ -138,7 +157,9 @@
                             clip-rule="evenodd"
                         />
                     </svg>
-                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-medium">
+                    <span
+                        class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-medium"
+                    >
                         Bimbingan Magang
                     </span>
                     <svg
@@ -155,9 +176,9 @@
                         />
                     </svg>
                 </button>
-                
-                <ul 
-                    id="dropdown-example" 
+
+                <ul
+                    id="dropdown-example"
                     class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.list.*') || request()->routeIs('supervisor.logbooks.*') ? '' : 'hidden' }}"
                 >
                     <li>
@@ -192,8 +213,8 @@
 
             <!-- Profile -->
             <div>
-                <a 
-                    href="{{ route('profile.show') }}" 
+                <a
+                    href="{{ route('profile.show') }}"
                     class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('profile.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
                 >
                     <svg
@@ -214,87 +235,93 @@
 
             <!-- Logout -->
             <div>
-                <form method="POST" action="{{ route('logout') }}" class="w-full">
-                    @csrf
-                    <button
-                        type="submit"
-                        class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 focus:text-red-700"
-                        onclick="return confirm('Apakah Anda yakin ingin logout?')"
+                <button
+                    type="button"
+                    onclick="confirmLogout()"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 focus:text-red-700"
+                >
+                    <svg
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 hover:text-red-500"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        <span class="ms-3 font-medium">Logout</span>
-                    </button>
-                </form>
+                        <path
+                            fill-rule="evenodd"
+                            d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                    <span class="ms-3 font-medium">Logout</span>
+                </button>
             </div>
         </nav>
     </div>
 </aside>
 
 <!-- Overlay for mobile -->
-<div 
-    id="sidebar-overlay" 
+<div
+    id="sidebar-overlay"
     class="fixed inset-0 z-30 bg-black bg-opacity-50 hidden sm:hidden"
 ></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar toggle functionality
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.getElementById('logo-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sidebar toggle functionality
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        const sidebar = document.getElementById("logo-sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
 
-    if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay?.classList.toggle('hidden');
-        });
-    }
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener("click", function () {
+                sidebar.classList.toggle("-translate-x-full");
+                overlay?.classList.toggle("hidden");
+            });
+        }
 
-    // Close sidebar when clicking overlay
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            sidebar?.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
-    }
+        // Close sidebar when clicking overlay
+        if (overlay) {
+            overlay.addEventListener("click", function () {
+                sidebar?.classList.add("-translate-x-full");
+                overlay.classList.add("hidden");
+            });
+        }
 
-    // Dropdown functionality
-    const dropdownToggles = document.querySelectorAll('[data-collapse-toggle]');
+        // Dropdown functionality
+        const dropdownToggles = document.querySelectorAll(
+            "[data-collapse-toggle]"
+        );
 
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-collapse-toggle');
-            const target = document.getElementById(targetId);
-            
-            if (target) {
-                target.classList.toggle('hidden');
-                
-                // Rotate arrow
-                const arrow = this.querySelector('svg:last-child');
-                if (arrow) {
-                    arrow.style.transform = target.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        dropdownToggles.forEach((toggle) => {
+            toggle.addEventListener("click", function () {
+                const targetId = this.getAttribute("data-collapse-toggle");
+                const target = document.getElementById(targetId);
+
+                if (target) {
+                    target.classList.toggle("hidden");
+
+                    // Rotate arrow
+                    const arrow = this.querySelector("svg:last-child");
+                    if (arrow) {
+                        arrow.style.transform = target.classList.contains(
+                            "hidden"
+                        )
+                            ? "rotate(0deg)"
+                            : "rotate(180deg)";
+                    }
                 }
+            });
+        });
+
+        // Close sidebar on escape key
+        document.addEventListener("keydown", function (e) {
+            if (
+                e.key === "Escape" &&
+                sidebar &&
+                !sidebar.classList.contains("-translate-x-full")
+            ) {
+                sidebar.classList.add("-translate-x-full");
+                overlay?.classList.add("hidden");
             }
         });
     });
-
-    // Close sidebar on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar && !sidebar.classList.contains('-translate-x-full')) {
-            sidebar.classList.add('-translate-x-full');
-            overlay?.classList.add('hidden');
-        }
-    });
-});
 </script>

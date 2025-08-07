@@ -279,8 +279,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 group-hover:text-purple-700">Informasi Akun</h4>
-                                    <p class="text-sm text-gray-600">Edit profil dan data</p>
+                                    <h4 class="font-semibold text-gray-900 group-hover:text-purple-700">Informasi Magang</h4>
+                                    <p class="text-sm text-gray-600">Edit profil magang</p>
                                 </div>
                             </div>
                         </a>
