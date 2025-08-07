@@ -29,6 +29,9 @@ use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -60,7 +63,17 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::post('/settings/universities', [SettingController::class, 'storeUniversity'])->name('settings.storeUniversity');
     Route::put('/settings/universities/{id}', [SettingController::class, 'updateUniversity'])->name('settings.updateUniversity');
     Route::delete('/settings/universities/{id}', [SettingController::class, 'deleteUniversity'])->name('settings.deleteUniversity');
-    
+
+    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/approvals', [AdminAttendanceController::class, 'approvals'])->name('attendance.approvals');
+    Route::post('/attendance/approve/{type}/{id}', [AdminAttendanceController::class, 'approve'])->name('attendance.approve');
+    Route::get('/attendance/reports', [AdminAttendanceController::class, 'reports'])->name('attendance.reports');
+    Route::get('/attendance/settings', [AdminAttendanceController::class, 'settings'])->name('attendance.settings');
+    Route::post('/attendance/settings', [AdminAttendanceController::class, 'updateSettings'])->name('attendance.settings.update');
+
+    Route::post('/geocode/address', [AdminAttendanceController::class, 'geocodeAddress'])->name('geocode.address');
+    Route::post('/geocode/reverse', [AdminAttendanceController::class, 'reverseGeocode'])->name('geocode.reverse');
+
     Route::resource('users', UserController::class);
 });
 
@@ -95,6 +108,13 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::get('certificate/{student}/generate', [FinalAssessmentController::class, 'generateCertificate'])->name('pdf.certificate.generate');
     Route::get('certificate/{student}/download', [FinalAssessmentController::class, 'downloadCertificate'])->name('pdf.certificate.download');
 
+    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
+    Route::get('/attendance/approvals', [AdminAttendanceController::class, 'approvals'])->name('admin.attendance.approvals');
+    Route::post('/attendance/approve/{type}/{id}', [AdminAttendanceController::class, 'approve'])->name('admin.attendance.approve');
+    Route::get('/attendance/reports', [AdminAttendanceController::class, 'reports'])->name('admin.attendance.reports');
+    Route::get('/attendance/settings', [AdminAttendanceController::class, 'settings'])->name('admin.attendance.settings');
+    Route::post('/attendance/settings', [AdminAttendanceController::class, 'updateSettings'])->name('admin.attendance.settings.update');
+
     Route::get('/students/{student}/documents', [SupervisorController::class, 'showDocuments'])->name('students.documents');
 });
 
@@ -112,6 +132,19 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::patch('/info', [StudentProfileController::class, 'update'])->name('info.update');
 
     Route::get('/certificate/download', [FinalAssessmentController::class, 'studentDownload'])->name('pdf.certificate.download');
+
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('student.attendance.index');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('student.attendance.check-in');
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('student.attendance.check-out');
+    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('student.attendance.history');
+    Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('student.attendance.exception');
+
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
+    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('attendance.history');
+    Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('attendance.exception');
+
 
     Route::resource('documents', DocumentController::class);
 });
