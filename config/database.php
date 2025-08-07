@@ -65,9 +65,9 @@ return [
         'absensi_mysql' => [
             'driver' => 'mysql',
             /* 'url' => env('DB_URL'), */
-            'host' => env('ABSEN_DB_HOST', '127.0.0.1'),
+            'host' => env('ABSEN_DB_HOST', '192.168.1.252'),
             'port' => env('ABSEN_DB_PORT', '3306'),
-            'database' => env('ABSEN_DB_DATABASE', 'absensi'),
+            'database' => env('ABSEN_DB_DATABASE', 'presensi'),
             'username' => env('ABSEN_DB_USERNAME', 'root'),
             'password' => env('ABSEN_DB_PASSWORD', ''),
             /* 'unix_socket' => env('DB_SOCKET', ''), */
