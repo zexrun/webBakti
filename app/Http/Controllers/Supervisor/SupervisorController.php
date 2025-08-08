@@ -59,7 +59,7 @@ class SupervisorController extends Controller
 
         $pdf = Pdf::loadView('supervisor.pdf.grades-pdf', $data);
 
-        return $pdf->download('rekap-nilai-' . Str::slug($student->user->name) . '.pdf');
+        return $pdf->stream('rekap-nilai-' . Str::slug($student->user->name) . '.pdf');
     }
 
     public function showDocuments(Student $student)

@@ -363,13 +363,6 @@
 </head>
 <body>
     <div class="report-container">
-        <!-- Official Stamp Area -->
-        <div class="stamp-area">
-            STEMPEL<br>
-            RESMI<br>
-            INSTANSI
-        </div>
-        
         <!-- Official Header -->
         <div class="official-header">
             <div class="institution-name">BAKTI KOMINFO</div>
@@ -566,17 +559,8 @@
             <div class="signature-left">
                 <div class="signature-box">
                     <div class="signature-title">Mengetahui,<br>Pembimbing Lapangan</div>
-                    <div class="signature-line"></div>
                     <div class="signature-name">{{ $supervisor->name }}</div>
                     <div class="signature-position">NIP. {{ $supervisor->nip ?? '________________' }}</div>
-                </div>
-            </div>
-            <div class="signature-right">
-                <div class="signature-box">
-                    <div class="signature-title">Jakarta, {{ date('d F Y') }}<br>Kepala BAKTI</div>
-                    <div class="signature-line"></div>
-                    <div class="signature-name">Dr. [Nama Kepala BAKTI]</div>
-                    <div class="signature-position">NIP. ________________</div>
                 </div>
             </div>
         </div>
