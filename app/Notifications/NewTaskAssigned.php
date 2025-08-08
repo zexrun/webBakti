@@ -67,7 +67,7 @@ class NewTaskAssigned extends Notification
             ->line('')
             ->line('**Butuh Bantuan?**')
             ->line('Hubungi pembimbing Anda: **' . ($this->task->supervisor->user->email ?? 'Email tidak tersedia') . '**')
-            ->line('Atau hubungi admin sistem di **baktimagang@gmail.com**')
+            ->line('Atau hubungi admin sistem di **magang.baktikomdigi@gmail.com**')
             ->line('')
             ->line('Semangat mengerjakan tugas! Semoga sukses!')
             ->salutation('**Tim Sistem Monitoring Magang**');

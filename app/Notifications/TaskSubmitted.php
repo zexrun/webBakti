@@ -90,7 +90,7 @@ class TaskSubmitted extends Notification
             ->line('**Reminder:** Mahasiswa menunggu feedback dari Anda. Review yang cepat dan berkualitas akan membantu proses pembelajaran mereka.')
             ->line('')
             ->line('**Butuh Bantuan?**')
-            ->line('Hubungi admin sistem di **baktimagang@gmail.com** jika ada kendala teknis.')
+            ->line('Hubungi admin sistem di **magang.baktikomdigi@gmail.com** jika ada kendala teknis.')
             ->line('')
             ->line('Terima kasih atas bimbingan Anda!')
             ->salutation('**Tim Sistem Monitoring Magang**');

@@ -61,7 +61,7 @@ class WelcomeEmail extends Notification
             ->line('')
             ->line('---')
             ->line('** Butuh Bantuan?**')
-            ->line('Jika Anda mengalami kesulitan, jangan ragu menghubungi tim support kami di **baktimagang@gmail.com**')
+            ->line('Jika Anda mengalami kesulitan, jangan ragu menghubungi tim support kami di **magang.baktikomdigi@gmail.com**')
             ->line('')
             ->line('Terima kasih telah bergabung dengan kami! 🙏')
             ->salutation('**Magang BAKTI**');

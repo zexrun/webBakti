@@ -60,7 +60,7 @@ class SendAccountActivationEmail extends Notification
             ->line('**Penting:** Link aktivasi hanya **sekali pakai** untuk keamanan. Jika link sudah tidak berlaku, silakan hubungi administrator untuk mendapatkan link baru.')
             ->line('')
             ->line('**Butuh Bantuan?**')
-            ->line('Jika Anda mengalami kesulitan dalam proses aktivasi, jangan ragu untuk menghubungi tim support kami di **baktimagang@gmail.com** atau hubungi administrator sistem.')
+            ->line('Jika Anda mengalami kesulitan dalam proses aktivasi, jangan ragu untuk menghubungi tim support kami di **magang.baktikomdigi@gmail.com** atau hubungi administrator sistem.')
             ->line('')
             ->line('Terima kasih telah bergabung dengan Sistem Monitoring Magang!')
             ->salutation('**Tim Sistem Monitoring Magang**');
