@@ -3,11 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>Aplikasi Monitoring Magang</title>
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}" />
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="//unpkg.com/alpinejs" defer></script>
-
     </head>
     <body>
         <div class="flex">
@@ -85,7 +86,7 @@
             let currentDeleteId = null;
             let currentDeleteType = null;
             let currentDeleteUserId = null;
-            
+
             // Popup functions
             function showPopup(popupId) {
                 const popup = document.getElementById(popupId);
@@ -98,7 +99,7 @@
                     }, 10);
                 }
             }
-            
+
             function closePopup(popupId) {
                 const popup = document.getElementById(popupId);
                 const content = document.getElementById(popupId + "-content");
@@ -112,16 +113,16 @@
                     }, 300);
                 }
             }
-            
+
             // Logout functions
             function confirmLogout() {
                 showPopup("logout-popup");
             }
-            
+
             function executeLogout() {
                 document.getElementById("logout-form").submit();
             }
-            
+
             // Delete functions
             function confirmDelete(itemId, itemName) {
                 currentDeleteId = itemId;
@@ -133,7 +134,7 @@
                 }
                 showPopup("delete-popup");
             }
-            
+
             function confirmDeleteUser(userId, userName) {
                 currentDeleteUserId = userId;
                 const popup = document.getElementById("delete-user-popup");
@@ -143,7 +144,7 @@
                 }
                 showPopup("delete-user-popup");
             }
-            
+
             function confirmDeletePosition(itemId, itemName) {
                 currentDeleteId = itemId;
                 currentDeleteType = "position";
@@ -159,14 +160,16 @@
             function confirmDeleteUniversity(itemId, itemName) {
                 currentDeleteId = itemId;
                 currentDeleteType = "university";
-                const popup = document.getElementById("delete-university-popup");
+                const popup = document.getElementById(
+                    "delete-university-popup"
+                );
                 const messageElement = popup.querySelector(".text-gray-700");
                 if (messageElement) {
                     messageElement.innerHTML = `Yakin ingin menghapus universitas <strong>"${itemName}"</strong>?<br><small class="text-red-600">Tindakan ini tidak dapat dibatalkan.</small>`;
                 }
                 showPopup("delete-university-popup");
             }
-            
+
             function executeDeleteUser() {
                 if (currentDeleteUserId) {
                     const form = document.getElementById(
@@ -177,7 +180,7 @@
                     }
                 }
             }
-            
+
             function executeDelete() {
                 if (currentDeleteId && currentDeleteType === "directorate") {
                     const form = document.getElementById(
@@ -188,7 +191,7 @@
                     }
                 }
             }
-            
+
             function executeDeletePosition() {
                 if (currentDeleteId && currentDeleteType === "position") {
                     const form = document.getElementById(
@@ -215,30 +218,30 @@
             // Modal Functions dengan Fade Animation
             function openModal(modalId) {
                 const popup = document.getElementById(modalId);
-                const content = document.getElementById(modalId + '-content');
-                
+                const content = document.getElementById(modalId + "-content");
+
                 if (popup && content) {
-                    popup.classList.remove('hidden');
+                    popup.classList.remove("hidden");
                     setTimeout(() => {
-                        content.classList.remove('scale-95', 'opacity-0');
-                        content.classList.add('scale-100', 'opacity-100');
+                        content.classList.remove("scale-95", "opacity-0");
+                        content.classList.add("scale-100", "opacity-100");
                     }, 10);
                 }
             }
 
             function closeModal(modalId) {
                 const popup = document.getElementById(modalId);
-                const content = document.getElementById(modalId + '-content');
-                
+                const content = document.getElementById(modalId + "-content");
+
                 if (popup && content) {
-                    content.classList.remove('scale-100', 'opacity-100');
-                    content.classList.add('scale-95', 'opacity-0');
+                    content.classList.remove("scale-100", "opacity-100");
+                    content.classList.add("scale-95", "opacity-0");
                     setTimeout(() => {
-                        popup.classList.add('hidden');
-                        
+                        popup.classList.add("hidden");
+
                         // Reset form jika bukan edit modal
-                        if (!modalId.includes('edit')) {
-                            const form = popup.querySelector('form');
+                        if (!modalId.includes("edit")) {
+                            const form = popup.querySelector("form");
                             if (form) {
                                 form.reset();
                             }
@@ -246,28 +249,36 @@
                     }, 300);
                 }
             }
-            
+
             // Edit Functions
             function editDirectorate(id, name) {
-                document.getElementById('editDirectorateForm').action = `/admin/settings/directorates/${id}`;
-                document.getElementById('editDirectorateName').value = name;
-                openModal('editDirectorateModal');
+                document.getElementById(
+                    "editDirectorateForm"
+                ).action = `/admin/settings/directorates/${id}`;
+                document.getElementById("editDirectorateName").value = name;
+                openModal("editDirectorateModal");
             }
 
             function editPosition(id, name) {
-                document.getElementById('editPositionForm').action = `/admin/settings/positions/${id}`;
-                document.getElementById('editPositionName').value = name;
-                openModal('editPositionModal');
+                document.getElementById(
+                    "editPositionForm"
+                ).action = `/admin/settings/positions/${id}`;
+                document.getElementById("editPositionName").value = name;
+                openModal("editPositionModal");
             }
 
             function editUniversity(id, name, domain, website) {
-                document.getElementById('editUniversityForm').action = `/admin/settings/universities/${id}`;
-                document.getElementById('editUniversityName').value = name;
-                document.getElementById('editUniversityDomain').value = domain || '';
-                document.getElementById('editUniversityWebsite').value = website || '';
-                openModal('editUniversityModal');
+                document.getElementById(
+                    "editUniversityForm"
+                ).action = `/admin/settings/universities/${id}`;
+                document.getElementById("editUniversityName").value = name;
+                document.getElementById("editUniversityDomain").value =
+                    domain || "";
+                document.getElementById("editUniversityWebsite").value =
+                    website || "";
+                openModal("editUniversityModal");
             }
-            
+
             // Close popup on ESC key
             document.addEventListener("keydown", function (e) {
                 if (e.key === "Escape") {
@@ -276,7 +287,7 @@
                     closePopup("delete-position-popup");
                     closePopup("delete-university-popup");
                     closePopup("delete-user-popup");
-                    
+
                     // Close modals too
                     const modals = [
                         "addDirectorateModal",
@@ -291,7 +302,7 @@
                     });
                 }
             });
-            
+
             // Close popup when clicking outside
             document.addEventListener("click", function (e) {
                 if (e.target.id === "logout-popup") {
@@ -310,7 +321,7 @@
                     closePopup("delete-university-popup");
                 }
             });
-            
+
             // Close modal when clicking outside
             window.onclick = function (event) {
                 const modals = [
@@ -328,21 +339,21 @@
                     }
                 });
             };
-            
+
             // Your existing sidebar JavaScript code
             document.addEventListener("DOMContentLoaded", function () {
                 // Sidebar toggle functionality
                 const sidebarToggle = document.getElementById("sidebar-toggle");
                 const sidebar = document.getElementById("logo-sidebar");
                 const overlay = document.getElementById("sidebar-overlay");
-                
+
                 if (sidebarToggle && sidebar) {
                     sidebarToggle.addEventListener("click", function () {
                         sidebar.classList.toggle("-translate-x-full");
                         overlay?.classList.toggle("hidden");
                     });
                 }
-                
+
                 // Close sidebar when clicking overlay
                 if (overlay) {
                     overlay.addEventListener("click", function () {
@@ -350,7 +361,7 @@
                         overlay.classList.add("hidden");
                     });
                 }
-                
+
                 // Dropdown functionality
                 const dropdownToggles = document.querySelectorAll(
                     "[data-collapse-toggle]"
@@ -361,10 +372,10 @@
                             "data-collapse-toggle"
                         );
                         const target = document.getElementById(targetId);
-                        
+
                         if (target) {
                             target.classList.toggle("hidden");
-                            
+
                             // Rotate arrow
                             const arrow = this.querySelector("svg:last-child");
                             if (arrow) {
@@ -376,7 +387,7 @@
                         }
                     });
                 });
-                
+
                 // Close sidebar on escape key
                 document.addEventListener("keydown", function (e) {
                     if (
@@ -390,9 +401,8 @@
                 });
             });
         </script>
-        @stack('scripts')
-        @if(request()->routeIs('student.attendance.*'))
-            <script src="{{ asset('js/attendance.js') }}"></script>
+        @stack('scripts') @if(request()->routeIs('student.attendance.*'))
+        <script src="{{ asset('js/attendance.js') }}"></script>
         @endif
     </body>
 </html>
