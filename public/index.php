@@ -1,5 +1,13 @@
 <?php
 
+if (
+    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+    $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'
+) {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
@@ -8,10 +16,6 @@ define('LARAVEL_START', microtime(true));
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
-}
-
-if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-    $_SERVER['HTTPS'] = 'on';
 }
 
 // Register the Composer autoloader...
