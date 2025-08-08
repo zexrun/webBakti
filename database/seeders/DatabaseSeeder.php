@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             SupervisorSeeder::class,
             StudentSeeder::class,
-            TaskSeeder::class,
             UniversitySeeder::class,
         ]);
     }
