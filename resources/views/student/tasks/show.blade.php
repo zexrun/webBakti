@@ -486,9 +486,7 @@
                             <div class="flex-1">
                                 <p class="text-xs font-medium text-gray-600 uppercase tracking-wide">Deadline</p>
                                 <p class="text-sm font-semibold text-gray-900">{{ $dueDate->format('d M Y, H:i') }}</p>
-                                <p class="text-xs text-{{ $colorClass }}-600 font-medium">
-                                    {{ $timeText }}
-                                </p>
+                                <p class="text-xs text-{{ $colorClass }}-600 font-medium">{{ $timeText }}</p>
                             </div>
                         </div>
                     @else

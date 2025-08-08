@@ -214,6 +214,54 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($task->due_date)
+                                    @php
+                                        $now = \Carbon\Carbon::now();
+                                        $dueDate = \Carbon\Carbon::parse($task->due_date);
+                                        $isOverdue = $dueDate->isPast();
+                                        
+                                        if ($isOverdue) {
+                                            // Untuk overdue, gunakan diffForHumans dengan opsi yang tepat
+                                            $timeText = "Terlambat " . $dueDate->diffForHumans($now, [
+                                                'parts' => 2,
+                                                'short' => false,
+                                                'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE
+                                            ]);
+                                            $colorClass = 'red';
+                                        } else {
+                                            // Untuk yang belum overdue
+                                            $diffInDays = $dueDate->diffInDays($now);
+                                            $diffInHours = $dueDate->diffInHours($now);
+                                            $diffInMinutes = $dueDate->diffInMinutes($now);
+                                            
+                                            if ($diffInDays > 3) {
+                                                $timeText = $dueDate->diffForHumans($now, [
+                                                    'parts' => 1,
+                                                    'short' => false
+                                                ]);
+                                                $colorClass = 'green';
+                                            } elseif ($diffInDays > 0) {
+                                                $timeText = $dueDate->diffForHumans($now, [
+                                                    'parts' => 2,
+                                                    'short' => false
+                                                ]);
+                                                $colorClass = 'yellow';
+                                            } elseif ($diffInHours > 0) {
+                                                $timeText = $dueDate->diffForHumans($now, [
+                                                    'parts' => 2,
+                                                    'short' => false
+                                                ]);
+                                                $colorClass = $diffInHours <= 3 ? 'red' : 'yellow';
+                                            } else {
+                                                $minutes = max(1, floor($diffInMinutes));
+                                                $timeText = "{$minutes} menit lagi";
+                                                $colorClass = 'red';
+                                            }
+                                        }
+                                        
+                                        $gradientFrom = $colorClass === 'red' ? 'red' : ($colorClass === 'yellow' ? 'yellow' : 'green');
+                                        $gradientTo = $colorClass === 'red' ? 'pink' : ($colorClass === 'yellow' ? 'orange' : 'emerald');
+                                    @endphp
+
                                         <div class="flex items-center">
                                             <div class="p-2 rounded-lg {{ $isOverdue ? 'bg-red-100' : ($daysLeft <= 3 ? 'bg-yellow-100' : 'bg-green-100') }} mr-3">
                                                 <svg class="w-4 h-4 {{ $isOverdue ? 'text-red-600' : ($daysLeft <= 3 ? 'text-yellow-600' : 'text-green-600') }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,17 +270,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm font-medium text-gray-900">{{ \Carbon\Carbon::parse($task->due_date)->format('d M Y') }}</p>
-                                                <p class="text-xs {{ $isOverdue ? 'text-red-600' : ($daysLeft <= 3 ? 'text-yellow-600' : 'text-gray-500') }}">
-                                                    @if($isOverdue)
-                                                        Terlambat {{ abs($daysLeft) }} hari
-                                                    @elseif($daysLeft == 0)
-                                                        Hari ini
-                                                    @elseif($daysLeft == 1)
-                                                        Besok
-                                                    @else
-                                                        {{ $daysLeft }} hari lagi
-                                                    @endif
-                                                </p>
+                                                <p class="text-xs {{ $isOverdue ? 'text-red-600' : ($daysLeft <= 3 ? 'text-yellow-600' : 'text-gray-500') }}">{{ $timeText}}</p>
                                             </div>
                                         </div>
                                     @else
