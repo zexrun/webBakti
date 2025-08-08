@@ -14,6 +14,8 @@ class AbsenUser extends Model
         'username',
         'email',
         'password',
+	'id_magang',
+	'status',
     ];
 
     public $timestamps = false;
