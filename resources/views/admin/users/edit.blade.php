@@ -334,7 +334,7 @@ function toggleRoleFields(role) {
     } else if (role === 'supervisor') {
         supervisorFields.style.display = 'block';
         direktoratField.style.display = 'block';
-        jabatanField.style.display = 'block'; // Jabatan ditampilkan untuk supervisor
+        jabatanField.style.display = 'block';
     }
 }
 

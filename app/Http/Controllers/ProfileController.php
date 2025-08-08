@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -54,56 +55,86 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:256'],
-            'email' => ['required', 'string', 'email', 'max:256', Rule::unique('users')->ignore($request->user()->id)],
-            'direktorat' => ['nullable', 'exists:directorates,id'],
-            'jabatan' => ['nullable', 'exists:positions,id'],
-        ]);
+        // Validasi dasar
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($request->user()->id)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ];
+
+        // Validasi username hanya jika user belum punya username
+        if (is_null($request->user()->username)) {
+            $rules['username'] = ['required', 'string', 'alpha_dash', 'max:255', 'unique:users'];
+        }
+
+        // Validasi tambahan berdasarkan role
+        if ($request->user()->role === 'supervisor') {
+            $rules['nip'] = ['nullable', 'string', 'max:255'];
+        }
+
+        $validated = $request->validate($rules);
 
         $user = $request->user();
-        $user->name = $request->name;
-        $user->email = $request->email;
 
-        // Buat username jika belum ada
-        if (is_null($user->username) && $request->filled('username')) {
-            $request->validate([
-                'username' => ['required', 'string', 'alpha_dash', 'max:256', 'unique:users'],
-            ]);
-            $user->username = $request->username;
+        // Update data dasar user
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+
+        // Update username jika belum ada dan diisi
+        if (is_null($user->username) && !empty($validated['username'])) {
+            $user->username = $validated['username'];
+        }
+
+        // Update password jika diisi
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
         }
 
         $user->save();
 
         // Update data tambahan sesuai role
         if ($user->role === 'student' && $user->student) {
-            $user->student->nim = $request->input('nim');
-            $user->student->universitas = $request->input('universitas');
-
-            $directorate = Directorate::find($request->input('direktorat'));
-            if ($directorate) {
-                $user->student->direktorat = $directorate->name;
+            // Update data mahasiswa jika ada field tambahan
+            if ($request->has('nim')) {
+                $user->student->nim = $request->input('nim');
             }
-
+            if ($request->has('universitas')) {
+                $user->student->universitas = $request->input('universitas');
+            }
+            if ($request->has('direktorat')) {
+                $directorate = Directorate::find($request->input('direktorat'));
+                if ($directorate) {
+                    $user->student->direktorat = $directorate->name;
+                }
+            }
             $user->student->save();
-
         } elseif ($user->role === 'supervisor' && $user->supervisor) {
-            $user->supervisor->nip = $request->input('nip');
-/* 
-            $position = Position::find($request->input('jabatan'));
-            if ($position) {
-                $user->supervisor->jabatan = $position->name;
+            // Update data supervisor
+            if (!empty($validated['nip'])) {
+                $user->supervisor->nip = $validated['nip'];
             }
 
-            $directorate = Directorate::find($request->input('direktorat'));
-            if ($directorate) {
-                $user->supervisor->direktorat = $directorate->name;
-            } */
+            // Uncomment jika diperlukan
+            /*
+            if ($request->has('jabatan')) {
+                $position = Position::find($request->input('jabatan'));
+                if ($position) {
+                    $user->supervisor->jabatan = $position->name;
+                }
+            }
+            
+            if ($request->has('direktorat')) {
+                $directorate = Directorate::find($request->input('direktorat'));
+                if ($directorate) {
+                    $user->supervisor->direktorat = $directorate->name;
+                }
+            }
+            */
 
             $user->supervisor->save();
         }
 
-        return Redirect::route('profile.show')->with('status', 'profile-updated');
+        return Redirect::route('profile.show')->with('success', 'Profil berhasil diperbarui!');
     }
 
     /**

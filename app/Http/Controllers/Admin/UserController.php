@@ -23,7 +23,6 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-
         $queryBuilder = fn($role, $relasi = null) =>
         User::with($relasi ? [$relasi] : [])
             ->where('role', $role)
@@ -88,58 +87,35 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        // Validasi dasar untuk semua role
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', Rule::unique('users')->ignore($user->id)],
             'role' => ['required', 'string', Rule::in(['admin', 'supervisor', 'student'])],
-            'direktorat' => [
-                Rule::requiredIf(in_array($request->role, ['supervisor', 'student'])),
-                'exists:directorates,id'
-            ],
-            'jabatan' => [
-                Rule::requiredIf($request->role === 'supervisor'),
-                'nullable',
-                'exists:positions,id'
-            ],
             'password' => ['nullable', 'confirmed', Password::defaults()],
-        ]);
+        ];
 
+        // Validasi tambahan berdasarkan role
+        if (in_array($request->role, ['supervisor', 'student'])) {
+            $rules['direktorat'] = ['required', 'exists:directorates,id'];
+        }
 
+        if ($request->role === 'supervisor') {
+            $rules['jabatan'] = ['nullable', 'exists:positions,id'];
+            $rules['nip'] = ['nullable', 'string', 'max:255'];
+        }
+
+        if ($request->role === 'student') {
+            $rules['nim'] = ['nullable', 'string', 'max:255'];
+            $rules['universitas'] = ['nullable', 'string', 'max:255'];
+            $rules['program_studi'] = ['nullable', 'string', 'max:255'];
+            $rules['semester'] = ['nullable', 'integer', 'min:1', 'max:14'];
+        }
+
+        $request->validate($rules);
+
+        // Update data dasar user
         $user->fill($request->only(['name', 'email', 'role']));
-
-        // Update student
-        if ($user->role === 'student' && $user->student) {
-            $user->student->fill($request->only([
-                'nim',
-                'universitas',
-                'program_studi',
-                'semester'
-            ]));
-
-            if ($request->filled('direktorat')) {
-                $directorateName = Directorate::find($request->input('direktorat'))?->name;
-                $user->student->direktorat = $directorateName;
-            }
-
-            $user->student->save();
-        }
-
-        // Update supervisor
-        elseif ($user->role === 'supervisor' && $user->supervisor) {
-            $user->supervisor->fill($request->only(['nip']));
-
-            if ($request->filled('direktorat')) {
-                $directorateName = Directorate::find($request->input('direktorat'))?->name;
-                $user->supervisor->direktorat = $directorateName;
-            }
-
-            if ($request->filled('jabatan')) {
-                $positionName = Position::find($request->input('jabatan'))?->name;
-                $user->supervisor->jabatan = $positionName;
-            }
-
-            $user->supervisor->save();
-        }
 
         // Update password jika diisi
         if (!empty($request->password)) {
@@ -148,9 +124,102 @@ class UserController extends Controller
 
         $user->save();
 
+        // Handle role-specific updates
+        $this->handleRoleSpecificUpdates($request, $user);
+
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui!');
     }
 
+    private function handleRoleSpecificUpdates(Request $request, User $user)
+    {
+        // Hapus relasi lama jika role berubah
+        if ($user->wasChanged('role')) {
+            $this->cleanupOldRoleRelations($user);
+        }
+
+        // Update berdasarkan role baru
+        switch ($user->role) {
+            case 'student':
+                $this->updateStudentData($request, $user);
+                break;
+            case 'supervisor':
+                $this->updateSupervisorData($request, $user);
+                break;
+            case 'admin':
+                // Admin tidak memerlukan data tambahan
+                break;
+        }
+    }
+
+    private function cleanupOldRoleRelations(User $user)
+    {
+        $originalRole = $user->getOriginal('role');
+        
+        if ($originalRole === 'student' && $user->student) {
+            $user->student->delete();
+        } elseif ($originalRole === 'supervisor' && $user->supervisor) {
+            $user->supervisor->delete();
+        }
+    }
+
+    private function updateStudentData(Request $request, User $user)
+    {
+        // Buat atau update student record
+        $student = $user->student ?: new Student(['user_id' => $user->id]);
+        
+        $student->fill($request->only([
+            'nim',
+            'universitas',
+            'program_studi',
+            'semester'
+        ]));
+
+        // Update direktorat
+        if ($request->filled('direktorat')) {
+            $directorate = Directorate::find($request->input('direktorat'));
+            if ($directorate) {
+                $student->direktorat = $directorate->name;
+            }
+        }
+
+        $student->save();
+        
+        // Pastikan relasi tersimpan
+        if (!$user->student) {
+            $user->student()->save($student);
+        }
+    }
+
+    private function updateSupervisorData(Request $request, User $user)
+    {
+        // Buat atau update supervisor record
+        $supervisor = $user->supervisor ?: new Supervisor(['user_id' => $user->id]);
+        
+        $supervisor->fill($request->only(['nip']));
+
+        // Update direktorat
+        if ($request->filled('direktorat')) {
+            $directorate = Directorate::find($request->input('direktorat'));
+            if ($directorate) {
+                $supervisor->direktorat = $directorate->name;
+            }
+        }
+
+        // Update jabatan
+        if ($request->filled('jabatan')) {
+            $position = Position::find($request->input('jabatan'));
+            if ($position) {
+                $supervisor->jabatan = $position->name;
+            }
+        }
+
+        $supervisor->save();
+        
+        // Pastikan relasi tersimpan
+        if (!$user->supervisor) {
+            $user->supervisor()->save($supervisor);
+        }
+    }
 
     public function destroy(User $user)
     {
