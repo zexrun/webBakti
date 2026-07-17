@@ -153,11 +153,11 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
 
     Route::get('/certificate/download', [FinalAssessmentController::class, 'studentDownload'])->name('pdf.certificate.download');
 
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('student.attendance.index');
-    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('student.attendance.check-in');
-    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('student.attendance.check-out');
-    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('student.attendance.history');
-    Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('student.attendance.exception');
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
+    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('attendance.history');
+    Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('attendance.exception');
 
     Route::resource('documents', DocumentController::class);
 });
