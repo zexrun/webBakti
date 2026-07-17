@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
         // 5. Attendance stats
         $attendance = $student->attendances()
-            ->where('created_at', '>=', now()->startOfMonth())
+            ->where('attendances.created_at', '>=', now()->startOfMonth())
             ->get();
 
         $attendanceStats = [
