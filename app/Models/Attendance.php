@@ -53,6 +53,8 @@ class Attendance extends Model
         'check_in_longitude' => 'decimal:8',
         'check_out_latitude' => 'decimal:8',
         'check_out_longitude' => 'decimal:8',
+        'location_verification_details' => 'array',
+        'requires_manual_review' => 'boolean',
     ];
 
     public function user()

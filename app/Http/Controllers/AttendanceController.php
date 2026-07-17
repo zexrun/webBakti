@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\AttendanceException;
 use App\Models\AttendanceSetting;
+use App\Services\LocationVerificationService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -63,26 +64,50 @@ class AttendanceController extends Controller
                 ]);
             }
 
+            $locationService = new LocationVerificationService();
+            $photoPath = null;
+            $verificationResult = null;
+
+            // Store photo
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('attendance/check-in', 'public');
+            }
+
             // Validate location if required
+            $locationVerificationStatus = 'unverified';
+            $spoofingScore = 0;
+            $requiresManualReview = false;
+
             if ($settings->require_location && $settings->office_latitude && $settings->office_longitude) {
-                $distance = $this->calculateDistance(
-                    $request->latitude,
-                    $request->longitude,
+                $verificationResult = $locationService->verifyAttendanceLocation(
+                    $request,
                     $settings->office_latitude,
-                    $settings->office_longitude
+                    $settings->office_longitude,
+                    $settings->location_radius_meters
                 );
 
-                if ($distance > $settings->location_radius_meters) {
+                $locationVerificationStatus = $verificationResult['risk_level'] === 'high' ? 'suspicious' :
+                                              (count($verificationResult['issues']) > 0 ? 'flagged' : 'verified');
+                $spoofingScore = $verificationResult['spoofing_score'];
+                $requiresManualReview = $verificationResult['risk_level'] === 'high' || !$verificationResult['verified'];
+
+                // If high risk or outside radius, reject immediately
+                if ($verificationResult['risk_level'] === 'high') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Lokasi terindikasi mencurigakan. Hubungi supervisor Anda.',
+                        'details' => $verificationResult['issues'],
+                    ], 403);
+                }
+
+                // If outside radius, reject
+                if (!$verificationResult['verified']) {
+                    $distance = $verificationResult['details']['distance_check']['distance'];
                     return response()->json([
                         'success' => false,
                         'message' => 'Anda berada di luar radius kantor! Jarak: ' . round($distance) . 'm'
                     ]);
                 }
-            }
-
-            $photoPath = null;
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('attendance/check-in', 'public');
             }
 
             $now = Carbon::now();
@@ -104,6 +129,10 @@ class AttendanceController extends Controller
                     'check_in_photo' => $photoPath,
                     'notes' => $request->notes,
                     'status' => $status,
+                    'location_verification_status' => $locationVerificationStatus,
+                    'location_spoofing_score' => $spoofingScore,
+                    'location_verification_details' => $verificationResult,
+                    'requires_manual_review' => $requiresManualReview,
                 ]
             );
 

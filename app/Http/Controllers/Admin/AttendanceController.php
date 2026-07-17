@@ -95,6 +95,35 @@ class AttendanceController extends Controller
         return back()->with('success', "Item berhasil {$message}!");
     }
 
+    public function suspicious()
+    {
+        $suspiciousAttendances = Attendance::where('requires_manual_review', true)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('admin.attendance.suspicious', compact('suspiciousAttendances'));
+    }
+
+    public function reviewSuspicious(Request $request, Attendance $attendance)
+    {
+        $request->validate([
+            'action' => 'required|in:approve,reject',
+            'notes' => 'required|string|max:500',
+        ]);
+
+        $attendance->update([
+            'requires_manual_review' => false,
+            'location_verification_status' => $request->action === 'approve' ? 'verified' : 'flagged',
+            'location_notes' => $request->notes,
+            'approved_by' => Auth::id(),
+            'approved_at' => now(),
+        ]);
+
+        $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
+        return back()->with('success', "Kehadiran berhasil di-review dan {$message}!");
+    }
+
     public function settings()
     {
         $settings = AttendanceSetting::getSettings();
