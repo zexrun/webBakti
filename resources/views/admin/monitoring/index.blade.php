@@ -23,63 +23,101 @@
                 <!-- Stats Summary -->
                 <div class="hidden md:flex space-x-6">
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-600">{{ $supervisors->count() }}</div>
+                        <div class="text-2xl font-bold text-blue-600">{{ $stats['total_supervisors'] }}</div>
                         <div class="text-sm text-gray-500">Supervisor</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-green-600">{{ $supervisors->sum(function($s) { return $s->students->count(); }) }}</div>
+                        <div class="text-2xl font-bold text-green-600">{{ $stats['total_students'] }}</div>
                         <div class="text-sm text-gray-500">Mahasiswa</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-orange-600">{{ $stats['avg_students_per_supervisor'] }}</div>
+                        <div class="text-sm text-gray-500">Rata-rata/Supervisor</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-600">{{ $stats['active_submissions'] }}</div>
+                        <div class="text-sm text-gray-500">Submission Pending</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Filter & Search -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                    <!-- Search -->
+        <form method="GET" class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <!-- Search -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </div>
-                        <input type="text" 
-                               id="searchInput"
-                               placeholder="Cari supervisor atau mahasiswa..." 
+                        <input type="text"
+                               name="search"
+                               value="{{ $search ?? '' }}"
+                               placeholder="Nama supervisor/mahasiswa..."
                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                     </div>
-                    
-                    <!-- Filter by Direktorat -->
-                    <select id="direktoratFilter" class="block w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                </div>
+
+                <!-- Filter by Directorat -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Direktorat</label>
+                    <select name="directorat" class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
                         <option value="">Semua Direktorat</option>
-                        @foreach($supervisors->pluck('direktorat')->unique()->filter() as $direktorat)
-                            <option value="{{ $direktorat }}">{{ $direktorat }}</option>
+                        @foreach($directorates as $dir)
+                            <option value="{{ $dir }}" {{ $directorat === $dir ? 'selected' : '' }}>{{ $dir }}</option>
                         @endforeach
                     </select>
                 </div>
-                
-                <!-- View Toggle -->
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-500">Tampilan:</span>
-                    <div class="flex bg-gray-100 rounded-lg p-1">
-                        <button id="cardView" class="px-3 py-1 text-sm rounded-md bg-white shadow-sm text-blue-600 font-medium transition-all duration-200">
-                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                            </svg>
-                            Card
-                        </button>
-                        <button id="listView" class="px-3 py-1 text-sm rounded-md text-gray-600 transition-all duration-200">
-                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                            </svg>
-                            List
-                        </button>
-                    </div>
+
+                <!-- Filter by Position -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan</label>
+                    <select name="position" class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="">Semua Jabatan</option>
+                        @foreach($positions as $pos)
+                            <option value="{{ $pos }}" {{ $position === $pos ? 'selected' : '' }}>{{ $pos }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Sort By -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Urutkan</label>
+                    <select name="sort_by" class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="name" {{ $sortBy === 'name' ? 'selected' : '' }}>Nama</option>
+                        <option value="students" {{ $sortBy === 'students' ? 'selected' : '' }}>Jumlah Mahasiswa</option>
+                        <option value="created_at" {{ $sortBy === 'created_at' ? 'selected' : '' }}>Tanggal Dibuat</option>
+                    </select>
                 </div>
             </div>
-        </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-between items-center">
+                <div class="flex gap-2">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                        Terapkan Filter
+                    </button>
+                    <a href="{{ route('admin.monitoring.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                        Reset
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gray-600">
+                        {{ $supervisors->total() }} hasil ditemukan
+                    </div>
+                    <a href="{{ route('admin.monitoring.export-csv', request()->query()) }}" class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors inline-flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0 0V8m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Export CSV
+                    </a>
+                </div>
+            </div>
+        </form>
 
         <!-- Card View Container -->
         <div id="cardContainer" class="space-y-6">
@@ -418,9 +456,21 @@ document.addEventListener('DOMContentLoaded', function() {
     direktoratFilter.addEventListener('change', filterItems);
     cardViewBtn.addEventListener('click', switchToCardView);
     listViewBtn.addEventListener('click', switchToListView);
-    
+
     // Initialize with card view
     switchToCardView();
 });
 </script>
+
+<!-- Pagination -->
+<div class="mt-8 flex items-center justify-between">
+    <div class="text-sm text-gray-600">
+        Menampilkan <span class="font-medium">{{ $supervisors->firstItem() ?? 0 }}</span> sampai
+        <span class="font-medium">{{ $supervisors->lastItem() ?? 0 }}</span> dari
+        <span class="font-medium">{{ $supervisors->total() }}</span> hasil
+    </div>
+    <div>
+        {{ $supervisors->appends(request()->query())->links() }}
+    </div>
+</div>
 @endsection
