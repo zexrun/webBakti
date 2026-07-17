@@ -83,10 +83,15 @@ public function generateCertificate(Student $student)
         return back()->with('error', 'Penilaian akhir belum diisi.');
     }
 
-    // Cek kelengkapan dokumen
-    $hasProposal = $student->documents()->where('type', 'proposal')->exists();
-    $hasLaporanAkhir = $student->documents()->where('type', 'laporan_akhir')->exists();
-    if (!$hasProposal || !$hasLaporanAkhir) {
+    // Cek kelengkapan dokumen (single query)
+    $requiredDocuments = ['proposal', 'laporan_akhir'];
+    $documentTypes = $student->documents()
+        ->whereIn('type', $requiredDocuments)
+        ->pluck('type')
+        ->toArray();
+
+    $missingDocuments = array_diff($requiredDocuments, $documentTypes);
+    if (!empty($missingDocuments)) {
         return back()->with('error', 'Dokumen belum lengkap.');
     }
 

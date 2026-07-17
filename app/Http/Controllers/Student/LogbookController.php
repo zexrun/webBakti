@@ -63,18 +63,57 @@ class LogbookController extends Controller
         return view('student.logbooks.show', compact('logbook'));
     }
 
-    public function edit(string $id)
+    public function edit(Logbook $logbook)
     {
-        //
+        if ($logbook->student_id !== Auth::user()->student->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        return view('student.logbooks.edit', compact('logbook'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Logbook $logbook)
     {
-        //
+        if ($logbook->student_id !== Auth::user()->student->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'activity_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'feeling' => 'required|string',
+            'description' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+        ]);
+
+        $data = $request->only(['title', 'activity_date', 'start_time', 'end_time', 'feeling', 'description']);
+
+        if ($request->hasFile('file')) {
+            if ($logbook->file_path && \Storage::disk('public')->exists($logbook->file_path)) {
+                \Storage::disk('public')->delete($logbook->file_path);
+            }
+            $data['file_path'] = $request->file('file')->store('logbook_files', 'public');
+        }
+
+        $logbook->update($data);
+
+        return redirect()->route('student.logbooks.index')->with('success', 'Laporan harian berhasil diperbarui!');
     }
 
-    public function destroy(string $id)
+    public function destroy(Logbook $logbook)
     {
-        //
+        if ($logbook->student_id !== Auth::user()->student->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        if ($logbook->file_path && \Storage::disk('public')->exists($logbook->file_path)) {
+            \Storage::disk('public')->delete($logbook->file_path);
+        }
+
+        $logbook->delete();
+
+        return redirect()->route('student.logbooks.index')->with('success', 'Laporan harian berhasil dihapus!');
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Notifications\TaskSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -65,10 +66,16 @@ class TaskController extends Controller
             return redirect()->route('student.tasks.show', $task->id)
                 ->with('success', 'Tugas berhasil dikumpulkan');
         } catch (\Exception $e) {
-            // Tangkap dan kembalikan error message
+            Log::error('Task submission failed', [
+                'task_id' => $task->id,
+                'student_id' => Auth::user()->student->id,
+                'error' => $e->getMessage(),
+                'exception' => $e,
+            ]);
+
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan saat mengumpulkan tugas: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan saat mengumpulkan tugas. Silahkan coba lagi.');
         }
     }
 }

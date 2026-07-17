@@ -49,8 +49,6 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings/directorates', [SettingController::class, 'storeDirectorate'])->name('settings.storeDirectorate');
     Route::put('/settings/directorates/{id}', [SettingController::class, 'updateDirectorate'])->name('settings.updateDirectorate');
     Route::delete('/settings/directorates/{id}', [SettingController::class, 'deleteDirectorate'])->name('settings.deleteDirectorate');
@@ -138,13 +136,6 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('student.attendance.check-out');
     Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('student.attendance.history');
     Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('student.attendance.exception');
-
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
-    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
-    Route::get('/attendance/history', [AttendanceController::class, 'history'])->name('attendance.history');
-    Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('attendance.exception');
-
 
     Route::resource('documents', DocumentController::class);
 });

@@ -34,11 +34,13 @@ class AdminController extends Controller
     public function plotting()
     {
         $students = Student::with('user', 'supervisor.user')
-            ->get()
-            ->sortBy('user.name');
-            
+            ->join('users', 'users.id', '=', 'students.user_id')
+            ->orderBy('users.name')
+            ->select('students.*')
+            ->get();
+
         $supervisors = Supervisor::with('user')->get();
-        
+
         return view('admin.plotting', [
             'students' => $students,
             'supervisors' => $supervisors,

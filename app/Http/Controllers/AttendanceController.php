@@ -87,6 +87,8 @@ class AttendanceController extends Controller
 
             $now = Carbon::now();
             $workStart = Carbon::parse($settings->work_start_time);
+
+            // Determine status based on time
             $isLate = $now->gt($workStart->addMinutes($settings->late_tolerance_minutes));
             $status = $isLate ? 'late' : 'present';
 
