@@ -64,7 +64,7 @@ class AdminController extends Controller
         // Activity Trends (Last 7 days)
         $attendanceTrend = Attendance::where('created_at', '>=', now()->subDays(7))
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')
+            ->groupByRaw('DATE(created_at)')
             ->get()
             ->pluck('count', 'date')
             ->values()
@@ -72,7 +72,7 @@ class AdminController extends Controller
 
         $submissionTrend = Submission::where('created_at', '>=', now()->subDays(7))
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-            ->groupBy('date')
+            ->groupByRaw('DATE(created_at)')
             ->get()
             ->pluck('count', 'date')
             ->values()
