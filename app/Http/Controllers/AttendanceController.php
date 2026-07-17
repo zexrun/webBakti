@@ -11,10 +11,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $user = Auth::user();
         $today = Carbon::today();
@@ -32,9 +34,9 @@ class AttendanceController extends Controller
             ->where('status', 'pending')
             ->count();
             
-        return view('student.attendance.index', compact(
-            'todayAttendance', 
-            'recentAttendances', 
+        return Inertia::render('Student/Attendance/Index', compact(
+            'todayAttendance',
+            'recentAttendances',
             'pendingExceptions'
         ));
     }
