@@ -206,7 +206,7 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <!-- View Tasks -->
-                        <a href="{{ route('supervisor.tasks.index') }}" 
+                        <a href="{{ route('supervisor.tasks.index') }}"
                            class="group p-4 border border-gray-200 rounded-lg hover:border-indigo-300 hover:shadow-md transition-all duration-200">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-indigo-100 group-hover:bg-indigo-200 rounded-lg flex items-center justify-center transition-colors duration-200">
@@ -221,8 +221,24 @@
                             </div>
                         </a>
 
+                        <!-- Grading Dashboard -->
+                        <a href="{{ route('supervisor.submissions.index') }}"
+                           class="group p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:shadow-md transition-all duration-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center transition-colors duration-200">
+                                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7 12a5 5 0 1110 0 5 5 0 01-10 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 group-hover:text-purple-700">Nilai Submission</h4>
+                                    <p class="text-sm text-gray-600">Dashboard penilaian submission</p>
+                                </div>
+                            </div>
+                        </a>
+
                         <!-- Create Task -->
-                        <a href="{{ route('supervisor.tasks.create') }}" 
+                        <a href="{{ route('supervisor.tasks.create') }}"
                            class="group p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:shadow-md transition-all duration-200">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center transition-colors duration-200">

@@ -22,6 +22,7 @@ use App\Http\Controllers\Supervisor\FinalAssessmentController;
 
 use App\Http\Controllers\Student\TaskController as StudentTaskController;
 use App\Http\Controllers\Supervisor\TaskController as SupervisorTaskController;
+use App\Http\Controllers\Supervisor\SubmissionController as SupervisorSubmissionController;
 use App\Http\Controllers\Student\LogbookController as StudentLogbookController;
 use App\Http\Controllers\Supervisor\LogbookController as SupervisorLogbookController;
 
@@ -98,7 +99,14 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::get('/students/{student}/assessment/edit', [FinalAssessmentController::class, 'edit'])->name('students.assessment.edit');
     Route::patch('/students/{student}/assessment', [FinalAssessmentController::class, 'update'])->name('students.assessment.update');
 
-    // Rute untuk memberi nilai pada submission tugas
+    // Rute untuk Submission Grading Dashboard
+    Route::get('/submissions', [SupervisorSubmissionController::class, 'index'])->name('submissions.index');
+    Route::get('/submissions/{submission}/edit', [SupervisorSubmissionController::class, 'edit'])->name('submissions.edit');
+    Route::put('/submissions/{submission}', [SupervisorSubmissionController::class, 'update'])->name('submissions.update');
+    Route::post('/submissions/{submission}/quick-update', [SupervisorSubmissionController::class, 'quickUpdate'])->name('submissions.quick-update');
+    Route::post('/submissions/bulk-grade', [SupervisorSubmissionController::class, 'bulkGrade'])->name('submissions.bulk-grade');
+
+    // Rute untuk memberi nilai pada submission tugas (legacy)
     Route::post('submissions/{submission}/grade', [SupervisorTaskController::class, 'grade'])->name('submissions.grade');
 
     Route::prefix('pdf')->name('pdf.')->group(function () {
