@@ -39,10 +39,14 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\AnnouncementViewController;
+use App\Http\Controllers\InertiaTestController;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+// Inertia.js test route (for new UI development)
+Route::middleware('auth')->get('/test-inertia', [InertiaTestController::class, 'dashboard'])->name('inertia.test');
 
 // Announcement viewing routes (all authenticated users)
 Route::middleware('auth')->group(function () {
