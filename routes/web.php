@@ -198,6 +198,7 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
 
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard-new', [StudentDashboardController::class, 'indexInertia'])->name('dashboard.new');
 
     Route::post('tasks/{task}/submit', [StudentTaskController::class, 'submit'])->name('tasks.submit');
 

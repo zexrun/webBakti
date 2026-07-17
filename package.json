@@ -31,6 +31,8 @@
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
         "shadcn-ui": "^0.9.5",
-        "typescript": "^7.0.2"
+        "tailwind-merge": "^3.6.0",
+        "typescript": "^7.0.2",
+        "ziggy-js": "^2.6.3"
     }
 }

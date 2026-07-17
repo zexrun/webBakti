@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
@@ -13,6 +15,21 @@ class DashboardController extends Controller
      * Menampilkan dashboard mahasiswa yang dipersonalisasi dengan berbagai widgets.
      */
     public function index()
+    {
+        $data = $this->dashboardData();
+
+        return view('student.dashboard', $data);
+    }
+
+    /**
+     * Versi Inertia/React dari dashboard mahasiswa (dalam migrasi UI baru).
+     */
+    public function indexInertia(): Response
+    {
+        return Inertia::render('Student/Dashboard', $this->dashboardData());
+    }
+
+    private function dashboardData(): array
     {
         $student = Auth::user()->student;
 
@@ -81,7 +98,7 @@ class DashboardController extends Controller
             ? round(($taskStats['completed'] / $taskStats['total']) * 100, 1)
             : 0;
 
-        return view('student.dashboard', compact(
+        return compact(
             'student',
             'upcomingTasks',
             'allTasks',
@@ -92,6 +109,6 @@ class DashboardController extends Controller
             'supervisor',
             'logbooksThisMonth',
             'completionPercentage'
-        ));
+        );
     }
 }
