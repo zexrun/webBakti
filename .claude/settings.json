@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm run *)",
-      "Bash(curl -s http://127.0.0.1:8000/test-inertia)"
+      "Bash(curl -s http://127.0.0.1:8000/test-inertia)",
+      "Bash(npm uninstall *)",
+      "Bash(npm install *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'fix: Upgrade Vite to v5 for React plugin compatibility *)"
     ]
   }
 }
