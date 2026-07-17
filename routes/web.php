@@ -36,6 +36,8 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\Supervisor\AnalyticsController;
 use App\Http\Controllers\Supervisor\BulkOperationController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Admin\AnnouncementController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -56,6 +58,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/saved', [SearchController::class, 'getSavedSearches'])->name('search.saved');
     Route::get('/search/saved/{id}/apply', [SearchController::class, 'applySavedSearch'])->name('search.saved.apply');
     Route::delete('/search/saved/{id}', [SearchController::class, 'deleteSavedSearch'])->name('search.saved.delete');
+
+    // Message routes
+    Route::get('/messages/inbox', [MessageController::class, 'inbox'])->name('messages.inbox');
+    Route::get('/messages/sent', [MessageController::class, 'sent'])->name('messages.sent');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{message}/reply', [MessageController::class, 'reply'])->name('messages.reply');
+    Route::delete('/messages/{message}', [MessageController::class, 'delete'])->name('messages.delete');
+    Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+    Route::post('/messages/read-all', [MessageController::class, 'markAllAsRead'])->name('messages.read-all');
 });
 
 // Grup rute yang HANYA bisa diakses oleh ADMIN
@@ -99,6 +112,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::post('/geocode/reverse', [AdminAttendanceController::class, 'reverseGeocode'])->name('geocode.reverse');
 
     Route::resource('users', UserController::class);
+
+    // Announcement routes
+    Route::resource('announcements', AnnouncementController::class);
+    Route::post('/announcements/{announcement}/publish', [AnnouncementController::class, 'publish'])->name('announcements.publish');
 });
 
 // Grup Supervisor
