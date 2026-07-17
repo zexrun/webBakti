@@ -12,4 +12,11 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        cors: true,
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });

@@ -6,7 +6,9 @@
       "Bash(npm uninstall *)",
       "Bash(npm install *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'fix: Upgrade Vite to v5 for React plugin compatibility *)"
+      "Bash(git commit -m 'fix: Upgrade Vite to v5 for React plugin compatibility *)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(tasklist //FI \"IMAGENAME eq php.exe\")"
     ]
   }
 }
