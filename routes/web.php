@@ -33,6 +33,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Supervisor\AnalyticsController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -120,6 +121,11 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 
     // Rute untuk memberi nilai pada submission tugas (legacy)
     Route::post('submissions/{submission}/grade', [SupervisorTaskController::class, 'grade'])->name('submissions.grade');
+
+    // Rute untuk Analytics & Performance Reporting
+    Route::get('/analytics', [AnalyticsController::class, 'dashboard'])->name('analytics.dashboard');
+    Route::get('/analytics/student/{student}', [AnalyticsController::class, 'studentReport'])->name('analytics.student');
+    Route::get('/analytics/task/{task}', [AnalyticsController::class, 'taskAnalytics'])->name('analytics.task');
 
     Route::prefix('pdf')->name('pdf.')->group(function () {
         Route::get('/grades/{student}', [SupervisorController::class, 'generateGrade'])->name('grade');
