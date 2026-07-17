@@ -35,6 +35,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Supervisor\AnalyticsController;
 use App\Http\Controllers\Supervisor\BulkOperationController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -47,6 +48,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
     Route::delete('/notifications/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
     Route::delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
+
+    // Search routes
+    Route::get('/search/global', [SearchController::class, 'globalSearch'])->name('search.global');
+    Route::get('/search/advanced', [SearchController::class, 'advancedSearch'])->name('search.advanced');
+    Route::post('/search/save', [SearchController::class, 'saveSearch'])->name('search.save');
+    Route::get('/search/saved', [SearchController::class, 'getSavedSearches'])->name('search.saved');
+    Route::get('/search/saved/{id}/apply', [SearchController::class, 'applySavedSearch'])->name('search.saved.apply');
+    Route::delete('/search/saved/{id}', [SearchController::class, 'deleteSavedSearch'])->name('search.saved.delete');
 });
 
 // Grup rute yang HANYA bisa diakses oleh ADMIN
