@@ -242,6 +242,62 @@
                 </ul>
             </div>
 
+            <!-- Analytics & Grading (Dropdown) -->
+            <div>
+                <button
+                    type="button"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.analytics.*') || request()->routeIs('supervisor.submissions.*') ? 'bg-blue-50 text-blue-700' : '' }}"
+                    data-collapse-toggle="dropdown-analytics"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('supervisor.analytics.*') || request()->routeIs('supervisor.submissions.*') ? 'text-blue-600' : '' }}"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z"/>
+                    </svg>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-medium">
+                        Penilaian & Analitik
+                    </span>
+                    <svg
+                        class="w-3 h-3 ml-auto transition-transform duration-200"
+                        viewBox="0 0 10 6"
+                        fill="none"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 4 4 4-4"
+                        />
+                    </svg>
+                </button>
+
+                <ul
+                    id="dropdown-analytics"
+                    class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('supervisor.analytics.*') || request()->routeIs('supervisor.submissions.*') ? '' : 'hidden' }}"
+                >
+                    <li>
+                        <a
+                            href="{{ route('supervisor.submissions.index') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.submissions.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            Dashboard Penilaian
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ route('supervisor.analytics.dashboard') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.analytics.dashboard') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            📊 Analitik Kinerja
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <!-- Bulk Operations (Dropdown) -->
             <div>
                 <button
@@ -341,9 +397,6 @@
                     <span class="ms-3 font-medium">Pesan</span>
                 </a>
             </div>
-
-            <!-- Divider -->
-            <div class="border-t border-gray-200 my-4"></div>
 
             <!-- Divider -->
             <div class="border-t border-gray-200 my-4"></div>
