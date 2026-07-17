@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AnnouncementViewController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $user = Auth::user();
         $roleMap = [
@@ -23,10 +25,10 @@ class AnnouncementViewController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate(20);
 
-        return view('announcements.index', compact('announcements'));
+        return Inertia::render('Announcements/Index', compact('announcements'));
     }
 
-    public function show(Announcement $announcement)
+    public function show(Announcement $announcement): Response
     {
         $user = Auth::user();
         $roleMap = [
@@ -45,6 +47,6 @@ class AnnouncementViewController extends Controller
             abort(404, 'Pengumuman tidak ditemukan');
         }
 
-        return view('announcements.show', compact('announcement'));
+        return Inertia::render('Announcements/Show', compact('announcement'));
     }
 }

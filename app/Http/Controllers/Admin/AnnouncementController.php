@@ -6,21 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AnnouncementController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $announcements = Announcement::with('admin')
             ->orderBy('published_at', 'desc')
             ->paginate(20);
 
-        return view('admin.announcements.index', compact('announcements'));
+        return Inertia::render('Admin/Announcements/Index', compact('announcements'));
     }
 
-    public function create()
+    public function create(): Response
     {
-        return view('admin.announcements.create');
+        return Inertia::render('Admin/Announcements/Create');
     }
 
     public function store(Request $request)
@@ -47,9 +49,9 @@ class AnnouncementController extends Controller
             ->with('success', 'Pengumuman berhasil dibuat');
     }
 
-    public function edit(Announcement $announcement)
+    public function edit(Announcement $announcement): Response
     {
-        return view('admin.announcements.edit', compact('announcement'));
+        return Inertia::render('Admin/Announcements/Edit', compact('announcement'));
     }
 
     public function update(Request $request, Announcement $announcement)

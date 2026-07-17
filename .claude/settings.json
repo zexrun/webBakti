@@ -14,7 +14,10 @@
       "Bash(tasklist //FI \"IMAGENAME eq node.exe\")",
       "Bash(php -l app/Http/Controllers/Supervisor/SupervisorController.php)",
       "Bash(php -l resources/views/supervisor/dashboard.blade.php)",
-      "Bash(php -l app/Http/Controllers/Admin/AdminController.php)"
+      "Bash(php -l app/Http/Controllers/Admin/AdminController.php)",
+      "Bash(php -l app/Http/Controllers/Admin/AnnouncementController.php)",
+      "Bash(php -l app/Http/Controllers/AnnouncementViewController.php)",
+      "Bash(php -l app/Http/Middleware/HandleInertiaRequests.php)"
     ]
   }
 }
