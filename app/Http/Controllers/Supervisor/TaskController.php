@@ -42,7 +42,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => 'required|in:harian,akhir',
-            'due_date' => 'nullable|date',
+            'due_date' => 'nullable|date|after_or_equal:today',
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
             'file' => 'nullable|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
@@ -51,13 +51,9 @@ class TaskController extends Controller
         $filePath = null;
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('task_attachments', 'public');
-        } else if ($request->hasFile('file')) {
-            dd('File not valid');
         }
 
         $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
-
-        //dd($request->file('file'));
 
         $task = Task::create([
             'supervisor_id' => $supervisor->id,
@@ -82,20 +78,13 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        if (Auth::user() === 'admin') {
-            return view('supervisor.tasks.show', [
-                'task' => $task,
-                'assignedStudents' => $assignedStudents,
-                'submissions' => $submissions,
-            ]);
+        if ($task->supervisor_id !== Auth::user()->supervisor->id) {
+            abort(403, 'AKSES DITOLAK');
         }
-        // 1. Ambil semua mahasiswa yang terhubung dengan tugas ini
-        $assignedStudents = $task->students()->with('user')->get();
 
-        // 2. Ambil semua submission untuk tugas ini dan kelompokkan berdasarkan student_id
+        $assignedStudents = $task->students()->with('user')->get();
         $submissions = $task->submissions()->with('student.user')->get()->keyBy('student_id');
 
-        // 3. Kirim kedua data tersebut ke view
         return view('supervisor.tasks.show', [
             'task' => $task,
             'assignedStudents' => $assignedStudents,
@@ -105,6 +94,10 @@ class TaskController extends Controller
 
     public function grade(Request $request, Submission $submission)
     {
+        if ($submission->task->supervisor_id !== Auth::user()->supervisor->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
         $request->validate([
             'grade' => 'required|string|max:10',
             'comments' => 'nullable|string',

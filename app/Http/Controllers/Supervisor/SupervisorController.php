@@ -76,32 +76,4 @@ class SupervisorController extends Controller
         // Tampilkan view
         return view('supervisor.students.documents.index', compact('student', 'documents'));
     }
-    /* 
-    public function myStudents()
-    {
-        $supervisor = Auth::user()->supervisor;
-
-        // Ambil semua mahasiswa bimbingan dan muat relasi yang dibutuhkan
-        $students = $supervisor->students()
-            ->with('user')
-            // Kita juga memuat submission yang terhubung dengan tugas tipe 'akhir'
-            ->with(['submissions' => function ($query) {
-                $query->whereHas('task', function ($q) {
-                    $q->where('type', 'akhir');
-                });
-            }])
-            ->paginate(10);
-
-        return view('supervisor.my-students', compact('students'));
-    }
-
-
-    public function viewStudent()
-    {
-        $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
-
-        $students = $supervisor->students()->with('user')->paginate(10);
-
-        return view('supervisor.view-student', compact('students'));
-    } */
 }
