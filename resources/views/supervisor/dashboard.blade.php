@@ -50,47 +50,12 @@
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             @php
-                // Fixed queries - adjust table names and columns based on your actual database structure
-                try {
-                    // Total students supervised by this supervisor
-                    $totalStudents = DB::table('students')
-                        ->where('supervisor_id', Auth::id())
-                        ->count();
-                    
-                    // Total tasks created by this supervisor
-                    $totalTasks = DB::table('tasks')
-                        ->where('supervisor_id', Auth::id())
-                        ->count();
-                    
-                    // Students who need final assessment (assuming you have a final_assessments table)
-                    $pendingAssessments = DB::table('students')
-                        ->where('supervisor_id', Auth::id())
-                        ->whereNotExists(function ($query) {
-                            $query->select(DB::raw(1))
-                                  ->from('final_assessments')
-                                  ->whereColumn('final_assessments.student_id', 'students.id');
-                        })
-                        ->count();
-                    
-                    // Students who have completed assessments
-                    $completedInternships = DB::table('students')
-                        ->where('supervisor_id', Auth::id())
-                        ->whereExists(function ($query) {
-                            $query->select(DB::raw(1))
-                                  ->from('final_assessments')
-                                  ->whereColumn('final_assessments.student_id', 'students.id');
-                        })
-                        ->count();
-                        
-                } catch (\Exception $e) {
-                    // Fallback values if queries fail
-                    $totalStudents = 0;
-                    $totalTasks = 0;
-                    $pendingAssessments = 0;
-                    $completedInternships = 0;
-                }
+                $totalStudents = $stats['totalStudents'];
+                $totalTasks = $stats['totalTasks'];
+                $pendingAssessments = $stats['pendingAssessments'];
+                $completedInternships = $stats['completedInternships'];
             @endphp
-            
+
             <!-- Total Students -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center">
@@ -254,11 +219,6 @@
                         </a>
 
                         <!-- Messaging -->
-                        @php
-                            $unreadMessages = App\Models\Message::where('recipient_id', Auth::id())
-                                ->where('is_read', false)
-                                ->count();
-                        @endphp
                         <a href="{{ route('messages.inbox') }}"
                            class="group p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:shadow-md transition-all duration-200">
                             <div class="flex items-center space-x-3">
@@ -341,38 +301,24 @@
                         Aktivitas Terbaru
                     </h3>
                     
-                    @php
-                        try {
-                            $recentStudents = DB::table('students')
-                                ->join('users', 'students.user_id', '=', 'users.id')
-                                ->where('students.supervisor_id', Auth::id())
-                                ->select('students.*', 'users.name', 'users.email')
-                                ->orderBy('students.created_at', 'desc')
-                                ->limit(5)
-                                ->get();
-                        } catch (\Exception $e) {
-                            $recentStudents = collect();
-                        }
-                    @endphp
-                    
                     <div class="space-y-3">
                         @forelse($recentStudents as $student)
                             <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                                 <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                                     <span class="text-xs font-semibold text-blue-600">
-                                        {{ strtoupper(substr($student->name, 0, 1)) }}
+                                        {{ strtoupper(substr($student->user->name, 0, 1)) }}
                                     </span>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-900 truncate">
-                                        {{ $student->name }}
+                                        {{ $student->user->name }}
                                     </p>
                                     <p class="text-xs text-gray-500">
                                         {{ $student->universitas ?? 'Universitas belum diisi' }}
                                     </p>
                                 </div>
                                 <div class="text-xs text-gray-400">
-                                    {{ \Carbon\Carbon::parse($student->created_at)->diffForHumans() }}
+                                    {{ $student->created_at->diffForHumans() }}
                                 </div>
                             </div>
                         @empty

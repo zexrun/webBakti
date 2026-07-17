@@ -133,6 +133,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supervisor.')->group(function () {
     // Rute utama
     Route::get('/dashboard', [SupervisorController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard-new', [SupervisorController::class, 'dashboardInertia'])->name('dashboard.new');
 
     // Rute untuk menampilkan daftar mahasiswa bimbingan
     Route::get('/students/list', [SupervisorController::class, 'index'])->name('students.list.index');

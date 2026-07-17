@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Supervisor;
 
 use App\Models\Supervisor;
 use App\Models\Student;
+use App\Models\Message;
 
 use App\Http\Controllers\Controller;
 
@@ -11,12 +12,53 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SupervisorController extends Controller
 {
     public function dashboard()
     {
-        return view('supervisor.dashboard');
+        return view('supervisor.dashboard', $this->dashboardData());
+    }
+
+    /**
+     * Versi Inertia/React dari dashboard pembimbing (dalam migrasi UI baru).
+     */
+    public function dashboardInertia(): Response
+    {
+        return Inertia::render('Supervisor/Dashboard', $this->dashboardData());
+    }
+
+    private function dashboardData(): array
+    {
+        $supervisor = Auth::user()->supervisor;
+
+        $totalStudents = $supervisor->students()->count();
+        $totalTasks = $supervisor->tasks()->count();
+        $pendingAssessments = $supervisor->students()->whereDoesntHave('finalAssessment')->count();
+        $completedInternships = $supervisor->students()->whereHas('finalAssessment')->count();
+
+        $recentStudents = $supervisor->students()
+            ->with('user')
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $unreadMessages = Message::where('recipient_id', Auth::id())
+            ->where('is_read', false)
+            ->count();
+
+        return [
+            'stats' => [
+                'totalStudents' => $totalStudents,
+                'totalTasks' => $totalTasks,
+                'pendingAssessments' => $pendingAssessments,
+                'completedInternships' => $completedInternships,
+            ],
+            'recentStudents' => $recentStudents,
+            'unreadMessages' => $unreadMessages,
+        ];
     }
 
     public function index()
