@@ -165,6 +165,147 @@
             </div>
         </div>
 
+        <!-- Real-time Statistics Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Submission Statistics -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-900 mb-4">Submission</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Total Submission</span>
+                        <span class="text-lg font-bold text-gray-900">{{ $totalSubmissions }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Sudah Dinilai</span>
+                        <span class="text-lg font-bold text-green-600">{{ $submissionsWithGrades }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Menunggu Nilai</span>
+                        <span class="text-lg font-bold text-orange-600">{{ $pendingSubmissions }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                        <div class="bg-green-600 h-2 rounded-full" style="width: {{ $submissionGradeRate }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ $submissionGradeRate }}% Selesai</p>
+                </div>
+            </div>
+
+            <!-- Attendance Statistics -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-900 mb-4">Kehadiran</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Total Attendance</span>
+                        <span class="text-lg font-bold text-gray-900">{{ $totalAttendance }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Disetujui</span>
+                        <span class="text-lg font-bold text-green-600">{{ $approvedAttendance }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Pending</span>
+                        <span class="text-lg font-bold text-orange-600">{{ $pendingAttendance }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $attendanceApprovalRate }}%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ $attendanceApprovalRate }}% Diproses</p>
+                </div>
+            </div>
+
+            <!-- Today's Activity -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-900 mb-4">Hari Ini</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Check-in</span>
+                        <span class="text-lg font-bold text-blue-600">{{ $todayAttendance }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Submission</span>
+                        <span class="text-lg font-bold text-purple-600">{{ $todaySubmissions }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Approval</span>
+                        <span class="text-lg font-bold text-green-600">{{ $todayApprovals }}</span>
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                        <p class="text-xs text-blue-800">
+                            <strong>Update realtime</strong><br>
+                            Diperbarui {{ now()->format('H:i') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This Month Statistics -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-semibold text-gray-900 mb-4">Bulan Ini</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Mahasiswa Baru</span>
+                        <span class="text-lg font-bold text-blue-600">{{ $thisMonthStudents }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Tugas Baru</span>
+                        <span class="text-lg font-bold text-purple-600">{{ $thisMonthTasks }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Kehadiran</span>
+                        <span class="text-lg font-bold text-green-600">{{ $thisMonthAttendance }}</span>
+                    </div>
+                    <div class="mt-4 p-3 bg-purple-50 rounded-lg">
+                        <p class="text-xs text-purple-800">
+                            <strong>Periode</strong><br>
+                            {{ now()->format('d M Y') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Supervisor Metrics -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Metrik Pembimbing</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">Rata-rata Mahasiswa/Pembimbing</span>
+                        <span class="text-2xl font-bold text-blue-600">{{ $averageStudentsPerSupervisor }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">Rata-rata Tugas/Pembimbing</span>
+                        <span class="text-2xl font-bold text-purple-600">{{ $averageTasksPerSupervisor }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                        <span class="text-sm text-red-800 font-medium">Mahasiswa Tanpa Pembimbing</span>
+                        <span class="text-2xl font-bold text-red-600">{{ $studentWithoutSupervisor }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Rankings -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Direktorat</h3>
+                <div class="space-y-2">
+                    @forelse($departmentStats as $dept)
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ $dept['name'] }}</p>
+                                <p class="text-xs text-gray-600">{{ $dept['supervisors'] }} pembimbing • {{ $dept['students'] }} mahasiswa</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg font-bold text-blue-600">{{ $dept['students'] }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-sm text-gray-500">Tidak ada data</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between mb-6">
