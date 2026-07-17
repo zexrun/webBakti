@@ -30,7 +30,12 @@ class FinalAssessmentController extends Controller
 
     public function edit(Student $student)
     {
-        // Ambil data penilaian yang sudah ada
+        // Otorisasi: Supervisor hanya bisa edit penilaian student bimbingannya
+        $isAuthorized = Auth::user()->supervisor->students()->where('id', $student->id)->exists();
+        if (!$isAuthorized) {
+            abort(403, "AKSES DITOLAK");
+        }
+
         $assessment = $student->finalAssessment;
 
         // Jika belum ada penilaian, arahkan ke halaman create
@@ -41,17 +46,19 @@ class FinalAssessmentController extends Controller
         return view('supervisor.students.assessment.edit', compact('student', 'assessment'));
     }
 
-    /**
-     * MENGUPDATE penilaian akhir yang sudah ada.
-     */
     public function update(Request $request, Student $student)
     {
+        // Otorisasi: Supervisor hanya bisa update penilaian student bimbingannya
+        $isAuthorized = Auth::user()->supervisor->students()->where('id', $student->id)->exists();
+        if (!$isAuthorized) {
+            abort(403, "AKSES DITOLAK");
+        }
+
         $request->validate([
             'final_grade' => 'required|string|max:10',
             'overall_comments' => 'required|string',
         ]);
 
-        // Cari penilaian akhir dan update
         $student->finalAssessment->update([
             'final_grade' => $request->final_grade,
             'overall_comments' => $request->overall_comments,

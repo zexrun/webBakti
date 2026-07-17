@@ -57,6 +57,7 @@ class UserController extends Controller
             'role' => $request->role,
             'password' => null,
             'activation_token' => hash('sha256', $token),
+            'activation_token_expires_at' => now()->addDay(),
         ]);
 
         if ($request->role === 'student') {
@@ -239,8 +240,10 @@ class UserController extends Controller
         }
 
         $token = Str::random(60);
-        $user->activation_token = hash('sha256', $token);
-        $user->save();
+        $user->update([
+            'activation_token' => hash('sha256', $token),
+            'activation_token_expires_at' => now()->addDay(),
+        ]);
 
         $user->notify(new SendAccountActivationEmail($token));
 

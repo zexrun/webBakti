@@ -17,6 +17,9 @@ class Document extends Model
         'document_name',
         'file_path',
         'type',
+        'mime_type',
+        'file_size',
+        'original_filename',
     ];
 
     public function documents()

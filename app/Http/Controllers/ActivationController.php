@@ -13,10 +13,17 @@ class ActivationController extends Controller
     public function showActivationForm(string $token)
     {
         $hashedToken = hash('sha256', $token);
-        $user = User::where('activation_token', $hashedToken)->whereNull('email_verified_at')->first();
+        $user = User::where('activation_token', $hashedToken)
+            ->whereNull('email_verified_at')
+            ->first();
 
         if (!$user) {
             return redirect('/login')->withErrors(['email' => 'Link aktivasi tidak valid atau sudah kedaluwarsa.']);
+        }
+
+        // Check if token has expired
+        if ($user->activation_token_expires_at && $user->activation_token_expires_at->isPast()) {
+            return redirect('/login')->withErrors(['email' => 'Link aktivasi telah kedaluwarsa. Silahkan minta link aktivasi yang baru.']);
         }
 
         return view('auth.activate', ['token' => $token, 'email' => $user->email]);
@@ -34,12 +41,18 @@ class ActivationController extends Controller
         $hashedToken = hash('sha256', $request->token);
         $user = User::where('activation_token', $hashedToken)->firstOrFail();
 
+        // Check if token has expired
+        if ($user->activation_token_expires_at && $user->activation_token_expires_at->isPast()) {
+            return back()->withErrors(['token' => 'Link aktivasi telah kedaluwarsa. Silahkan minta link aktivasi yang baru.']);
+        }
+
         $user->update([
             'name' => $request->name,
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
             'activation_token' => null,
+            'activation_token_expires_at' => null,
         ]);
     
 

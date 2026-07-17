@@ -59,8 +59,16 @@ class AttendanceController extends Controller
             'notes' => 'nullable|string|max:500',
         ]);
 
+        $user = Auth::user();
+
         if ($type === 'attendance') {
-            $item = Attendance::findOrFail($id);
+            $item = Attendance::with('user.student')->findOrFail($id);
+
+            // Authorization: Supervisor must supervise this student
+            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
+                abort(403, 'Anda tidak berhak mengapprove attendance student ini.');
+            }
+
             $item->update([
                 'supervisor_approval' => $request->action === 'approve' ? 'approved' : 'rejected',
                 'supervisor_notes' => $request->notes,
@@ -68,7 +76,13 @@ class AttendanceController extends Controller
                 'approved_at' => now(),
             ]);
         } else {
-            $item = AttendanceException::findOrFail($id);
+            $item = AttendanceException::with('user.student')->findOrFail($id);
+
+            // Authorization: Supervisor must supervise this student
+            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
+                abort(403, 'Anda tidak berhak mengapprove exception student ini.');
+            }
+
             $item->update([
                 'status' => $request->action === 'approve' ? 'approved' : 'rejected',
                 'supervisor_notes' => $request->notes,

@@ -163,6 +163,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/activate/{token}', [ActivationController::class, 'showActivationForm'])->name('activation.form');
-Route::post('/activate', [ActivationController::class, 'activateAccount'])->name('activation.activate');
+Route::post('/activate', [ActivationController::class, 'activateAccount'])
+    ->middleware('throttle:5,1')
+    ->name('activation.activate');
 
 require __DIR__ . '/auth.php';
