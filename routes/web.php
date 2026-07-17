@@ -14,6 +14,7 @@ use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\Admin\MonitoringController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DirectorateController;
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\Admin\SettingController;
 
@@ -35,6 +36,15 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+// Notification routes (authenticated users only)
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
+    Route::delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 });
 
 // Grup rute yang HANYA bisa diakses oleh ADMIN

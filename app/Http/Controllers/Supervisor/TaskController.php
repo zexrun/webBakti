@@ -8,8 +8,10 @@ use App\Models\Task;
 use App\Models\Supervisor;
 use App\Models\Student;
 use App\Notifications\NewTaskAssigned;
+use App\Notifications\TaskDeadlineReminder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {

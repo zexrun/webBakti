@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use App\Models\Submission;
 use App\Models\Supervisor;
-use App\Models\Task;
+use App\Notifications\SubmissionGraded;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -100,10 +100,16 @@ class SubmissionController extends Controller
             'comments' => 'nullable|string|max:1000',
         ]);
 
+        $wasGraded = $submission->grade !== null;
+
         $submission->update([
             'grade' => $request->grade,
             'comments' => $request->comments,
         ]);
+
+        if (!$wasGraded) {
+            $submission->student->user->notify(new SubmissionGraded($submission));
+        }
 
         return redirect()
             ->route('supervisor.submissions.index')
@@ -121,10 +127,16 @@ class SubmissionController extends Controller
             'comments' => 'nullable|string|max:1000',
         ]);
 
+        $wasGraded = $submission->grade !== null;
+
         $submission->update([
             'grade' => $request->grade,
             'comments' => $request->comments,
         ]);
+
+        if (!$wasGraded) {
+            $submission->student->user->notify(new SubmissionGraded($submission));
+        }
 
         return response()->json([
             'success' => true,
