@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
 // Grup rute yang HANYA bisa diakses oleh ADMIN
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard-new', [AdminController::class, 'dashboardInertia'])->name('dashboard.new');
     Route::get('/plotting', [AdminController::class, 'plotting'])->name('plotting');
     Route::post('/plotting/assign', [AdminController::class, 'assign'])->name('plotting.assign');
     Route::post('/users/{user}/resend-activation', [UserController::class, 'resendActivation'])->name('users.resend_activation');

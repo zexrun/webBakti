@@ -11,10 +11,25 @@ use App\Models\User;
 use App\Models\Submission;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AdminController extends Controller
 {
     public function dashboard()
+    {
+        return view('admin.dashboard', $this->dashboardData());
+    }
+
+    /**
+     * Versi Inertia/React dari dashboard admin (dalam migrasi UI baru).
+     */
+    public function dashboardInertia(): Response
+    {
+        return Inertia::render('Admin/Dashboard', $this->dashboardData());
+    }
+
+    private function dashboardData(): array
     {
         // Basic counts
         $userCount = User::whereNotNull('username')->where('username', '!=', '')->count();
@@ -90,7 +105,7 @@ class AdminController extends Controller
             ->values()
             ->toArray();
 
-        return view('admin.dashboard', [
+        return [
             'userCount' => $userCount,
             'directorateCount' => $directorateCount,
             'adminCount' => $adminCount,
@@ -117,7 +132,7 @@ class AdminController extends Controller
             'attendanceTrend' => $attendanceTrend,
             'submissionTrend' => $submissionTrend,
             'departmentStats' => $departmentStats,
-        ]);
+        ];
     }
 
     public function plotting()
