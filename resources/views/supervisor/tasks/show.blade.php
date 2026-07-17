@@ -7,16 +7,40 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header with Back Button -->
         <div class="mb-6">
-            <div class="flex items-center mb-4">
-                <a href="{{ route('supervisor.tasks.index') }}" 
-                   class="mr-4 p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </a>
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Detail Tugas</h1>
-                    <p class="text-gray-600 mt-1">Kelola dan nilai submission mahasiswa</p>
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <a href="{{ route('supervisor.tasks.index') }}"
+                       class="mr-4 p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Detail Tugas</h1>
+                        <p class="text-gray-600 mt-1">Kelola dan nilai submission mahasiswa</p>
+                    </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <a href="{{ route('supervisor.tasks.edit', $task) }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit
+                    </a>
+                    <form action="{{ route('supervisor.tasks.destroy', $task) }}" method="POST" style="display: inline;" id="deleteForm">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button"
+                                onclick="confirmDelete()"
+                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-white border border-red-300 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Hapus
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -393,7 +417,7 @@ document.querySelectorAll('form[id^="form-nilai-"]').forEach(form => {
     form.addEventListener('submit', function() {
         const submitBtn = this.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = `
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
@@ -402,7 +426,7 @@ document.querySelectorAll('form[id^="form-nilai-"]').forEach(form => {
             </svg>
             Menyimpan...
         `;
-        
+
         // Reset after 3 seconds if form doesn't redirect
         setTimeout(() => {
             submitBtn.disabled = false;
@@ -410,5 +434,12 @@ document.querySelectorAll('form[id^="form-nilai-"]').forEach(form => {
         }, 3000);
     });
 });
+
+// Delete confirmation
+function confirmDelete() {
+    if (confirm('Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan.')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
 </script>
 @endsection

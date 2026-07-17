@@ -219,13 +219,28 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4">
-                                                <a href="{{ route('supervisor.tasks.show', $task->id) }}"
-                                                   class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
-                                                    Lihat Detail
-                                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                    </svg>
-                                                </a>
+                                                <div class="flex gap-2">
+                                                    <a href="{{ route('supervisor.tasks.show', $task->id) }}"
+                                                       class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
+                                                        Lihat
+                                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                                        </svg>
+                                                    </a>
+                                                    <a href="{{ route('supervisor.tasks.edit', $task->id) }}"
+                                                       class="inline-flex items-center text-sm font-medium text-green-600 hover:text-green-500 transition-colors">
+                                                        Edit
+                                                    </a>
+                                                    <form action="{{ route('supervisor.tasks.destroy', $task->id) }}" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                                onclick="confirmTaskDelete(event)"
+                                                                class="text-sm font-medium text-red-600 hover:text-red-500 transition-colors">
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -320,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
         row.addEventListener('mouseenter', function() {
             this.style.transform = 'translateX(2px)';
         });
-        
+
         row.addEventListener('mouseleave', function() {
             this.style.transform = 'translateX(0)';
         });
@@ -338,5 +353,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 });
+
+// Delete confirmation
+function confirmTaskDelete(event) {
+    event.preventDefault();
+    if (confirm('Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan.')) {
+        event.target.closest('form').submit();
+    }
+}
 </script>
 @endsection

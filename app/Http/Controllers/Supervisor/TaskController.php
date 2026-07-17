@@ -92,6 +92,77 @@ class TaskController extends Controller
         ]);
     }
 
+    public function edit(Task $task)
+    {
+        if ($task->supervisor_id !== Auth::user()->supervisor->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
+        $students = $supervisor->students()->with('user')->get();
+        $assignedStudents = $task->students()->pluck('id')->toArray();
+
+        return view('supervisor.tasks.edit', compact('task', 'students', 'assignedStudents'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        if ($task->supervisor_id !== Auth::user()->supervisor->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => 'required|in:harian,akhir',
+            'due_date' => 'nullable|date|after_or_equal:today',
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id',
+            'file' => 'nullable|file|mimes:pdf,pptx,doc,docx,jpg,jpeg,png,rar,zip|max:10240',
+        ]);
+
+        $filePath = $task->file_path;
+        if ($request->hasFile('file')) {
+            if ($task->file_path && \Storage::disk('public')->exists($task->file_path)) {
+                \Storage::disk('public')->delete($task->file_path);
+            }
+            $filePath = $request->file('file')->store('task_attachments', 'public');
+        }
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'type' => $request->type,
+            'due_date' => $request->due_date,
+            'file_path' => $filePath,
+        ]);
+
+        $task->students()->sync($request->student_ids);
+
+        return redirect()->route('supervisor.tasks.show', $task)->with('success', 'Tugas berhasil diperbarui!');
+    }
+
+    public function destroy(Task $task)
+    {
+        if ($task->supervisor_id !== Auth::user()->supervisor->id) {
+            abort(403, 'AKSES DITOLAK');
+        }
+
+        if ($task->submissions()->exists()) {
+            return redirect()
+                ->route('supervisor.tasks.index')
+                ->with('error', 'Tugas tidak dapat dihapus karena sudah ada submission dari siswa.');
+        }
+
+        if ($task->file_path && \Storage::disk('public')->exists($task->file_path)) {
+            \Storage::disk('public')->delete($task->file_path);
+        }
+
+        $task->delete();
+
+        return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dihapus!');
+    }
+
     public function grade(Request $request, Submission $submission)
     {
         if ($submission->task->supervisor_id !== Auth::user()->supervisor->id) {
