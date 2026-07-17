@@ -358,6 +358,30 @@
                     </div>
                 </a>
 
+                <!-- Messaging -->
+                @php
+                    $unreadMessages = App\Models\Message::where('recipient_id', Auth::id())
+                        ->where('is_read', false)
+                        ->count();
+                @endphp
+                <a href="{{ route('messages.inbox') }}"
+                class="flex items-center p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg border border-indigo-200 transition-colors duration-200">
+                    <div class="p-2 bg-indigo-100 rounded-lg mr-3 relative">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        @if($unreadMessages > 0)
+                            <span class="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                                {{ $unreadMessages }}
+                            </span>
+                        @endif
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-900">Pesan</h3>
+                        <p class="text-sm text-gray-500">{{ $unreadMessages > 0 ? $unreadMessages . ' pesan baru' : 'Tidak ada pesan baru' }}</p>
+                    </div>
+                </a>
+
                 <!-- Laporan Kehadiran -->
                 <a href="{{ route('admin.attendance.reports') }}"
                 class="flex items-center p-4 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors duration-200">
