@@ -28,39 +28,17 @@ class AttendanceApprovalNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $statusLabel = $this->status === 'approved' ? 'Disetujui' : 'Ditolak';
-        $checkInTime = $this->attendance->check_in_time ? \Carbon\Carbon::parse($this->attendance->check_in_time)->format('d M Y, H:i') : 'N/A';
-        $attendanceUrl = url('/student/attendance/' . $this->attendance->id);
+        $subject = $this->status === 'approved'
+            ? '✓ Kehadiran Disetujui'
+            : '✗ Kehadiran Ditolak';
 
-        $mail = (new MailMessage)
-            ->subject('Attendance ' . $statusLabel . ' - ' . $checkInTime)
-            ->greeting('Halo, ' . $notifiable->name . '!')
-            ->line('Status kehadiran Anda telah dikaji oleh admin.');
-
-        if ($this->status === 'approved') {
-            $mail->line('')
-                ->line('✓ **Kehadiran Anda DISETUJUI**')
-                ->line('');
-        } else {
-            $mail->line('')
-                ->line('✗ **Kehadiran Anda DITOLAK**')
-                ->line('')
-                ->line('Alasan: ' . ($this->attendance->rejection_reason ?? 'Tidak ada alasan yang diberikan'));
-        }
-
-        $mail->line('**Waktu Check-in:** ' . $checkInTime)
-            ->line('**Lokasi:** ' . ($this->attendance->location ?? 'Tidak tercatat'))
-            ->line('**Status Verifikasi Lokasi:** ' . ($this->attendance->location_verification_status ?? 'Belum diverifikasi'))
-            ->action('Lihat Detail', $attendanceUrl)
-            ->line('Terima kasih!');
-
-        if ($this->status === 'rejected') {
-            $mail->line('')
-                ->line('Jika Anda memiliki pertanyaan atau ingin mengajukan banding, silakan hubungi admin.')
-                ->line('Email: magang.baktikomdigi@gmail.com');
-        }
-
-        return $mail->salutation('Tim Sistem Monitoring Magang');
+        return (new MailMessage)
+            ->subject($subject . ' - ' . ($this->attendance->check_in_time ? \Carbon\Carbon::parse($this->attendance->check_in_time)->format('d M Y') : 'N/A'))
+            ->view('emails.attendance-approval', [
+                'attendance' => $this->attendance,
+                'status' => $this->status,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toArray(object $notifiable): array

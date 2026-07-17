@@ -28,27 +28,18 @@ class TaskDeadlineReminder extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $taskUrl = url('/student/tasks/' . $this->task->id);
-        $dueDate = $this->task->due_date->format('d M Y, H:i');
-
         $subject = match($this->daysUntilDeadline) {
-            0 => 'URGENT: Tugas berakhir HARI INI - ' . $this->task->title,
-            default => 'Reminder: Tugas berakhir dalam ' . $this->daysUntilDeadline . ' hari - ' . $this->task->title,
+            0 => '🚨 URGENT: Tugas berakhir HARI INI - ' . $this->task->title,
+            default => '⏰ Reminder: Tugas berakhir dalam ' . $this->daysUntilDeadline . ' hari',
         };
 
         return (new MailMessage)
             ->subject($subject)
-            ->greeting('Halo, ' . $notifiable->name . '!')
-            ->line('Ini adalah pengingat bahwa tugas Anda akan segera berakhir.')
-            ->line('')
-            ->line('**Tugas:** ' . $this->task->title)
-            ->line('**Batas Waktu:** ' . $dueDate)
-            ->line('**Waktu Tersisa:** ' . $this->getTimeRemaining())
-            ->line('')
-            ->line('Pastikan Anda menyelesaikan dan mengumpulkan tugas sebelum batas waktu!')
-            ->action('Lihat Tugas Sekarang', $taskUrl)
-            ->line('Jangan sampai ketinggalan!')
-            ->salutation('Tim Sistem Monitoring Magang');
+            ->view('emails.task-deadline-reminder', [
+                'task' => $this->task,
+                'daysUntilDeadline' => $this->daysUntilDeadline,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toArray(object $notifiable): array

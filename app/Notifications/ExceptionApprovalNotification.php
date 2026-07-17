@@ -28,38 +28,17 @@ class ExceptionApprovalNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $statusLabel = $this->status === 'approved' ? 'Disetujui' : 'Ditolak';
-        $exceptionDate = $this->exception->date ? \Carbon\Carbon::parse($this->exception->date)->format('d M Y') : 'N/A';
+        $subject = $this->status === 'approved'
+            ? '✓ Exception Disetujui'
+            : '✗ Exception Ditolak';
 
-        $mail = (new MailMessage)
-            ->subject('Pengajuan Exception ' . $statusLabel . ' - ' . $exceptionDate)
-            ->greeting('Halo, ' . $notifiable->name . '!')
-            ->line('Pengajuan exception Anda telah dikaji oleh admin.')
-            ->line('');
-
-        if ($this->status === 'approved') {
-            $mail->line('✓ **Pengajuan Anda DISETUJUI**')
-                ->line('')
-                ->line('Alasan sakit/izin Anda pada ' . $exceptionDate . ' telah disetujui.')
-                ->line('');
-        } else {
-            $mail->line('✗ **Pengajuan Anda DITOLAK**')
-                ->line('')
-                ->line('Alasan penolakan: ' . ($this->exception->admin_notes ?? 'Tidak ada keterangan yang diberikan'))
-                ->line('');
-        }
-
-        $mail->line('**Tanggal:** ' . $exceptionDate)
-            ->line('**Tipe:** ' . ($this->exception->type ?? 'N/A'))
-            ->line('**Alasan:** ' . ($this->exception->reason ?? 'N/A'));
-
-        if ($this->status === 'rejected') {
-            $mail->line('')
-                ->line('Jika Anda ingin mengajukan banding atau memiliki pertanyaan, silakan hubungi admin.')
-                ->line('Email: magang.baktikomdigi@gmail.com');
-        }
-
-        return $mail->salutation('Tim Sistem Monitoring Magang');
+        return (new MailMessage)
+            ->subject($subject . ' - ' . ($this->exception->date ? \Carbon\Carbon::parse($this->exception->date)->format('d M Y') : 'N/A'))
+            ->view('emails.exception-approval', [
+                'exception' => $this->exception,
+                'status' => $this->status,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toArray(object $notifiable): array

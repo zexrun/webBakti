@@ -26,24 +26,12 @@ class SubmissionGraded extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $supervisorName = $this->submission->task->supervisor->user->name;
-        $taskUrl = url('/student/tasks/' . $this->submission->task->id);
-
         return (new MailMessage)
-            ->subject('Tugas Dinilai: ' . $this->submission->task->title)
-            ->greeting('Halo, ' . $notifiable->name . '!')
-            ->line('Pembimbing **' . $supervisorName . '** telah memberikan nilai untuk tugas Anda.')
-            ->line('')
-            ->line('**Tugas:** ' . $this->submission->task->title)
-            ->line('**Nilai:** ' . strtoupper($this->submission->grade))
-            ->line('')
-            ->if($this->submission->comments, function ($mail) {
-                $mail->line('**Komentar Pembimbing:**')
-                    ->line($this->submission->comments);
-            })
-            ->action('Lihat Detail', $taskUrl)
-            ->line('Terus tingkatkan kualitas pekerjaan Anda!')
-            ->salutation('Tim Sistem Monitoring Magang');
+            ->subject('Submission Dinilai: ' . $this->submission->task->title)
+            ->view('emails.submission-graded', [
+                'submission' => $this->submission,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toArray(object $notifiable): array
