@@ -6,10 +6,12 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class MessageController extends Controller
 {
-    public function inbox()
+    public function inbox(): Response
     {
         $messages = Message::where('recipient_id', Auth::id())
             ->with('sender')
@@ -20,20 +22,20 @@ class MessageController extends Controller
             ->where('is_read', false)
             ->count();
 
-        return view('messages.inbox', compact('messages', 'unreadCount'));
+        return Inertia::render('Messages/Inbox', compact('messages', 'unreadCount'));
     }
 
-    public function sent()
+    public function sent(): Response
     {
         $messages = Message::where('sender_id', Auth::id())
             ->with('recipient')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('messages.sent', compact('messages'));
+        return Inertia::render('Messages/Sent', compact('messages'));
     }
 
-    public function show(Message $message)
+    public function show(Message $message): Response
     {
         if ($message->recipient_id !== Auth::id() && $message->sender_id !== Auth::id()) {
             abort(403);
@@ -53,16 +55,16 @@ class MessageController extends Controller
          ->orderBy('created_at', 'asc')
          ->get();
 
-        return view('messages.show', compact('message', 'conversation'));
+        return Inertia::render('Messages/Show', compact('message', 'conversation'));
     }
 
-    public function create()
+    public function create(): Response
     {
         $recipients = User::whereIn('role', ['supervisor', 'student', 'admin'])
             ->where('id', '!=', Auth::id())
             ->get();
 
-        return view('messages.create', compact('recipients'));
+        return Inertia::render('Messages/Create', compact('recipients'));
     }
 
     public function store(Request $request)
