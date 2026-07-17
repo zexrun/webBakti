@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class LogbookController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $studentIds = Auth::user()->supervisor->students()->pluck('id');
 
@@ -18,17 +20,12 @@ class LogbookController extends Controller
             ->latest('activity_date')
             ->paginate(15);
 
-        return view('supervisor.logbooks.index', compact('logbooks'));
+        return Inertia::render('Supervisor/Logbooks/Index', compact('logbooks'));
     }
 
-    public function show(Logbook $logbook)
+    public function show(Logbook $logbook): Response
     {
-
-        if (Auth::user() === 'admin') {
-            return view('supervisor.students.assessment.create', compact('student'));
-        }
-
-        $logbook->load('student');
+        $logbook->load('student.user');
 
         $isAuthorized = Auth::user()->supervisor->students()->where('id', $logbook->student_id)->exists();
 
@@ -40,7 +37,7 @@ class LogbookController extends Controller
             $logbook->update(['is_verified' => true]);
         }
 
-        return view('supervisor.logbooks.show', compact('logbook'));
+        return Inertia::render('Supervisor/Logbooks/Show', compact('logbook'));
     }
 
     public function verify(Logbook $logbook)

@@ -6,20 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use function Laravel\Prompts\alert;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class LogbookController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        $logbook = Auth::user()->student->logbooks()->paginate(10);
+        $logbook = Auth::user()->student->logbooks()->latest('activity_date')->paginate(10);
 
-        return view('student.logbooks.index', compact('logbook'));
+        return Inertia::render('Student/Logbooks/Index', compact('logbook'));
     }
 
-    public function create()
+    public function create(): Response
     {
-        return view('student.logbooks.create');
+        return Inertia::render('Student/Logbooks/Create');
     }
 
     public function store(Request $request)
@@ -54,22 +55,22 @@ class LogbookController extends Controller
         return redirect()->route('student.logbooks.index')->with('success', 'Laporan harian berhasil disimpan!');
     }
 
-    public function show(Logbook $logbook)
+    public function show(Logbook $logbook): Response
     {
         if ($logbook->student_id !== Auth::user()->student->id) {
             abort(403, 'AKSES DITOLAK');
         }
 
-        return view('student.logbooks.show', compact('logbook'));
+        return Inertia::render('Student/Logbooks/Show', compact('logbook'));
     }
 
-    public function edit(Logbook $logbook)
+    public function edit(Logbook $logbook): Response
     {
         if ($logbook->student_id !== Auth::user()->student->id) {
             abort(403, 'AKSES DITOLAK');
         }
 
-        return view('student.logbooks.edit', compact('logbook'));
+        return Inertia::render('Student/Logbooks/Edit', compact('logbook'));
     }
 
     public function update(Request $request, Logbook $logbook)

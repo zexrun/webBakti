@@ -27,7 +27,8 @@
       "Bash(git commit -m 'feat: Migrate Messages module to React + Inertia + shadcn \\(full cutover\\) *)",
       "Bash(php -l app/Http/Controllers/DocumentController.php)",
       "Bash(rm resources/views/student/documents/index.blade.php resources/views/student/documents/create.blade.php)",
-      "Bash(rmdir resources/views/student/documents)"
+      "Bash(rmdir resources/views/student/documents)",
+      "Bash(git commit -m 'feat: Migrate Documents module to React + Inertia + shadcn \\(full cutover\\) *)"
     ]
   }
 }
