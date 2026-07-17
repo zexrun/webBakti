@@ -219,6 +219,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::post('/attendance/exception', [AttendanceController::class, 'requestException'])->name('attendance.exception');
 
     Route::resource('documents', DocumentController::class);
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
 });
 
 

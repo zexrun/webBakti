@@ -23,7 +23,11 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8000/admin/announcements\" -H \"X-Inertia: true\" -H \"X-Inertia-Version: 1\")",
       "Bash(php -l app/Http/Controllers/MessageController.php)",
       "Bash(rm resources/views/messages/inbox.blade.php resources/views/messages/sent.blade.php resources/views/messages/create.blade.php resources/views/messages/show.blade.php)",
-      "Bash(rmdir resources/views/messages)"
+      "Bash(rmdir resources/views/messages)",
+      "Bash(git commit -m 'feat: Migrate Messages module to React + Inertia + shadcn \\(full cutover\\) *)",
+      "Bash(php -l app/Http/Controllers/DocumentController.php)",
+      "Bash(rm resources/views/student/documents/index.blade.php resources/views/student/documents/create.blade.php)",
+      "Bash(rmdir resources/views/student/documents)"
     ]
   }
 }

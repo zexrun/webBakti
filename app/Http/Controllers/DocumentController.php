@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use finfo;
 use Symfony\Component\HttpFoundation\Response;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 
 
@@ -19,7 +21,7 @@ class DocumentController extends Controller
     /**
      * Menampilkan daftar dokumen milik mahasiswa.
      */
-    public function index(Request $request)
+    public function index(Request $request): InertiaResponse
     {
         $user = Auth::user();
 
@@ -40,15 +42,15 @@ class DocumentController extends Controller
             $documents = $student->documents;
         }
 
-        return view('student.documents.index', compact('documents', 'student'));
+        return Inertia::render('Student/Documents/Index', compact('documents', 'student'));
     }
 
     /**
      * Menyimpan dokumen baru.
      */
-    public function create()
+    public function create(): InertiaResponse
     {
-        return view('student.documents.create');
+        return Inertia::render('Student/Documents/Create');
     }
 
     public function store(Request $request)
@@ -103,6 +105,25 @@ class DocumentController extends Controller
         ]);
 
         return redirect()->route('student.documents.index')->with('success', 'Dokumen berhasil diunggah.');
+    }
+
+    /**
+     * Menyajikan file dokumen dari private disk (bukan public storage,
+     * karena file diunggah dengan Storage::disk('private')).
+     */
+    public function download($id): Response
+    {
+        $student = Auth::user()->student;
+        $document = $student->documents()->findOrFail($id);
+
+        if (!Storage::disk('private')->exists($document->file_path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return Storage::disk('private')->response(
+            $document->file_path,
+            $document->original_filename,
+        );
     }
 
     public function destroy($id)
