@@ -86,7 +86,7 @@ class DashboardController extends Controller
         ];
 
         // 6. Supervisor info
-        $supervisor = $student->supervisor->user;
+        $supervisor = $student->supervisor?->user;
 
         // 7. Logbooks count this month
         $logbooksThisMonth = $student->logbooks()

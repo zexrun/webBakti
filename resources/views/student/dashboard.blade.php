@@ -30,8 +30,12 @@
                 <!-- Supervisor Info -->
                 <div class="mt-4 sm:mt-0 bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
                     <p class="text-xs text-gray-500 mb-1">Pembimbing</p>
-                    <p class="text-sm font-semibold text-gray-900">{{ $supervisor->name }}</p>
-                    <p class="text-xs text-gray-600">{{ $supervisor->email }}</p>
+                    @if($supervisor)
+                        <p class="text-sm font-semibold text-gray-900">{{ $supervisor->name }}</p>
+                        <p class="text-xs text-gray-600">{{ $supervisor->email }}</p>
+                    @else
+                        <p class="text-sm text-gray-500">Belum ditugaskan</p>
+                    @endif
                 </div>
             </div>
         </div>
