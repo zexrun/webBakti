@@ -52,11 +52,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function supervisor() {
+    public function supervisor()
+    {
         return $this->hasOne(Supervisor::class);
     }
 
-        public function student() {
+    public function student()
+    {
         return $this->hasOne(Student::class);
     }
+
+    public function getSupervisorOrNull()
+    {
+        return $this->supervisor()->first();
+    }
+
+    public function getStudentOrNull()
+    {
+        return $this->student()->first();
+    }
 }
+

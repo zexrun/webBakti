@@ -23,18 +23,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $queryBuilder = fn($role, $relasi = null) =>
-        User::with($relasi ? [$relasi] : [])
-            ->where('role', $role)
-            ->when($search, fn($q) => $q->where('name', 'like', "%$search%"))
-            ->orderBy('created_at', 'asc')
-            ->paginate(10, ['*'], $role);
+        $tab = $request->input('tab', 'admin');
 
-        $admins = $queryBuilder('admin');
-        $supervisors = $queryBuilder('supervisor', 'supervisor');
-        $students = $queryBuilder('student', 'student');
+        $query = User::when($search, fn($q) => $q->where('name', 'like', "%$search%"))
+            ->orderBy('created_at', 'asc');
 
-        return view('admin.users.index', compact('admins', 'supervisors', 'students', 'search'));
+        $admins = (clone $query)->where('role', 'admin')->paginate(10);
+        $supervisors = (clone $query)->where('role', 'supervisor')->with('supervisor')->paginate(10);
+        $students = (clone $query)->where('role', 'student')->with('student')->paginate(10);
+
+        return view('admin.users.index', compact('admins', 'supervisors', 'students', 'search', 'tab'));
     }
 
     public function create()
@@ -226,6 +224,15 @@ class UserController extends Controller
     {
         if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        // Check if supervisor has active students
+        if ($user->role === 'supervisor' && $user->supervisor) {
+            $activeStudents = $user->supervisor->students()->count();
+            if ($activeStudents > 0) {
+                return redirect()->route('admin.users.index')
+                    ->with('error', "Supervisor ini masih memiliki {$activeStudents} mahasiswa. Reassign mahasiswa terlebih dahulu.");
+            }
         }
 
         $user->delete();

@@ -5,10 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class Attendance extends Model
 {
     use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($attendance) {
+            if ($attendance->check_in_photo && Storage::disk('public')->exists($attendance->check_in_photo)) {
+                Storage::disk('public')->delete($attendance->check_in_photo);
+            }
+            if ($attendance->check_out_photo && Storage::disk('public')->exists($attendance->check_out_photo)) {
+                Storage::disk('public')->delete($attendance->check_out_photo);
+            }
+        });
+    }
 
     protected $fillable = [
         'user_id',
