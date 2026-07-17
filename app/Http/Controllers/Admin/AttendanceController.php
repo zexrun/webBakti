@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AttendanceController extends Controller
 {
@@ -210,5 +211,140 @@ class AttendanceController extends Controller
         });
 
         return view('admin.attendance.reports', compact('summary', 'users', 'month', 'year', 'userId'));
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $month = $request->get('month', Carbon::now()->month);
+        $year = $request->get('year', Carbon::now()->year);
+        $userId = $request->get('user_id');
+        $exportType = $request->get('type', 'detail');
+
+        $query = Attendance::with('user.student.supervisor.user')
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year);
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        $attendances = $query->orderBy('date', 'asc')->orderBy('user_id')->get();
+
+        $filename = "attendance_export_" . now()->format('Y-m-d_H-i-s') . ".csv";
+
+        $response = new StreamedResponse(function () use ($attendances, $exportType) {
+            $handle = fopen('php://output', 'w');
+            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            if ($exportType === 'detail') {
+                $this->exportDetailedCsv($handle, $attendances);
+            } else {
+                $this->exportSummaryCsv($handle, $attendances);
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+        return $response;
+    }
+
+    private function exportDetailedCsv($handle, $attendances)
+    {
+        $headers = [
+            'Tanggal',
+            'Nama Mahasiswa',
+            'Nim',
+            'Pembimbing',
+            'Direktorat',
+            'Waktu Masuk',
+            'Waktu Keluar',
+            'Jam Kerja',
+            'Status',
+            'Lokasi',
+            'Catatan',
+        ];
+
+        fputcsv($handle, $headers);
+
+        foreach ($attendances as $attendance) {
+            $checkInTime = $attendance->check_in_time
+                ? Carbon::parse($attendance->check_in_time)->format('H:i:s')
+                : '-';
+            $checkOutTime = $attendance->check_out_time
+                ? Carbon::parse($attendance->check_out_time)->format('H:i:s')
+                : '-';
+
+            $row = [
+                Carbon::parse($attendance->date)->format('d-m-Y'),
+                $attendance->user->name,
+                $attendance->user->student->nim ?? '-',
+                $attendance->user->student?->supervisor?->user->name ?? '-',
+                $attendance->user->student?->supervisor?->direktorat ?? '-',
+                $checkInTime,
+                $checkOutTime,
+                $attendance->working_hours ?? '-',
+                ucfirst($attendance->status),
+                $attendance->location_name ?? '-',
+                $attendance->location_notes ?? '-',
+            ];
+
+            fputcsv($handle, $row);
+        }
+    }
+
+    private function exportSummaryCsv($handle, $attendances)
+    {
+        $headers = [
+            'Nama Mahasiswa',
+            'NIM',
+            'Pembimbing',
+            'Total Hari Kerja',
+            'Hadir',
+            'Terlambat',
+            'Tidak Hadir',
+            'Rata-rata Jam Kerja',
+        ];
+
+        fputcsv($handle, $headers);
+
+        $summary = $attendances->groupBy('user_id')->map(function ($userAttendances) {
+            $totalHours = 0;
+            $countWithHours = 0;
+
+            foreach ($userAttendances->where('check_out_time', '!=', null) as $att) {
+                $totalHours += $att->working_hours ?? 0;
+                $countWithHours++;
+            }
+
+            $avgHours = $countWithHours > 0 ? round($totalHours / $countWithHours, 2) : 0;
+
+            return [
+                'user' => $userAttendances->first()->user,
+                'total_days' => $userAttendances->count(),
+                'present' => $userAttendances->where('status', 'present')->count(),
+                'late' => $userAttendances->where('status', 'late')->count(),
+                'absent' => $userAttendances->where('status', 'absent')->count(),
+                'avg_hours' => $avgHours,
+            ];
+        });
+
+        foreach ($summary as $item) {
+            $row = [
+                $item['user']->name,
+                $item['user']->student->nim ?? '-',
+                $item['user']->student?->supervisor?->user->name ?? '-',
+                $item['total_days'],
+                $item['present'],
+                $item['late'],
+                $item['absent'],
+                $item['avg_hours'] . ' jam',
+            ];
+
+            fputcsv($handle, $row);
+        }
     }
 }

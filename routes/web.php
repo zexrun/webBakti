@@ -80,6 +80,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/attendance/suspicious', [AdminAttendanceController::class, 'suspicious'])->name('attendance.suspicious');
     Route::post('/attendance/suspicious/{attendance}/review', [AdminAttendanceController::class, 'reviewSuspicious'])->name('attendance.suspicious.review');
     Route::get('/attendance/reports', [AdminAttendanceController::class, 'reports'])->name('attendance.reports');
+    Route::get('/attendance/export-csv', [AdminAttendanceController::class, 'exportCsv'])->name('attendance.export-csv');
     Route::get('/attendance/settings', [AdminAttendanceController::class, 'settings'])->name('attendance.settings');
     Route::post('/attendance/settings', [AdminAttendanceController::class, 'updateSettings'])->name('attendance.settings.update');
 
