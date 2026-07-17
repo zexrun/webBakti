@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->longText('content');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('normal');
-            $table->json('target_roles')->default(json_encode(['admin', 'supervisor', 'student']));
+            $table->json('target_roles');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
