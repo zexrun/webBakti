@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Directorate extends Model
 {
-    // Laravel otomatis pakai tabel "directorates"
+    protected $fillable = ['name'];
 
-    protected $fillable = ['name']; // agar bisa mass assignment seperti create()
+    public function supervisors()
+    {
+        return $this->hasMany(Supervisor::class, 'direktorat', 'name');
+    }
 }
