@@ -9,33 +9,37 @@ use App\Notifications\TaskSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        // Kode ini sudah bagus, tidak perlu diubah.
         $student = Auth::user()->student;
 
-        if ($student) {
-            $tasks = $student->tasks()
-                ->with('supervisor.user')
-                ->latest()
-                ->paginate(10);
-        } else {
-            $tasks = collect();
-        }
-        return view('student.tasks.index', compact('tasks'));
+        $tasks = $student
+            ? $student->tasks()->with('supervisor.user')->latest()->paginate(10)
+            : Task::whereRaw('0 = 1')->paginate(10);
+
+        $tasks->getCollection()->transform(function (Task $task) use ($student) {
+            $task->is_submitted = $student
+                ? $task->submissions()->where('student_id', $student->id)->exists()
+                : false;
+
+            return $task;
+        });
+
+        return Inertia::render('Student/Tasks/Index', compact('tasks'));
     }
 
-    public function show(Task $task)
+    public function show(Task $task): Response
     {
-        // Kode ini sudah bagus, tidak perlu diubah.
         $submission = $task->submissions()
             ->where('student_id', Auth::user()->student->id)
             ->first();
 
-        return view('student.tasks.show', compact('task', 'submission'));
+        return Inertia::render('Student/Tasks/Show', compact('task', 'submission'));
     }
 
     public function submit(Request $request, Task $task)

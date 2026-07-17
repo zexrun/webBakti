@@ -12,30 +12,40 @@ use App\Notifications\TaskDeadlineReminder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
-    /**
-     * Menampilkan form untuk membuat tugas baru.
-     */
-
-    public function index()
+    public function index(): Response
     {
         $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
 
         $students = $supervisor->students()
-            ->with('user', 'tasks')
+            ->with(['user', 'tasks.submissions' => function ($query) {
+                $query->select('id', 'task_id', 'student_id');
+            }])
             ->paginate(5);
 
-        return view('supervisor.tasks.index', compact('students'));
+        $students->getCollection()->transform(function (Student $student) {
+            $student->tasks->each(function (Task $task) use ($student) {
+                $task->is_submitted = $task->submissions
+                    ->where('student_id', $student->id)
+                    ->isNotEmpty();
+            });
+
+            return $student;
+        });
+
+        return Inertia::render('Supervisor/Tasks/Index', compact('students'));
     }
 
-    public function create()
+    public function create(): Response
     {
         $supervisor = Supervisor::where('user_id', Auth::id())->firstOrFail();
         $students = $supervisor->students()->with('user')->get();
 
-        return view('supervisor.tasks.create', compact('students'));
+        return Inertia::render('Supervisor/Tasks/Create', compact('students'));
     }
 
     public function store(Request $request)
@@ -78,7 +88,7 @@ class TaskController extends Controller
         return redirect()->route('supervisor.tasks.index')->with('success', 'Tugas berhasil dibuat dan ditugaskan!');
     }
 
-    public function show(Task $task)
+    public function show(Task $task): Response
     {
         if ($task->supervisor_id !== Auth::user()->supervisor->id) {
             abort(403, 'AKSES DITOLAK');
@@ -87,14 +97,14 @@ class TaskController extends Controller
         $assignedStudents = $task->students()->with('user')->get();
         $submissions = $task->submissions()->with('student.user')->get()->keyBy('student_id');
 
-        return view('supervisor.tasks.show', [
+        return Inertia::render('Supervisor/Tasks/Show', [
             'task' => $task,
             'assignedStudents' => $assignedStudents,
             'submissions' => $submissions,
         ]);
     }
 
-    public function edit(Task $task)
+    public function edit(Task $task): Response
     {
         if ($task->supervisor_id !== Auth::user()->supervisor->id) {
             abort(403, 'AKSES DITOLAK');
@@ -104,7 +114,7 @@ class TaskController extends Controller
         $students = $supervisor->students()->with('user')->get();
         $assignedStudents = $task->students()->pluck('id')->toArray();
 
-        return view('supervisor.tasks.edit', compact('task', 'students', 'assignedStudents'));
+        return Inertia::render('Supervisor/Tasks/Edit', compact('task', 'students', 'assignedStudents'));
     }
 
     public function update(Request $request, Task $task)
