@@ -60,4 +60,9 @@ class Student extends Model
     {
         return $this->belongsTo(Directorate::class);
     }
+
+    public function attendances()
+    {
+        return $this->hasManyThrough(Attendance::class, User::class, 'id', 'user_id');
+    }
 }
