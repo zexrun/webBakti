@@ -59,6 +59,23 @@
 
             <!-- Right Section -->
             <div class="flex items-center">
+                <!-- Global Search -->
+                <div class="hidden md:flex items-center">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            id="global-search"
+                            placeholder="Cari tugas, mahasiswa, submission..."
+                            class="px-3 py-2 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <svg class="absolute right-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <!-- Search Results Dropdown -->
+                    <div id="search-results" class="absolute top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 w-80 hidden z-50 max-h-96 overflow-y-auto"></div>
+                </div>
+
                 <div class="flex items-center ms-3 space-x-4">
                     <!-- Messages Icon -->
                     @php
@@ -225,6 +242,78 @@
                 </ul>
             </div>
 
+            <!-- Bulk Operations (Dropdown) -->
+            <div>
+                <button
+                    type="button"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.bulk.*') ? 'bg-blue-50 text-blue-700' : '' }}"
+                    data-collapse-toggle="dropdown-bulk"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('supervisor.bulk.*') ? 'text-blue-600' : '' }}"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path fill-rule="evenodd" d="M3 4.25a.75.75 0 0 0-.75.75v14.5c0 .414.336.75.75.75H19.5a.75.75 0 0 0 .75-.75V5a.75.75 0 0 0-.75-.75H3ZM20.25 2a2.25 2.25 0 0 1 2.25 2.25v14.5A2.25 2.25 0 0 1 20.25 21H3A2.25 2.25 0 0 1 .75 18.75V5A2.25 2.25 0 0 1 3 2.75h17.25Zm-6.962 7.793a.75.75 0 0 0-1.06-1.06L8.812 12.75l-1.5-1.5a.75.75 0 1 0-1.061 1.061l2.03 2.03a.75.75 0 0 0 1.06 0l4.375-4.375Z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-medium">
+                        Operasi Massal
+                    </span>
+                    <svg
+                        class="w-3 h-3 ml-auto transition-transform duration-200"
+                        viewBox="0 0 10 6"
+                        fill="none"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 4 4 4-4"
+                        />
+                    </svg>
+                </button>
+
+                <ul
+                    id="dropdown-bulk"
+                    class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('supervisor.bulk.*') ? '' : 'hidden' }}"
+                >
+                    <li>
+                        <a
+                            href="{{ route('supervisor.bulk.create-task') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.bulk.create-task') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            Buat Tugas Massal
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ route('supervisor.bulk.send-notification') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.bulk.send-notification') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            Kirim Notifikasi Massal
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ route('supervisor.bulk.import-grades') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.bulk.import-grades') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            Import Nilai
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{{ route('supervisor.bulk.automation-settings') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.bulk.automation-settings') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                        >
+                            Pengaturan Automasi
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <!-- Divider -->
             <div class="border-t border-gray-200 my-4"></div>
 
@@ -368,5 +457,62 @@
                 overlay?.classList.add("hidden");
             }
         });
+
+        // Global search functionality
+        const searchInput = document.getElementById("global-search");
+        const searchResults = document.getElementById("search-results");
+
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener("input", function () {
+                clearTimeout(searchTimeout);
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    searchResults.classList.add("hidden");
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    fetch(`{{ route('search.global') }}?q=${encodeURIComponent(query)}&type=all`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.results && Object.keys(data.results).length > 0) {
+                                let html = '';
+                                Object.entries(data.results).forEach(([type, items]) => {
+                                    html += `<div class="border-b border-gray-100 last:border-b-0">
+                                        <div class="px-3 py-2 bg-gray-50">
+                                            <p class="text-xs font-semibold text-gray-600 uppercase">${type}</p>
+                                        </div>`;
+                                    items.forEach(item => {
+                                        html += `<a href="${item.url}" class="block px-3 py-2 hover:bg-gray-100 text-sm text-gray-900 border-b border-gray-100 last:border-b-0">
+                                            <div class="flex items-center">
+                                                <span class="mr-2">${item.icon}</span>
+                                                <div class="flex-1">
+                                                    <p class="font-medium">${item.title}</p>
+                                                    <p class="text-xs text-gray-500">${item.subtitle}</p>
+                                                </div>
+                                            </div>
+                                        </a>`;
+                                    });
+                                    html += '</div>';
+                                });
+                                searchResults.innerHTML = html;
+                                searchResults.classList.remove("hidden");
+                            } else {
+                                searchResults.innerHTML = '<div class="p-3 text-sm text-gray-600">Tidak ada hasil</div>';
+                                searchResults.classList.remove("hidden");
+                            }
+                        });
+                }, 300);
+            });
+
+            // Hide results when clicking outside
+            document.addEventListener("click", function (e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add("hidden");
+                }
+            });
+        }
     });
 </script>
