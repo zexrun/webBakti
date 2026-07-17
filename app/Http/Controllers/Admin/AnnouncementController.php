@@ -29,6 +29,8 @@ class AnnouncementController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string|max:5000',
             'priority' => 'required|in:low,normal,high,urgent',
+            'target_roles' => 'required|array|min:1',
+            'target_roles.*' => 'in:admin,supervisor,student',
             'publish_now' => 'nullable|boolean',
         ]);
 
@@ -37,6 +39,7 @@ class AnnouncementController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'priority' => $request->priority,
+            'target_roles' => $request->target_roles,
             'published_at' => $request->has('publish_now') ? now() : null,
         ]);
 
@@ -55,6 +58,8 @@ class AnnouncementController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string|max:5000',
             'priority' => 'required|in:low,normal,high,urgent',
+            'target_roles' => 'required|array|min:1',
+            'target_roles.*' => 'in:admin,supervisor,student',
             'publish_now' => 'nullable|boolean',
         ]);
 
@@ -62,6 +67,7 @@ class AnnouncementController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'priority' => $request->priority,
+            'target_roles' => $request->target_roles,
             'published_at' => $request->has('publish_now') && !$announcement->published_at ? now() : $announcement->published_at,
         ]);
 

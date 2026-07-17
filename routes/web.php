@@ -38,9 +38,16 @@ use App\Http\Controllers\Supervisor\BulkOperationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\AnnouncementViewController;
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+// Announcement viewing routes (all authenticated users)
+Route::middleware('auth')->group(function () {
+    Route::get('/announcements', [AnnouncementViewController::class, 'index'])->name('announcements.index');
+    Route::get('/announcements/{announcement}', [AnnouncementViewController::class, 'show'])->name('announcements.show');
 });
 
 // Notification routes (authenticated users only)

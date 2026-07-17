@@ -12,10 +12,12 @@ class Announcement extends Model
         'title',
         'content',
         'priority',
+        'target_roles',
         'published_at',
     ];
 
     protected $casts = [
+        'target_roles' => 'array',
         'published_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

@@ -291,6 +291,25 @@
                 </a>
             </div>
 
+            <!-- Announcements -->
+            <div>
+                <a
+                    href="{{ route('announcements.index') }}"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('announcements.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('announcements.*') ? 'text-blue-600' : '' }}"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path d="M15.75 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0ZM10.5 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0ZM5.25 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>
+                        <path fill-rule="evenodd" d="M2.25 3a.75.75 0 0 0-.75.75v12.75c0 .415.336.75.75.75H3v2.25a.75.75 0 0 0 1.2.6l2.1-1.75h3.4a.75.75 0 0 0 .75-.75V3.75a.75.75 0 0 0-.75-.75H2.25ZM20.25 6h-3.75v8.5h-1.5v-8.5H11v2.25a.75.75 0 0 1-1.5 0V6a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75H18V19.5a.75.75 0 0 0 1.2.6l2.1-1.75h2.95a.75.75 0 0 0 .75-.75V6.75a.75.75 0 0 0-.75-.75Z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="ms-3 font-medium">📢 Pengumuman</span>
+                </a>
+            </div>
+
             <!-- Divider -->
             <div class="border-t border-gray-200 my-4"></div>
 

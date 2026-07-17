@@ -46,6 +46,28 @@
             </select>
         </div>
 
+        <!-- Target Roles -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-3">Tampilkan ke Role</label>
+            <div class="space-y-2">
+                <label class="flex items-center">
+                    <input type="checkbox" name="target_roles[]" value="admin" {{ in_array('admin', old('target_roles', $announcement->target_roles ?? [])) ? 'checked' : '' }} class="rounded">
+                    <span class="ml-3 text-sm text-gray-700">👨‍💼 Admin</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" name="target_roles[]" value="supervisor" {{ in_array('supervisor', old('target_roles', $announcement->target_roles ?? [])) ? 'checked' : '' }} class="rounded">
+                    <span class="ml-3 text-sm text-gray-700">👨‍🏫 Pembimbing (Supervisor)</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" name="target_roles[]" value="student" {{ in_array('student', old('target_roles', $announcement->target_roles ?? [])) ? 'checked' : '' }} class="rounded">
+                    <span class="ml-3 text-sm text-gray-700">👨‍🎓 Mahasiswa (Student)</span>
+                </label>
+            </div>
+            @error('target_roles')
+                <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+            @enderror
+        </div>
+
         <!-- Status Info -->
         <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             @if($announcement->published_at)
