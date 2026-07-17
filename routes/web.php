@@ -34,6 +34,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Supervisor\AnalyticsController;
+use App\Http\Controllers\Supervisor\BulkOperationController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -126,6 +127,18 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::get('/analytics', [AnalyticsController::class, 'dashboard'])->name('analytics.dashboard');
     Route::get('/analytics/student/{student}', [AnalyticsController::class, 'studentReport'])->name('analytics.student');
     Route::get('/analytics/task/{task}', [AnalyticsController::class, 'taskAnalytics'])->name('analytics.task');
+
+    // Rute untuk Bulk Operations
+    Route::prefix('bulk')->name('bulk.')->group(function () {
+        Route::get('/create-task', [BulkOperationController::class, 'createBulkTaskForm'])->name('create-task');
+        Route::post('/store-task', [BulkOperationController::class, 'storeBulkTask'])->name('store-task');
+        Route::get('/send-notification', [BulkOperationController::class, 'bulkNotificationForm'])->name('send-notification');
+        Route::post('/send-notification', [BulkOperationController::class, 'sendBulkNotification'])->name('send-notification');
+        Route::get('/import-grades', [BulkOperationController::class, 'gradeImportForm'])->name('import-grades');
+        Route::post('/import-grades', [BulkOperationController::class, 'importGrades'])->name('import-grades');
+        Route::get('/automation-settings', [BulkOperationController::class, 'automationSettingsForm'])->name('automation-settings');
+        Route::post('/automation-settings', [BulkOperationController::class, 'saveAutomationSettings'])->name('automation-settings');
+    });
 
     Route::prefix('pdf')->name('pdf.')->group(function () {
         Route::get('/grades/{student}', [SupervisorController::class, 'generateGrade'])->name('grade');
