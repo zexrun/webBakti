@@ -24,28 +24,31 @@ class AnalyticsController extends Controller
 
         // Grade Statistics
         $submissions = $supervisor->tasks()->with('submissions')->get()->flatMap(fn($t) => $t->submissions)->filter(fn($s) => $s->grade !== null);
+        $grades = $submissions->pluck('grade')->map(fn($g) => (float)$g)->toArray();
         $gradeStats = [
-            'average' => $submissions->count() > 0 ? round($submissions->avg('grade'), 2) : 0,
-            'highest' => $submissions->count() > 0 ? $submissions->max('grade') : 0,
-            'lowest' => $submissions->count() > 0 ? $submissions->min('grade') : 0,
-            'median' => $this->calculateMedian($submissions->pluck('grade')->toArray()),
+            'average' => count($grades) > 0 ? round(array_sum($grades) / count($grades), 2) : 0,
+            'highest' => count($grades) > 0 ? round(max($grades), 2) : 0,
+            'lowest' => count($grades) > 0 ? round(min($grades), 2) : 0,
+            'median' => $this->calculateMedian($grades),
         ];
 
         // Grade Distribution
         $gradeDistribution = [
-            'A (90-100)' => $submissions->filter(fn($s) => $s->grade >= 90)->count(),
-            'B (80-89)' => $submissions->filter(fn($s) => $s->grade >= 80 && $s->grade < 90)->count(),
-            'C (70-79)' => $submissions->filter(fn($s) => $s->grade >= 70 && $s->grade < 80)->count(),
-            'D (60-69)' => $submissions->filter(fn($s) => $s->grade >= 60 && $s->grade < 70)->count(),
-            'E (<60)' => $submissions->filter(fn($s) => $s->grade < 60)->count(),
+            'A (90-100)' => $submissions->filter(fn($s) => (float)$s->grade >= 90)->count(),
+            'B (80-89)' => $submissions->filter(fn($s) => (float)$s->grade >= 80 && (float)$s->grade < 90)->count(),
+            'C (70-79)' => $submissions->filter(fn($s) => (float)$s->grade >= 70 && (float)$s->grade < 80)->count(),
+            'D (60-69)' => $submissions->filter(fn($s) => (float)$s->grade >= 60 && (float)$s->grade < 70)->count(),
+            'E (<60)' => $submissions->filter(fn($s) => (float)$s->grade < 60)->count(),
         ];
 
         // Task Performance
         $taskPerformance = $supervisor->tasks()->with('submissions')->get()->map(function ($task) {
             $submissions = $task->submissions;
-            $gradedCount = $submissions->filter(fn($s) => $s->grade !== null)->count();
+            $gradedSubmissions = $submissions->filter(fn($s) => $s->grade !== null);
+            $gradedCount = $gradedSubmissions->count();
             $totalCount = $submissions->count();
-            $avgGrade = $gradedCount > 0 ? round($submissions->filter(fn($s) => $s->grade !== null)->avg('grade'), 2) : 0;
+            $grades = $gradedSubmissions->pluck('grade')->map(fn($g) => (float)$g)->toArray();
+            $avgGrade = count($grades) > 0 ? round(array_sum($grades) / count($grades), 2) : 0;
 
             return [
                 'id' => $task->id,
@@ -107,10 +110,11 @@ class AnalyticsController extends Controller
 
         // Grade Performance
         $gradedSubmissions = $submissions->filter(fn($s) => $s->grade !== null);
+        $studentGrades = $gradedSubmissions->pluck('grade')->map(fn($g) => (float)$g)->toArray();
         $gradePerformance = [
-            'average_grade' => $gradedSubmissions->count() > 0 ? round($gradedSubmissions->avg('grade'), 2) : 0,
-            'highest_grade' => $gradedSubmissions->count() > 0 ? $gradedSubmissions->max('grade') : 0,
-            'lowest_grade' => $gradedSubmissions->count() > 0 ? $gradedSubmissions->min('grade') : 0,
+            'average_grade' => count($studentGrades) > 0 ? round(array_sum($studentGrades) / count($studentGrades), 2) : 0,
+            'highest_grade' => count($studentGrades) > 0 ? round(max($studentGrades), 2) : 0,
+            'lowest_grade' => count($studentGrades) > 0 ? round(min($studentGrades), 2) : 0,
             'total_graded' => $gradedSubmissions->count(),
         ];
 
@@ -180,19 +184,20 @@ class AnalyticsController extends Controller
         // Grade Distribution
         $gradedSubmissions = $submissions->filter(fn($s) => $s->grade !== null);
         $gradeDistribution = [
-            'A (90-100)' => $gradedSubmissions->filter(fn($s) => $s->grade >= 90)->count(),
-            'B (80-89)' => $gradedSubmissions->filter(fn($s) => $s->grade >= 80 && $s->grade < 90)->count(),
-            'C (70-79)' => $gradedSubmissions->filter(fn($s) => $s->grade >= 70 && $s->grade < 80)->count(),
-            'D (60-69)' => $gradedSubmissions->filter(fn($s) => $s->grade >= 60 && $s->grade < 70)->count(),
-            'E (<60)' => $gradedSubmissions->filter(fn($s) => $s->grade < 60)->count(),
+            'A (90-100)' => $gradedSubmissions->filter(fn($s) => (float)$s->grade >= 90)->count(),
+            'B (80-89)' => $gradedSubmissions->filter(fn($s) => (float)$s->grade >= 80 && (float)$s->grade < 90)->count(),
+            'C (70-79)' => $gradedSubmissions->filter(fn($s) => (float)$s->grade >= 70 && (float)$s->grade < 80)->count(),
+            'D (60-69)' => $gradedSubmissions->filter(fn($s) => (float)$s->grade >= 60 && (float)$s->grade < 70)->count(),
+            'E (<60)' => $gradedSubmissions->filter(fn($s) => (float)$s->grade < 60)->count(),
         ];
 
         // Grade Statistics
+        $taskGrades = $gradedSubmissions->pluck('grade')->map(fn($g) => (float)$g)->toArray();
         $gradeStats = [
-            'average' => $gradedSubmissions->count() > 0 ? round($gradedSubmissions->avg('grade'), 2) : 0,
-            'highest' => $gradedSubmissions->count() > 0 ? $gradedSubmissions->max('grade') : 0,
-            'lowest' => $gradedSubmissions->count() > 0 ? $gradedSubmissions->min('grade') : 0,
-            'median' => $this->calculateMedian($gradedSubmissions->pluck('grade')->toArray()),
+            'average' => count($taskGrades) > 0 ? round(array_sum($taskGrades) / count($taskGrades), 2) : 0,
+            'highest' => count($taskGrades) > 0 ? round(max($taskGrades), 2) : 0,
+            'lowest' => count($taskGrades) > 0 ? round(min($taskGrades), 2) : 0,
+            'median' => $this->calculateMedian($taskGrades),
         ];
 
         // Student Performance on this Task
@@ -204,8 +209,9 @@ class AnalyticsController extends Controller
                 'grade' => $submission->grade,
                 'feedback' => $submission->feedback,
                 'status' => $submission->grade !== null ? 'Graded' : 'Pending',
+                'grade_numeric' => $submission->grade !== null ? (float)$submission->grade : 0,
             ];
-        })->sortByDesc('grade')->values();
+        })->sortByDesc('grade_numeric')->values();
 
         // Not Submitted Students
         $notSubmittedStudents = $task->students()
@@ -253,8 +259,9 @@ class AnalyticsController extends Controller
                 ->filter(fn($s) => $s->created_at->format('Y-m-d') === $date)
                 ->filter(fn($s) => $s->grade !== null);
 
-            $avgGrade = $submissionsOnDate->count() > 0
-                ? round($submissionsOnDate->avg('grade'), 2)
+            $trendGrades = $submissionsOnDate->pluck('grade')->map(fn($g) => (float)$g)->toArray();
+            $avgGrade = count($trendGrades) > 0
+                ? round(array_sum($trendGrades) / count($trendGrades), 2)
                 : 0;
 
             $trendData[] = [
@@ -284,7 +291,7 @@ class AnalyticsController extends Controller
             ->map(fn($grades) => [
                 'student_name' => $grades[0]['student_name'],
                 'student_id' => $grades[0]['student_id'],
-                'average_grade' => round($grades->avg('grade'), 2),
+                'average_grade' => round(array_sum(array_map(fn($g) => (float)$g['grade'], $grades->all())) / count($grades), 2),
                 'submission_count' => $grades->count(),
             ])
             ->sortByDesc('average_grade')
@@ -303,7 +310,8 @@ class AnalyticsController extends Controller
 
             if ($submissions->count() > 0) {
                 $submissionRate = ($submissions->count() / $tasks->count()) * 100;
-                $avgGrade = $gradedSubmissions->count() > 0 ? $gradedSubmissions->avg('grade') : 0;
+                $riskGrades = $gradedSubmissions->pluck('grade')->map(fn($g) => (float)$g)->toArray();
+                $avgGrade = count($riskGrades) > 0 ? array_sum($riskGrades) / count($riskGrades) : 0;
 
                 if ($submissionRate < 50 || $avgGrade < 60) {
                     $atRisk->push([
