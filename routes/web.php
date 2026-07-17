@@ -46,7 +46,7 @@ Route::get('/', function () {
 });
 
 // Inertia.js test route (for new UI development)
-Route::middleware('auth')->get('/test-inertia', [InertiaTestController::class, 'dashboard'])->name('inertia.test');
+Route::get('/test-inertia', [InertiaTestController::class, 'dashboard'])->name('inertia.test');
 
 // Announcement viewing routes (all authenticated users)
 Route::middleware('auth')->group(function () {
