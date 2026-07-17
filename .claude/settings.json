@@ -17,7 +17,10 @@
       "Bash(php -l app/Http/Controllers/Admin/AdminController.php)",
       "Bash(php -l app/Http/Controllers/Admin/AnnouncementController.php)",
       "Bash(php -l app/Http/Controllers/AnnouncementViewController.php)",
-      "Bash(php -l app/Http/Middleware/HandleInertiaRequests.php)"
+      "Bash(php -l app/Http/Middleware/HandleInertiaRequests.php)",
+      "Bash(links)",
+      "Bash(git commit -m 'feat: Migrate Announcement module to React + Inertia + shadcn \\(full cutover\\) *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8000/admin/announcements\" -H \"X-Inertia: true\" -H \"X-Inertia-Version: 1\")"
     ]
   }
 }
