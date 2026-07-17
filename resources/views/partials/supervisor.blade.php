@@ -59,7 +59,24 @@
 
             <!-- Right Section -->
             <div class="flex items-center">
-                <div class="flex items-center ms-3">
+                <div class="flex items-center ms-3 space-x-4">
+                    <!-- Messages Icon -->
+                    @php
+                        $unreadMessages = App\Models\Message::where('recipient_id', Auth::id())
+                            ->where('is_read', false)
+                            ->count();
+                    @endphp
+                    <a href="{{ route('messages.inbox') }}" class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600 hover:text-blue-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        @if($unreadMessages > 0)
+                            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                                {{ $unreadMessages }}
+                            </span>
+                        @endif
+                    </a>
+
                     <div class="flex items-center space-x-3">
                         <span class="text-sm text-gray-700">
                             Halo,
@@ -206,6 +223,34 @@
                         </a>
                     </li>
                 </ul>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 my-4"></div>
+
+            <!-- Messages -->
+            <div>
+                <a
+                    href="{{ route('messages.inbox') }}"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-100 {{ request()->routeIs('messages.*') ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' : '' }}"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('messages.*') ? 'text-blue-600' : '' }}"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path
+                            d="M15.75 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0ZM10.5 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0ZM5.25 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"
+                        />
+                        <path
+                            fill-rule="evenodd"
+                            d="M2.25 3a.75.75 0 0 0-.75.75v12.75c0 .415.336.75.75.75H3v2.25a.75.75 0 0 0 1.2.6l2.1-1.75h3.4a.75.75 0 0 0 .75-.75V3.75a.75.75 0 0 0-.75-.75H2.25ZM20.25 6h-3.75v8.5h-1.5v-8.5H11v2.25a.75.75 0 0 1-1.5 0V6a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75H18V19.5a.75.75 0 0 0 1.2.6l2.1-1.75h2.95a.75.75 0 0 0 .75-.75V6.75a.75.75 0 0 0-.75-.75Z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                    <span class="ms-3 font-medium">Pesan</span>
+                </a>
             </div>
 
             <!-- Divider -->

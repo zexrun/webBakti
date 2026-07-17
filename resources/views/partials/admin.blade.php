@@ -52,6 +52,23 @@
 
             <!-- Right Section -->
             <div class="flex items-center space-x-4">
+                <!-- Messages Icon -->
+                @php
+                    $unreadMessages = App\Models\Message::where('recipient_id', Auth::id())
+                        ->where('is_read', false)
+                        ->count();
+                @endphp
+                <a href="{{ route('messages.inbox') }}" class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600 hover:text-blue-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    @if($unreadMessages > 0)
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                            {{ $unreadMessages }}
+                        </span>
+                    @endif
+                </a>
+
                 <!-- User Info -->
                 <div class="flex items-center">
                     <div class="hidden sm:block">
