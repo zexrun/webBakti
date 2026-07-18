@@ -220,24 +220,25 @@ class AttendanceController extends Controller
         }
     }
 
-    public function history(Request $request)
+    public function history(Request $request): Response
     {
         $user = Auth::user();
-        $month = $request->get('month', Carbon::now()->month);
-        $year = $request->get('year', Carbon::now()->year);
+        $month = (int) $request->get('month', Carbon::now()->month);
+        $year = (int) $request->get('year', Carbon::now()->year);
 
         $attendances = Attendance::where('user_id', $user->id)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->orderBy('date', 'desc')
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
         $exceptions = AttendanceException::where('user_id', $user->id)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->get();
 
-        return view('student.attendance.history', compact('attendances', 'exceptions', 'month', 'year'));
+        return Inertia::render('Student/Attendance/History', compact('attendances', 'exceptions', 'month', 'year'));
     }
 
     public function requestException(Request $request)
