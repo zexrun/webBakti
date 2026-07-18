@@ -12,45 +12,49 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $date = $request->get('date', Carbon::today()->format('Y-m-d'));
         $status = $request->get('status');
-        
+
         $query = Attendance::with('user')->where('date', $date);
-        
+
         if ($status) {
             $query->where('status', $status);
         }
-        
-        $attendances = $query->paginate(20);
-        
+
+        $attendances = $query->paginate(20)->withQueryString();
+
         $stats = [
             'total' => Attendance::where('date', $date)->count(),
             'present' => Attendance::where('date', $date)->where('status', 'present')->count(),
             'late' => Attendance::where('date', $date)->where('status', 'late')->count(),
             'absent' => Attendance::where('date', $date)->where('status', 'absent')->count(),
         ];
-        
-        return view('admin.attendance.index', compact('attendances', 'stats', 'date', 'status'));
+
+        return Inertia::render('Admin/Attendance/Index', compact('attendances', 'stats', 'date', 'status'));
     }
 
-    public function approvals()
+    public function approvals(): Response
     {
         $pendingAttendances = Attendance::with('user')
             ->where('supervisor_approval', 'pending')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
-            
+            ->paginate(20)
+            ->withQueryString();
+
         $pendingExceptions = AttendanceException::with('user')
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
-            
-        return view('admin.attendance.approvals', compact('pendingAttendances', 'pendingExceptions'));
+            ->paginate(20)
+            ->withQueryString();
+
+        return Inertia::render('Admin/Attendance/Approvals', compact('pendingAttendances', 'pendingExceptions'));
     }
 
     public function approve(Request $request, $type, $id)
@@ -96,14 +100,15 @@ class AttendanceController extends Controller
         return back()->with('success', "Item berhasil {$message}!");
     }
 
-    public function suspicious()
+    public function suspicious(): Response
     {
         $suspiciousAttendances = Attendance::where('requires_manual_review', true)
             ->with('user')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(20)
+            ->withQueryString();
 
-        return view('admin.attendance.suspicious', compact('suspiciousAttendances'));
+        return Inertia::render('Admin/Attendance/Suspicious', compact('suspiciousAttendances'));
     }
 
     public function reviewSuspicious(Request $request, Attendance $attendance)
@@ -125,10 +130,10 @@ class AttendanceController extends Controller
         return back()->with('success', "Kehadiran berhasil di-review dan {$message}!");
     }
 
-    public function settings()
+    public function settings(): Response
     {
         $settings = AttendanceSetting::getSettings();
-        return view('admin.attendance.settings', compact('settings'));
+        return Inertia::render('Admin/Attendance/Settings', compact('settings'));
     }
 
     public function updateSettings(Request $request)
@@ -180,10 +185,10 @@ class AttendanceController extends Controller
         }
     }
 
-    public function reports(Request $request)
+    public function reports(Request $request): Response
     {
-        $month = $request->get('month', Carbon::now()->month);
-        $year = $request->get('year', Carbon::now()->year);
+        $month = (int) $request->get('month', Carbon::now()->month);
+        $year = (int) $request->get('year', Carbon::now()->year);
         $userId = $request->get('user_id');
 
         $query = Attendance::with('user')
@@ -208,9 +213,9 @@ class AttendanceController extends Controller
                     return $att->working_hours;
                 }),
             ];
-        });
+        })->values();
 
-        return view('admin.attendance.reports', compact('summary', 'users', 'month', 'year', 'userId'));
+        return Inertia::render('Admin/Attendance/Reports', compact('summary', 'users', 'month', 'year', 'userId'));
     }
 
     public function exportCsv(Request $request)
