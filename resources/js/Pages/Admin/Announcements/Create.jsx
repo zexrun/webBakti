@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Button } from '@/Components/ui/button'
 
@@ -77,14 +77,18 @@ export default function Create() {
               <div className="space-y-2">
                 <Label htmlFor="priority">Prioritas</Label>
                 <Select
-                  id="priority"
                   value={data.priority}
-                  onChange={(e) => setData('priority', e.target.value)}
+                  onValueChange={(v) => setData('priority', v)}
                 >
-                  <option value="low">🟢 Low - Informasi umum</option>
-                  <option value="normal">🟡 Normal - Informasi penting</option>
-                  <option value="high">🟠 High - Sangat penting</option>
-                  <option value="urgent">🔴 Urgent - Sangat mendesak</option>
+                  <SelectTrigger id="priority">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">🟢 Low - Informasi umum</SelectItem>
+                    <SelectItem value="normal">🟡 Normal - Informasi penting</SelectItem>
+                    <SelectItem value="high">🟠 High - Sangat penting</SelectItem>
+                    <SelectItem value="urgent">🔴 Urgent - Sangat mendesak</SelectItem>
+                  </SelectContent>
                 </Select>
                 {errors.priority && <p className="text-sm text-destructive">{errors.priority}</p>}
               </div>

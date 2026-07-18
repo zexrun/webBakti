@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import StudentPicker from './StudentPicker'
 
@@ -76,9 +76,14 @@ export default function Edit({ task, students, assignedStudents }) {
                   <Label htmlFor="type">
                     Tipe Tugas <span className="text-destructive">*</span>
                   </Label>
-                  <Select id="type" value={data.type} onChange={(e) => setData('type', e.target.value)}>
-                    <option value="harian">Tugas Harian</option>
-                    <option value="akhir">Laporan Akhir</option>
+                  <Select value={data.type} onValueChange={(v) => setData('type', v)}>
+                    <SelectTrigger id="type" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="harian">Tugas Harian</SelectItem>
+                      <SelectItem value="akhir">Laporan Akhir</SelectItem>
+                    </SelectContent>
                   </Select>
                   {errors.type && <p className="text-sm text-destructive">{errors.type}</p>}
                 </div>

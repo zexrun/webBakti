@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { CheckCircle2, AlertTriangle, XCircle, FileText, Filter, RotateCcw, Eye, Calendar } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 
@@ -31,14 +32,15 @@ const exceptionStatusVariant = {
 }
 
 export default function History({ attendances, exceptions, month, year }) {
+  const [monthFilter, setMonthFilter] = useState(String(month))
+  const [yearFilter, setYearFilter] = useState(String(year))
   const r = (name) => (window.route ? window.route(name) : '#')
 
   function handleFilter(e) {
     e.preventDefault()
-    const form = e.target
     router.get(r('student.attendance.history'), {
-      month: form.month.value,
-      year: form.year.value,
+      month: monthFilter,
+      year: yearFilter,
     })
   }
 
@@ -135,18 +137,28 @@ export default function History({ attendances, exceptions, month, year }) {
             <form onSubmit={handleFilter} className="grid grid-cols-1 items-end gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <label htmlFor="month" className="block text-sm font-medium text-foreground">Bulan</label>
-                <Select id="month" name="month" defaultValue={month}>
-                  {monthNames.map((name, index) => (
-                    <option key={name} value={index + 1}>{name}</option>
-                  ))}
+                <Select value={monthFilter} onValueChange={setMonthFilter}>
+                  <SelectTrigger id="month" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {monthNames.map((name, index) => (
+                      <SelectItem key={name} value={String(index + 1)}>{name}</SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <label htmlFor="year" className="block text-sm font-medium text-foreground">Tahun</label>
-                <Select id="year" name="year" defaultValue={year}>
-                  {[0, 1, 2].map((offset) => (
-                    <option key={offset} value={currentYear - offset}>{currentYear - offset}</option>
-                  ))}
+                <Select value={yearFilter} onValueChange={setYearFilter}>
+                  <SelectTrigger id="year" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[0, 1, 2].map((offset) => (
+                      <SelectItem key={offset} value={String(currentYear - offset)}>{currentYear - offset}</SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div className="flex gap-3">

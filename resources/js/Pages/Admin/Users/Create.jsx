@@ -4,7 +4,7 @@ import AdminLayout from '@/Layouts/AdminLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 const roleDescriptions = {
@@ -76,11 +76,15 @@ export default function Create() {
                 <Label htmlFor="role" className="flex items-center gap-1">
                   <Users className="h-4 w-4" /> Peran (Role) <span className="text-destructive">*</span>
                 </Label>
-                <Select id="role" value={data.role} onChange={(e) => setData('role', e.target.value)} required>
-                  <option value="">-- Pilih Peran --</option>
-                  <option value="admin">👨‍💼 Administrator</option>
-                  <option value="student">🎓 Mahasiswa</option>
-                  <option value="supervisor">👨‍🏫 Pembimbing</option>
+                <Select value={data.role} onValueChange={(v) => setData('role', v)}>
+                  <SelectTrigger id="role" className="w-full">
+                    <SelectValue placeholder="-- Pilih Peran --" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">👨‍💼 Administrator</SelectItem>
+                    <SelectItem value="student">🎓 Mahasiswa</SelectItem>
+                    <SelectItem value="supervisor">👨‍🏫 Pembimbing</SelectItem>
+                  </SelectContent>
                 </Select>
                 {errors.role && <p className="text-sm text-destructive">{errors.role}</p>}
               </div>

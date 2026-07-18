@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Search as SearchIcon, RotateCcw, ArrowRight } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 
@@ -15,6 +16,7 @@ const statusVariant = {
 }
 
 export default function AdvancedStudent({ tasks, studentId, filters }) {
+  const [statusFilter, setStatusFilter] = useState(filters.status ?? 'all')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function handleSubmit(e) {
@@ -22,7 +24,7 @@ export default function AdvancedStudent({ tasks, studentId, filters }) {
     const form = e.target
     router.get(r('search.advanced'), {
       task_search: form.task_search.value,
-      status: form.status.value,
+      ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
       due_date_from: form.due_date_from.value,
       due_date_to: form.due_date_to.value,
     })
@@ -46,11 +48,16 @@ export default function AdvancedStudent({ tasks, studentId, filters }) {
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Status</label>
-                  <Select name="status" defaultValue={filters.status ?? ''}>
-                    <option value="">Semua</option>
-                    <option value="pending">Belum Submit</option>
-                    <option value="submitted">Sudah Submit</option>
-                    <option value="graded">Sudah Dinilai</option>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua</SelectItem>
+                      <SelectItem value="pending">Belum Submit</SelectItem>
+                      <SelectItem value="submitted">Sudah Submit</SelectItem>
+                      <SelectItem value="graded">Sudah Dinilai</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">

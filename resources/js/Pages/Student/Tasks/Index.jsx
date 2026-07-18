@@ -4,7 +4,7 @@ import { ClipboardList, Search, LayoutList, LayoutGrid, Eye, Clock, User } from 
 import StudentLayout from '@/Layouts/StudentLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Input } from '@/Components/ui/input'
 import Pagination from '@/Components/Pagination'
 import { formatDeadline } from '@/lib/deadline'
@@ -64,11 +64,16 @@ export default function Index({ tasks }) {
 
         <Card>
           <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="md:w-56">
-              <option value="all">Semua Tugas</option>
-              <option value="pending">Belum Dikerjakan</option>
-              <option value="completed">Sudah Selesai</option>
-              <option value="overdue">Terlambat</option>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="md:w-56">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Tugas</SelectItem>
+                <SelectItem value="pending">Belum Dikerjakan</SelectItem>
+                <SelectItem value="completed">Sudah Selesai</SelectItem>
+                <SelectItem value="overdue">Terlambat</SelectItem>
+              </SelectContent>
             </Select>
             <div className="relative md:w-64">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

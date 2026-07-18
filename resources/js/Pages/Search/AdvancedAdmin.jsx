@@ -1,13 +1,19 @@
+import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Search as SearchIcon, RotateCcw } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 
 export default function AdvancedAdmin({ students, supervisors, directorates, universities, filters }) {
+  const [direktoratFilter, setDirektoratFilter] = useState(filters.direktorat ?? 'all')
+  const [supervisorIdFilter, setSupervisorIdFilter] = useState(filters.supervisor_id ? String(filters.supervisor_id) : 'all')
+  const [universitasFilter, setUniversitasFilter] = useState(filters.universitas ?? 'all')
+  const [sortByFilter, setSortByFilter] = useState(filters.sort_by ?? 'created_at')
+  const [sortDirFilter, setSortDirFilter] = useState(filters.sort_dir ?? 'desc')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function handleSubmit(e) {
@@ -15,11 +21,11 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
     const form = e.target
     router.get(r('search.advanced'), {
       search: form.search.value,
-      direktorat: form.direktorat.value,
-      supervisor_id: form.supervisor_id.value,
-      universitas: form.universitas.value,
-      sort_by: form.sort_by.value,
-      sort_dir: form.sort_dir.value,
+      ...(direktoratFilter !== 'all' ? { direktorat: direktoratFilter } : {}),
+      ...(supervisorIdFilter !== 'all' ? { supervisor_id: supervisorIdFilter } : {}),
+      ...(universitasFilter !== 'all' ? { universitas: universitasFilter } : {}),
+      sort_by: sortByFilter,
+      sort_dir: sortDirFilter,
     })
   }
 
@@ -41,29 +47,44 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Direktorat</label>
-                  <Select name="direktorat" defaultValue={filters.direktorat ?? ''}>
-                    <option value="">Semua</option>
-                    {directorates.map((dir) => (
-                      <option key={dir.id} value={dir.name}>{dir.name}</option>
-                    ))}
+                  <Select value={direktoratFilter} onValueChange={setDirektoratFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua</SelectItem>
+                      {directorates.map((dir) => (
+                        <SelectItem key={dir.id} value={dir.name}>{dir.name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Pembimbing</label>
-                  <Select name="supervisor_id" defaultValue={filters.supervisor_id ?? ''}>
-                    <option value="">Semua</option>
-                    {supervisors.map((sup) => (
-                      <option key={sup.id} value={sup.id}>{sup.user.name}</option>
-                    ))}
+                  <Select value={supervisorIdFilter} onValueChange={setSupervisorIdFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua</SelectItem>
+                      {supervisors.map((sup) => (
+                        <SelectItem key={sup.id} value={String(sup.id)}>{sup.user.name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Universitas</label>
-                  <Select name="universitas" defaultValue={filters.universitas ?? ''}>
-                    <option value="">Semua</option>
-                    {universities.map((uni) => (
-                      <option key={uni.id} value={uni.name}>{uni.name}</option>
-                    ))}
+                  <Select value={universitasFilter} onValueChange={setUniversitasFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua</SelectItem>
+                      {universities.map((uni) => (
+                        <SelectItem key={uni.id} value={uni.name}>{uni.name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
@@ -71,17 +92,27 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Sort By</label>
-                  <Select name="sort_by" defaultValue={filters.sort_by ?? 'created_at'}>
-                    <option value="created_at">Terbaru</option>
-                    <option value="name">Nama</option>
-                    <option value="nim">NIM</option>
+                  <Select value={sortByFilter} onValueChange={setSortByFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="created_at">Terbaru</SelectItem>
+                      <SelectItem value="name">Nama</SelectItem>
+                      <SelectItem value="nim">NIM</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Urutan</label>
-                  <Select name="sort_dir" defaultValue={filters.sort_dir ?? 'desc'}>
-                    <option value="desc">Descending</option>
-                    <option value="asc">Ascending</option>
+                  <Select value={sortDirFilter} onValueChange={setSortDirFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="desc">Descending</SelectItem>
+                      <SelectItem value="asc">Ascending</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>

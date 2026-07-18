@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 export default function Create() {
@@ -80,11 +80,15 @@ export default function Create() {
 
                 <div className="space-y-2">
                   <Label htmlFor="feeling">Perasaan Hari Ini</Label>
-                  <Select id="feeling" value={data.feeling} onChange={(e) => setData('feeling', e.target.value)}>
-                    <option value="">Pilih perasaan</option>
-                    <option value="Senang">😊 Senang</option>
-                    <option value="Biasa Saja">😐 Biasa Saja</option>
-                    <option value="Menemukan Kendala">😥 Menemukan Kendala</option>
+                  <Select value={data.feeling} onValueChange={(v) => setData('feeling', v)}>
+                    <SelectTrigger id="feeling" className="w-full">
+                      <SelectValue placeholder="Pilih perasaan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Senang">😊 Senang</SelectItem>
+                      <SelectItem value="Biasa Saja">😐 Biasa Saja</SelectItem>
+                      <SelectItem value="Menemukan Kendala">😥 Menemukan Kendala</SelectItem>
+                    </SelectContent>
                   </Select>
                   {errors.feeling && <p className="text-sm text-destructive">{errors.feeling}</p>}
                 </div>

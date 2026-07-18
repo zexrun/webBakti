@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 export default function Create({ recipients }) {
@@ -35,16 +35,19 @@ export default function Create({ recipients }) {
               <div className="space-y-2">
                 <Label htmlFor="recipient_id">Penerima</Label>
                 <Select
-                  id="recipient_id"
                   value={data.recipient_id}
-                  onChange={(e) => setData('recipient_id', e.target.value)}
+                  onValueChange={(v) => setData('recipient_id', v)}
                 >
-                  <option value="">Pilih penerima...</option>
-                  {recipients.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name} ({user.role.charAt(0).toUpperCase() + user.role.slice(1)})
-                    </option>
-                  ))}
+                  <SelectTrigger id="recipient_id" className="w-full">
+                    <SelectValue placeholder="Pilih penerima..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {recipients.map((user) => (
+                      <SelectItem key={user.id} value={String(user.id)}>
+                        {user.name} ({user.role.charAt(0).toUpperCase() + user.role.slice(1)})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 {errors.recipient_id && <p className="text-sm text-destructive">{errors.recipient_id}</p>}
               </div>

@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Download, FileSpreadsheet, RotateCcw } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 const monthNames = [
@@ -17,15 +18,17 @@ function average(items, key) {
 }
 
 export default function Reports({ summary, users, month, year, userId }) {
+  const [monthFilter, setMonthFilter] = useState(String(month))
+  const [yearFilter, setYearFilter] = useState(String(year))
+  const [userIdFilter, setUserIdFilter] = useState(userId ? String(userId) : 'all')
   const r = (name) => (window.route ? window.route(name) : '#')
 
   function handleFilter(e) {
     e.preventDefault()
-    const form = e.target
     router.get(r('admin.attendance.reports'), {
-      month: form.month.value,
-      year: form.year.value,
-      user_id: form.user_id.value,
+      month: monthFilter,
+      year: yearFilter,
+      ...(userIdFilter !== 'all' ? { user_id: userIdFilter } : {}),
     })
   }
 
@@ -53,29 +56,44 @@ export default function Reports({ summary, users, month, year, userId }) {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Bulan</label>
-                  <Select name="month" defaultValue={month}>
-                    {monthNames.map((name, index) => (
-                      <option key={name} value={index + 1}>{name}</option>
-                    ))}
+                  <Select value={monthFilter} onValueChange={setMonthFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {monthNames.map((name, index) => (
+                        <SelectItem key={name} value={String(index + 1)}>{name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Tahun</label>
-                  <Select name="year" defaultValue={year}>
-                    {[0, 1, 2].map((offset) => (
-                      <option key={offset} value={currentYear - offset}>{currentYear - offset}</option>
-                    ))}
+                  <Select value={yearFilter} onValueChange={setYearFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[0, 1, 2].map((offset) => (
+                        <SelectItem key={offset} value={String(currentYear - offset)}>{currentYear - offset}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Mahasiswa</label>
-                  <Select name="user_id" defaultValue={userId ?? ''}>
-                    <option value="">Semua Mahasiswa</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.name} ({user.student?.nim ?? '-'})
-                      </option>
-                    ))}
+                  <Select value={userIdFilter} onValueChange={setUserIdFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Mahasiswa</SelectItem>
+                      {users.map((user) => (
+                        <SelectItem key={user.id} value={String(user.id)}>
+                          {user.name} ({user.student?.nim ?? '-'})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
               </div>

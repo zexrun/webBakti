@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from '@inertiajs/react'
 import { Pencil, Award } from 'lucide-react'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
@@ -57,11 +57,15 @@ export default function GradingForm({ submission }) {
         <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm font-medium text-foreground">Nilai</label>
-            <Select value={data.grade} onChange={(e) => setData('grade', e.target.value)}>
-              <option value="">Pilih Nilai</option>
-              {['A', 'B', 'C', 'D'].map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
+            <Select value={data.grade} onValueChange={(v) => setData('grade', v)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih Nilai" />
+              </SelectTrigger>
+              <SelectContent>
+                {['A', 'B', 'C', 'D'].map((g) => (
+                  <SelectItem key={g} value={g}>{g}</SelectItem>
+                ))}
+              </SelectContent>
             </Select>
             {errors.grade && <p className="text-sm text-destructive">{errors.grade}</p>}
           </div>

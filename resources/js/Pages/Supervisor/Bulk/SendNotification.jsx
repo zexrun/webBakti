@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 export default function SendNotification({ students }) {
@@ -117,11 +117,16 @@ export default function SendNotification({ students }) {
 
               <div className="space-y-2">
                 <Label htmlFor="priority">Prioritas</Label>
-                <Select id="priority" value={data.priority} onChange={(e) => setData('priority', e.target.value)}>
-                  <option value="low">🟢 Low - Informasi umum</option>
-                  <option value="normal">🟡 Normal - Pemberitahuan standar</option>
-                  <option value="high">🟠 High - Perhatian dibutuhkan</option>
-                  <option value="urgent">🔴 Urgent - Segera dibalas</option>
+                <Select value={data.priority} onValueChange={(v) => setData('priority', v)}>
+                  <SelectTrigger id="priority" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">🟢 Low - Informasi umum</SelectItem>
+                    <SelectItem value="normal">🟡 Normal - Pemberitahuan standar</SelectItem>
+                    <SelectItem value="high">🟠 High - Perhatian dibutuhkan</SelectItem>
+                    <SelectItem value="urgent">🔴 Urgent - Segera dibalas</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
 

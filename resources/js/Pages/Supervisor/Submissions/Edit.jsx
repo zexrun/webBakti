@@ -4,7 +4,7 @@ import { ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 
@@ -120,12 +120,16 @@ export default function Edit({ submission }) {
                     <label htmlFor="grade" className="mb-2 block text-sm font-medium text-foreground">
                       Nilai <span className="text-destructive">*</span>
                     </label>
-                    <Select id="grade" value={data.grade} onChange={(e) => handleGradeChange(e.target.value)} required>
-                      <option value="">Pilih Nilai</option>
-                      <option value="A">A (Sangat Baik)</option>
-                      <option value="B">B (Baik)</option>
-                      <option value="C">C (Cukup)</option>
-                      <option value="D">D (Kurang)</option>
+                    <Select value={data.grade} onValueChange={(v) => handleGradeChange(v)}>
+                      <SelectTrigger id="grade" className="w-full">
+                        <SelectValue placeholder="Pilih Nilai" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="A">A (Sangat Baik)</SelectItem>
+                        <SelectItem value="B">B (Baik)</SelectItem>
+                        <SelectItem value="C">C (Cukup)</SelectItem>
+                        <SelectItem value="D">D (Kurang)</SelectItem>
+                      </SelectContent>
                     </Select>
                     {errors.grade && <p className="mt-1 text-sm text-destructive">{errors.grade}</p>}
                   </div>

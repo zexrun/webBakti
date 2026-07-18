@@ -1,24 +1,28 @@
+import { useState } from 'react'
 import { Link, router, usePage } from '@inertiajs/react'
 import { CheckCircle2, Clock, FileText } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 
 export default function Index({ submissions, tasks, students, totalSubmissions, gradedCount, pendingCount, filters }) {
   const { flash } = usePage().props
+  const [statusFilter, setStatusFilter] = useState(filters.status ?? 'all')
+  const [taskIdFilter, setTaskIdFilter] = useState(filters.task_id ? String(filters.task_id) : 'all')
+  const [studentIdFilter, setStudentIdFilter] = useState(filters.student_id ? String(filters.student_id) : 'all')
+  const [sortByFilter, setSortByFilter] = useState(filters.sort_by ?? 'created_at')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function handleFilter(e) {
     e.preventDefault()
-    const form = e.target
     router.get(r('supervisor.submissions.index'), {
-      status: form.status.value,
-      task_id: form.task_id.value,
-      student_id: form.student_id.value,
-      sort_by: form.sort_by.value,
+      ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
+      ...(taskIdFilter !== 'all' ? { task_id: taskIdFilter } : {}),
+      ...(studentIdFilter !== 'all' ? { student_id: studentIdFilter } : {}),
+      sort_by: sortByFilter,
     })
   }
 
@@ -76,36 +80,56 @@ export default function Index({ submissions, tasks, students, totalSubmissions, 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Status</label>
-                  <Select name="status" defaultValue={filters.status ?? ''}>
-                    <option value="">Semua Status</option>
-                    <option value="pending">Menunggu Nilai</option>
-                    <option value="graded">Sudah Dinilai</option>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Status</SelectItem>
+                      <SelectItem value="pending">Menunggu Nilai</SelectItem>
+                      <SelectItem value="graded">Sudah Dinilai</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Tugas</label>
-                  <Select name="task_id" defaultValue={filters.task_id ?? ''}>
-                    <option value="">Semua Tugas</option>
-                    {tasks.map((task) => (
-                      <option key={task.id} value={task.id}>{task.title}</option>
-                    ))}
+                  <Select value={taskIdFilter} onValueChange={setTaskIdFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Tugas</SelectItem>
+                      {tasks.map((task) => (
+                        <SelectItem key={task.id} value={String(task.id)}>{task.title}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Mahasiswa</label>
-                  <Select name="student_id" defaultValue={filters.student_id ?? ''}>
-                    <option value="">Semua Mahasiswa</option>
-                    {students.map((student) => (
-                      <option key={student.id} value={student.id}>{student.user.name}</option>
-                    ))}
+                  <Select value={studentIdFilter} onValueChange={setStudentIdFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Mahasiswa</SelectItem>
+                      {students.map((student) => (
+                        <SelectItem key={student.id} value={String(student.id)}>{student.user.name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Urutkan</label>
-                  <Select name="sort_by" defaultValue={filters.sort_by ?? 'created_at'}>
-                    <option value="created_at">Terbaru</option>
-                    <option value="updated_at">Terakhir Diupdate</option>
-                    <option value="grade">Nilai</option>
+                  <Select value={sortByFilter} onValueChange={setSortByFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="created_at">Terbaru</SelectItem>
+                      <SelectItem value="updated_at">Terakhir Diupdate</SelectItem>
+                      <SelectItem value="grade">Nilai</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 import ApprovalModal from './ApprovalModal'
@@ -24,12 +24,16 @@ const approvalVariant = {
 
 export default function Index({ attendances, stats, date, status }) {
   const [modalItem, setModalItem] = useState(null)
+  const [statusFilter, setStatusFilter] = useState(status ?? 'all')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function handleFilter(e) {
     e.preventDefault()
     const form = e.target
-    router.get(r('admin.attendance.index'), { date: form.date.value, status: form.status.value })
+    router.get(r('admin.attendance.index'), {
+      date: form.date.value,
+      ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
+    })
   }
 
   function quickApprove(attendance) {
@@ -104,12 +108,17 @@ export default function Index({ attendances, stats, date, status }) {
               </div>
               <div className="space-y-2">
                 <label htmlFor="status" className="block text-sm font-medium text-foreground">Status</label>
-                <Select id="status" name="status" defaultValue={status ?? ''}>
-                  <option value="">Semua Status</option>
-                  <option value="present">Hadir</option>
-                  <option value="late">Terlambat</option>
-                  <option value="absent">Tidak Hadir</option>
-                  <option value="pending">Pending</option>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger id="status">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Status</SelectItem>
+                    <SelectItem value="present">Hadir</SelectItem>
+                    <SelectItem value="late">Terlambat</SelectItem>
+                    <SelectItem value="absent">Tidak Hadir</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
               <Button type="submit">

@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react'
 import { Send, X } from 'lucide-react'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 
@@ -64,12 +64,16 @@ export default function ExceptionModal({ open, onClose }) {
 
               <div className="space-y-2">
                 <Label htmlFor="type">Jenis</Label>
-                <Select id="type" value={data.type} onChange={(e) => setData('type', e.target.value)}>
-                  <option value="">Pilih jenis...</option>
-                  <option value="sick">Sakit</option>
-                  <option value="leave">Cuti</option>
-                  <option value="permit">Izin</option>
-                  <option value="official">Dinas</option>
+                <Select value={data.type} onValueChange={(v) => setData('type', v)}>
+                  <SelectTrigger id="type" className="w-full">
+                    <SelectValue placeholder="Pilih jenis..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sick">Sakit</SelectItem>
+                    <SelectItem value="leave">Cuti</SelectItem>
+                    <SelectItem value="permit">Izin</SelectItem>
+                    <SelectItem value="official">Dinas</SelectItem>
+                  </SelectContent>
                 </Select>
                 {errors.type && <p className="text-sm text-destructive">{errors.type}</p>}
               </div>

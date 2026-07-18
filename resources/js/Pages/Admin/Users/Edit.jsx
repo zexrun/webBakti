@@ -4,7 +4,7 @@ import AdminLayout from '@/Layouts/AdminLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 
 export default function Edit({ user, directorates, positions }) {
@@ -66,10 +66,15 @@ export default function Edit({ user, directorates, positions }) {
 
               <div className="space-y-2">
                 <Label htmlFor="role">Peran (Role) <span className="text-destructive">*</span></Label>
-                <Select id="role" value={data.role} onChange={(e) => setData('role', e.target.value)} required>
-                  <option value="admin">👨‍💼 Administrator</option>
-                  <option value="supervisor">👨‍🏫 Pembimbing</option>
-                  <option value="student">🎓 Mahasiswa</option>
+                <Select value={data.role} onValueChange={(v) => setData('role', v)}>
+                  <SelectTrigger id="role" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">👨‍💼 Administrator</SelectItem>
+                    <SelectItem value="supervisor">👨‍🏫 Pembimbing</SelectItem>
+                    <SelectItem value="student">🎓 Mahasiswa</SelectItem>
+                  </SelectContent>
                 </Select>
                 {errors.role && <p className="text-sm text-destructive">{errors.role}</p>}
               </div>
@@ -124,22 +129,38 @@ export default function Edit({ user, directorates, positions }) {
               <CardContent className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="direktorat">Direktorat</Label>
-                  <Select id="direktorat" value={data.direktorat} onChange={(e) => setData('direktorat', e.target.value)}>
-                    <option value="">Pilih Direktorat</option>
-                    {directorates.map((dir) => (
-                      <option key={dir.id} value={dir.id}>{dir.name}</option>
-                    ))}
+                  <Select
+                    value={data.direktorat === '' ? 'none' : String(data.direktorat)}
+                    onValueChange={(v) => setData('direktorat', v === 'none' ? '' : v)}
+                  >
+                    <SelectTrigger id="direktorat" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Pilih Direktorat</SelectItem>
+                      {directorates.map((dir) => (
+                        <SelectItem key={dir.id} value={String(dir.id)}>{dir.name}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
 
                 {data.role === 'supervisor' && (
                   <div className="space-y-2">
                     <Label htmlFor="jabatan">Jabatan</Label>
-                    <Select id="jabatan" value={data.jabatan} onChange={(e) => setData('jabatan', e.target.value)}>
-                      <option value="">Pilih Jabatan</option>
-                      {positions.map((pos) => (
-                        <option key={pos.id} value={pos.id}>{pos.name}</option>
-                      ))}
+                    <Select
+                      value={data.jabatan === '' ? 'none' : String(data.jabatan)}
+                      onValueChange={(v) => setData('jabatan', v === 'none' ? '' : v)}
+                    >
+                      <SelectTrigger id="jabatan" className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Pilih Jabatan</SelectItem>
+                        {positions.map((pos) => (
+                          <SelectItem key={pos.id} value={String(pos.id)}>{pos.name}</SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </div>
                 )}

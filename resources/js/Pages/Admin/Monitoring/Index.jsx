@@ -1,14 +1,18 @@
+import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Activity, Users, GraduationCap, Search, Download, ChevronRight } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Input } from '@/Components/ui/input'
-import { Select } from '@/Components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import Pagination from '@/Components/Pagination'
 
 export default function Index({ supervisors, directorates, positions, search, directorat, position, sortBy, sortOrder, stats }) {
+  const [directoratFilter, setDirectoratFilter] = useState(directorat ?? 'all')
+  const [positionFilter, setPositionFilter] = useState(position ?? 'all')
+  const [sortByFilter, setSortByFilter] = useState(sortBy ?? 'name')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function handleFilter(e) {
@@ -16,9 +20,9 @@ export default function Index({ supervisors, directorates, positions, search, di
     const form = e.target
     router.get(r('admin.monitoring.index'), {
       search: form.search.value,
-      directorat: form.directorat.value,
-      position: form.position.value,
-      sort_by: form.sort_by.value,
+      ...(directoratFilter !== 'all' ? { directorat: directoratFilter } : {}),
+      ...(positionFilter !== 'all' ? { position: positionFilter } : {}),
+      sort_by: sortByFilter,
     })
   }
 
@@ -70,28 +74,43 @@ export default function Index({ supervisors, directorates, positions, search, di
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Direktorat</label>
-                  <Select name="directorat" defaultValue={directorat ?? ''}>
-                    <option value="">Semua Direktorat</option>
-                    {directorates.map((dir) => (
-                      <option key={dir} value={dir}>{dir}</option>
-                    ))}
+                  <Select value={directoratFilter} onValueChange={setDirectoratFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Direktorat</SelectItem>
+                      {directorates.map((dir) => (
+                        <SelectItem key={dir} value={dir}>{dir}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Jabatan</label>
-                  <Select name="position" defaultValue={position ?? ''}>
-                    <option value="">Semua Jabatan</option>
-                    {positions.map((pos) => (
-                      <option key={pos} value={pos}>{pos}</option>
-                    ))}
+                  <Select value={positionFilter} onValueChange={setPositionFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Semua Jabatan</SelectItem>
+                      {positions.map((pos) => (
+                        <SelectItem key={pos} value={pos}>{pos}</SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">Urutkan</label>
-                  <Select name="sort_by" defaultValue={sortBy}>
-                    <option value="name">Nama</option>
-                    <option value="students">Jumlah Mahasiswa</option>
-                    <option value="created_at">Tanggal Dibuat</option>
+                  <Select value={sortByFilter} onValueChange={setSortByFilter}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="name">Nama</SelectItem>
+                      <SelectItem value="students">Jumlah Mahasiswa</SelectItem>
+                      <SelectItem value="created_at">Tanggal Dibuat</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
