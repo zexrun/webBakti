@@ -7,6 +7,7 @@ use App\Notifications\WelcomeEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ActivationController extends Controller
 {
@@ -26,7 +27,7 @@ class ActivationController extends Controller
             return redirect('/login')->withErrors(['email' => 'Link aktivasi telah kedaluwarsa. Silahkan minta link aktivasi yang baru.']);
         }
 
-        return view('auth.activate', ['token' => $token, 'email' => $user->email]);
+        return Inertia::render('Auth/Activate', ['token' => $token, 'email' => $user->email]);
     }
 
     public function activateAccount(Request $request)
