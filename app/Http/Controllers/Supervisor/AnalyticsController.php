@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class AnalyticsController extends Controller
 {
@@ -58,7 +59,7 @@ class AnalyticsController extends Controller
                 'completion_rate' => $totalCount > 0 ? round(($totalCount / $this->countAssignedStudents($task)) * 100, 1) : 0,
                 'average_grade' => $avgGrade,
             ];
-        });
+        })->values();
 
         // Student Performance Trend (Last 30 days)
         $studentTrend = $this->getStudentPerformanceTrend($supervisor, 30);
@@ -69,18 +70,18 @@ class AnalyticsController extends Controller
         // Students Needing Attention
         $atRiskStudents = $this->getAtRiskStudents($supervisor);
 
-        return view('supervisor.analytics.dashboard', compact(
-            'totalStudents',
-            'totalTasks',
-            'totalSubmissions',
-            'gradedSubmissions',
-            'gradeStats',
-            'gradeDistribution',
-            'taskPerformance',
-            'studentTrend',
-            'topStudents',
-            'atRiskStudents'
-        ));
+        return Inertia::render('Supervisor/Analytics/Dashboard', [
+            'totalStudents' => $totalStudents,
+            'totalTasks' => $totalTasks,
+            'totalSubmissions' => $totalSubmissions,
+            'gradedSubmissions' => $gradedSubmissions,
+            'gradeStats' => $gradeStats,
+            'gradeDistribution' => $gradeDistribution,
+            'taskPerformance' => $taskPerformance,
+            'studentTrend' => $studentTrend,
+            'topStudents' => $topStudents,
+            'atRiskStudents' => $atRiskStudents,
+        ]);
     }
 
     public function studentReport($studentId)
@@ -128,7 +129,7 @@ class AnalyticsController extends Controller
                 'feedback' => $submission->feedback,
                 'status' => $submission->grade !== null ? 'Graded' : 'Pending',
             ];
-        });
+        })->values();
 
         // Attendance Stats
         $attendance = $student->attendances()
@@ -145,15 +146,14 @@ class AnalyticsController extends Controller
         // Final Assessment
         $finalAssessment = $student->finalAssessment;
 
-        return view('supervisor.analytics.student-report', compact(
-            'student',
-            'studentInfo',
-            'taskStats',
-            'gradePerformance',
-            'submissionTimeline',
-            'attendanceStats',
-            'finalAssessment'
-        ));
+        return Inertia::render('Supervisor/Analytics/StudentReport', [
+            'studentInfo' => $studentInfo,
+            'taskStats' => $taskStats,
+            'gradePerformance' => $gradePerformance,
+            'submissionTimeline' => $submissionTimeline,
+            'attendanceStats' => $attendanceStats,
+            'finalAssessment' => $finalAssessment,
+        ]);
     }
 
     public function taskAnalytics($taskId)
@@ -217,17 +217,17 @@ class AnalyticsController extends Controller
         $notSubmittedStudents = $task->students()
             ->whereNotIn('id', $submissions->pluck('student_id'))
             ->get()
-            ->map(fn($s) => ['name' => $s->user->name, 'nim' => $s->nim]);
+            ->map(fn($s) => ['name' => $s->user->name, 'nim' => $s->nim])
+            ->values();
 
-        return view('supervisor.analytics.task-analytics', compact(
-            'task',
-            'taskInfo',
-            'submissionStats',
-            'gradeDistribution',
-            'gradeStats',
-            'studentPerformance',
-            'notSubmittedStudents'
-        ));
+        return Inertia::render('Supervisor/Analytics/TaskAnalytics', [
+            'taskInfo' => $taskInfo,
+            'submissionStats' => $submissionStats,
+            'gradeDistribution' => $gradeDistribution,
+            'gradeStats' => $gradeStats,
+            'studentPerformance' => $studentPerformance,
+            'notSubmittedStudents' => $notSubmittedStudents,
+        ]);
     }
 
     private function calculateMedian($grades)

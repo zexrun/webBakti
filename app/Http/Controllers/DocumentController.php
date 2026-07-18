@@ -113,8 +113,15 @@ class DocumentController extends Controller
      */
     public function download($id): Response
     {
-        $student = Auth::user()->student;
-        $document = $student->documents()->findOrFail($id);
+        $user = Auth::user();
+        $document = Document::findOrFail($id);
+
+        $isOwner = $user->role === 'student' && $document->student_id === $user->student?->id;
+        $isSupervisor = $user->role === 'supervisor' && $document->student->supervisor_id === $user->supervisor?->id;
+
+        if (!$isOwner && !$isSupervisor) {
+            abort(403, 'Tidak berhak mengakses dokumen ini.');
+        }
 
         if (!Storage::disk('private')->exists($document->file_path)) {
             abort(404, 'File tidak ditemukan.');

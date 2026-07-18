@@ -73,9 +73,12 @@ class SupervisorController extends Controller
                     $query->whereIn('type', ['proposal', 'laporan_akhir']);
             }
             ])
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('supervisor.students.list.index', compact('students'));
+        return Inertia::render('Supervisor/Students/Index', [
+            'students' => $students,
+        ]);
     }
 
 
@@ -115,7 +118,9 @@ class SupervisorController extends Controller
         // Ambil dokumen
         $documents = $student->documents()->latest()->get();
 
-        // Tampilkan view
-        return view('supervisor.students.documents.index', compact('student', 'documents'));
+        return Inertia::render('Supervisor/Students/Documents', [
+            'student' => $student->load('user'),
+            'documents' => $documents,
+        ]);
     }
 }

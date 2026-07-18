@@ -194,6 +194,7 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::post('/attendance/settings', [AdminAttendanceController::class, 'updateSettings'])->name('admin.attendance.settings.update');
 
     Route::get('/students/{student}/documents', [SupervisorController::class, 'showDocuments'])->name('students.documents');
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
 });
 
 // Grup Student

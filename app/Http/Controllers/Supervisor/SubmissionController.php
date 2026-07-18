@@ -8,6 +8,7 @@ use App\Models\Supervisor;
 use App\Notifications\SubmissionGraded;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class SubmissionController extends Controller
 {
@@ -65,19 +66,21 @@ class SubmissionController extends Controller
 
         $pendingCount = $totalSubmissions - $gradedCount;
 
-        return view('supervisor.submissions.index', compact(
-            'submissions',
-            'tasks',
-            'students',
-            'totalSubmissions',
-            'gradedCount',
-            'pendingCount',
-            'status',
-            'taskId',
-            'studentId',
-            'sortBy',
-            'sortOrder'
-        ));
+        return Inertia::render('Supervisor/Submissions/Index', [
+            'submissions' => $submissions->withQueryString(),
+            'tasks' => $tasks,
+            'students' => $students,
+            'totalSubmissions' => $totalSubmissions,
+            'gradedCount' => $gradedCount,
+            'pendingCount' => $pendingCount,
+            'filters' => [
+                'status' => $status,
+                'task_id' => $taskId,
+                'student_id' => $studentId,
+                'sort_by' => $sortBy,
+                'sort_order' => $sortOrder,
+            ],
+        ]);
     }
 
     public function edit(Submission $submission)
@@ -86,7 +89,9 @@ class SubmissionController extends Controller
             abort(403, 'AKSES DITOLAK');
         }
 
-        return view('supervisor.submissions.edit', compact('submission'));
+        return Inertia::render('Supervisor/Submissions/Edit', [
+            'submission' => $submission->load(['student.user', 'task']),
+        ]);
     }
 
     public function update(Request $request, Submission $submission)

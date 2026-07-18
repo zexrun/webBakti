@@ -17,6 +17,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -28,16 +29,22 @@ class UserController extends Controller
         $query = User::when($search, fn($q) => $q->where('name', 'like', "%$search%"))
             ->orderBy('created_at', 'asc');
 
-        $admins = (clone $query)->where('role', 'admin')->paginate(10);
-        $supervisors = (clone $query)->where('role', 'supervisor')->with('supervisor')->paginate(10);
-        $students = (clone $query)->where('role', 'student')->with('student')->paginate(10);
+        $admins = (clone $query)->where('role', 'admin')->paginate(10, ['*'], 'admins_page')->withQueryString();
+        $supervisors = (clone $query)->where('role', 'supervisor')->with('supervisor')->paginate(10, ['*'], 'supervisors_page')->withQueryString();
+        $students = (clone $query)->where('role', 'student')->with('student')->paginate(10, ['*'], 'students_page')->withQueryString();
 
-        return view('admin.users.index', compact('admins', 'supervisors', 'students', 'search', 'tab'));
+        return Inertia::render('Admin/Users/Index', [
+            'admins' => $admins,
+            'supervisors' => $supervisors,
+            'students' => $students,
+            'search' => $search,
+            'tab' => $tab,
+        ]);
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        return Inertia::render('Admin/Users/Create');
     }
 
     public function store(Request $request)
@@ -79,9 +86,11 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $directorates = Directorate::all();
-        $positions = Position::all();
-        return view('admin.users.edit', compact('user', 'directorates', 'positions'));
+        return Inertia::render('Admin/Users/Edit', [
+            'user' => $user->load('student', 'supervisor'),
+            'directorates' => Directorate::all(),
+            'positions' => Position::all(),
+        ]);
     }
 
     public function update(Request $request, User $user)

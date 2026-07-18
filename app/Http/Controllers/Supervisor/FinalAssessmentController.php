@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class FinalAssessmentController extends Controller
 {
@@ -25,7 +26,9 @@ class FinalAssessmentController extends Controller
             abort(403, "AKSES DITOLAK");
         }
 
-        return view('supervisor.students.assessment.create', compact('student'));
+        return Inertia::render('Supervisor/Students/AssessmentCreate', [
+            'student' => $student->load('user', 'documents'),
+        ]);
     }
 
     public function edit(Student $student)
@@ -43,7 +46,10 @@ class FinalAssessmentController extends Controller
             return redirect()->route('supervisor.students.assessment.create', $student->id);
         }
 
-        return view('supervisor.students.assessment.edit', compact('student', 'assessment'));
+        return Inertia::render('Supervisor/Students/AssessmentEdit', [
+            'student' => $student->load('user'),
+            'assessment' => $assessment,
+        ]);
     }
 
     public function update(Request $request, Student $student)

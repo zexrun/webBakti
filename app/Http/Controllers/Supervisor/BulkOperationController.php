@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\BulkTaskAssignedNotification;
+use Inertia\Inertia;
 
 class BulkOperationController extends Controller
 {
@@ -17,7 +18,9 @@ class BulkOperationController extends Controller
         $supervisor = Auth::user()->supervisor;
         $students = $supervisor->students()->with('user')->get();
 
-        return view('supervisor.bulk.create-task', compact('students'));
+        return Inertia::render('Supervisor/Bulk/CreateTask', [
+            'students' => $students,
+        ]);
     }
 
     public function storeBulkTask(Request $request)
@@ -77,7 +80,9 @@ class BulkOperationController extends Controller
         $supervisor = Auth::user()->supervisor;
         $students = $supervisor->students()->with('user')->get();
 
-        return view('supervisor.bulk.send-notification', compact('students'));
+        return Inertia::render('Supervisor/Bulk/SendNotification', [
+            'students' => $students,
+        ]);
     }
 
     public function sendBulkNotification(Request $request)
@@ -115,7 +120,7 @@ class BulkOperationController extends Controller
 
     public function gradeImportForm()
     {
-        return view('supervisor.bulk.import-grades');
+        return Inertia::render('Supervisor/Bulk/ImportGrades');
     }
 
     public function importGrades(Request $request)
@@ -191,14 +196,23 @@ class BulkOperationController extends Controller
 
         return redirect()->back()
             ->with('success', $message)
-            ->with('errors', $errorMessages);
+            ->with('import_errors', $errorMessages);
     }
 
     public function automationSettingsForm()
     {
         $supervisor = Auth::user()->supervisor;
 
-        return view('supervisor.bulk.automation-settings', compact('supervisor'));
+        return Inertia::render('Supervisor/Bulk/AutomationSettings', [
+            'settings' => [
+                'auto_deadline_reminder' => (bool) $supervisor->auto_deadline_reminder,
+                'reminder_days_before' => $supervisor->reminder_days_before
+                    ? json_decode($supervisor->reminder_days_before, true)
+                    : [],
+                'auto_submission_reminder' => (bool) $supervisor->auto_submission_reminder,
+                'submission_reminder_days' => $supervisor->submission_reminder_days,
+            ],
+        ]);
     }
 
     public function saveAutomationSettings(Request $request)
