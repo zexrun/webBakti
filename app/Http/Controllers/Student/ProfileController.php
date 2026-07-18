@@ -8,31 +8,53 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
     public function edit(Request $request)
     {
-        $user = $request->user();
         $student = Auth::user()->student;
-        /* $universities = [];
+        $student->load('supervisor.user', 'finalAssessment');
 
-        try {
-            $jsonPath = public_path('data/universities.json');
-            $allUniversityData = json_decode(file_get_contents($jsonPath), true);
+        $universities = University::orderBy('name')
+                                    ->pluck('name')
+                                    ->toArray();
 
-            // Ambil hanya kolom 'name' dari setiap objek
-            $universities = collect($allUniversityData)->pluck('name')->sort()->values();
-            
-        } catch (\Exception $e) {
-            // Biarkan array kosong jika file tidak ditemukan atau ada error
-        } */
-            $universities = University::orderBy('name')
-                                        ->pluck('name')
-                                        ->toArray();
+        $hasProposal = $student->documents()->where('type', 'proposal')->exists();
+        $hasLaporanAkhir = $student->documents()->where('type', 'laporan_akhir')->exists();
+        $hasAssessment = $student->finalAssessment && $student->finalAssessment->final_grade !== null;
+        $hasCertificate = $student->finalAssessment && $student->finalAssessment->certificate_generated_at;
 
-        // Kirim KEDUA variabel ('student' dan 'universities') ke view
-        return view('student.info.edit', compact('user', 'student', 'universities'));
+        if ($hasCertificate) {
+            $progress = 100;
+            $progressText = 'Selesai - Sertifikat tersedia';
+        } elseif ($hasAssessment) {
+            $progress = 75;
+            $progressText = 'Sudah dinilai - Menunggu sertifikat';
+        } elseif ($hasLaporanAkhir) {
+            $progress = 50;
+            $progressText = 'Laporan akhir sudah dikumpulkan';
+        } elseif ($hasProposal) {
+            $progress = 25;
+            $progressText = 'Proposal sudah dikumpulkan';
+        } else {
+            $progress = 0;
+            $progressText = 'Belum mengumpulkan proposal';
+        }
+
+        return Inertia::render('Student/Info/Edit', [
+            'student' => $student,
+            'universities' => $universities,
+            'certificateProgress' => [
+                'percent' => $progress,
+                'text' => $progressText,
+                'hasProposal' => $hasProposal,
+                'hasLaporanAkhir' => $hasLaporanAkhir,
+                'hasAssessment' => $hasAssessment,
+                'hasCertificate' => (bool) $hasCertificate,
+            ],
+        ]);
     }
 
     public function update(Request $request)

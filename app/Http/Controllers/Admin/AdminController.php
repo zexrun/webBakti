@@ -145,7 +145,7 @@ class AdminController extends Controller
 
         $supervisors = Supervisor::with('user')->get();
 
-        return view('admin.plotting', [
+        return Inertia::render('Admin/Plotting', [
             'students' => $students,
             'supervisors' => $supervisors,
         ]);

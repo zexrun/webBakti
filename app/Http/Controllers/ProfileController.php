@@ -10,16 +10,17 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class ProfileController extends Controller
 {
     /**
      * Tampilkan halaman profil pengguna.
      */
-    public function show(): View|RedirectResponse
+    public function show(): InertiaResponse|RedirectResponse
     {
         $user = Auth::user();
 
@@ -27,13 +28,21 @@ class ProfileController extends Controller
             return redirect()->route('login');
         }
 
-        return view('profile.show', compact('user'));
+        if ($user->role === 'student') {
+            $user->load('student.supervisor.user');
+        } elseif ($user->role === 'supervisor') {
+            $user->load('supervisor');
+        }
+
+        return Inertia::render('Profile/Show', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Tampilkan halaman edit profil pengguna.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request): InertiaResponse
     {
         $user = $request->user();
 
@@ -44,10 +53,9 @@ class ProfileController extends Controller
             $user->load('supervisor');
         }
 
-        $directorates = Directorate::orderBy('name')->get();
-        $positions = Position::orderBy('name')->get();
-
-        return view('profile.edit', compact('user', 'directorates', 'positions'));
+        return Inertia::render('Profile/Edit', [
+            'user' => $user,
+        ]);
     }
 
     /**

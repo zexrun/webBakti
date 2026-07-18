@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
@@ -12,7 +13,9 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notifications = $user->notifications()->latest()->paginate(20);
 
-        return view('notifications.index', compact('notifications'));
+        return Inertia::render('Notifications/Index', [
+            'notifications' => $notifications,
+        ]);
     }
 
     public function markAsRead($id)

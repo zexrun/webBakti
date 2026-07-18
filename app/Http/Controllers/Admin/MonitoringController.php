@@ -8,6 +8,8 @@ use App\Models\Student;
 use App\Models\Supervisor;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Inertia\Inertia;
 
 class MonitoringController extends Controller
 {
@@ -44,19 +46,26 @@ class MonitoringController extends Controller
             $query->join('users', 'supervisors.user_id', '=', 'users.id')
                   ->select('supervisors.*')
                   ->orderBy('users.name', $sortOrder);
-        } elseif ($sortBy === 'students') {
-            $supervisors = $query->get()
-                ->sortBy(fn($s) => $s->students->count(), SORT_REGULAR, $sortOrder === 'desc')
-                ->values();
-        } else {
+        } elseif ($sortBy !== 'students') {
             $query->orderBy($sortBy, $sortOrder);
         }
 
         // Pagination
         if ($sortBy !== 'students') {
-            $supervisors = $query->paginate(10);
+            $supervisors = $query->paginate(10)->withQueryString();
         } else {
-            $supervisors = collect($supervisors)->forPage($request->get('page', 1), 10);
+            $sorted = $query->get()
+                ->sortBy(fn($s) => $s->students->count(), SORT_REGULAR, $sortOrder === 'desc')
+                ->values();
+
+            $page = $request->get('page', 1);
+            $supervisors = new LengthAwarePaginator(
+                $sorted->forPage($page, 10)->values(),
+                $sorted->count(),
+                10,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
         }
 
         // Get unique directorates and positions
@@ -78,31 +87,35 @@ class MonitoringController extends Controller
             'active_submissions' => Student::whereHas('submissions', fn($q) => $q->whereNull('grade'))->count(),
         ];
 
-        return view('admin.monitoring.index', compact(
-            'supervisors',
-            'directorates',
-            'positions',
-            'search',
-            'directorat',
-            'position',
-            'sortBy',
-            'sortOrder',
-            'stats'
-        ));
+        return Inertia::render('Admin/Monitoring/Index', [
+            'supervisors' => $supervisors,
+            'directorates' => $directorates,
+            'positions' => $positions,
+            'search' => $search,
+            'directorat' => $directorat,
+            'position' => $position,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
+            'stats' => $stats,
+        ]);
     }
-    
+
     public function showSupervisor(Supervisor $supervisor)
     {
         $supervisor->load(['user', 'students.user']);
-        
-        return view('admin.monitoring.supervisor-detail', compact('supervisor'));
+
+        return Inertia::render('Admin/Monitoring/SupervisorDetail', [
+            'supervisor' => $supervisor,
+        ]);
     }
-    
+
     public function showStudent(Student $student)
     {
         $student->load(['user', 'supervisor.user']);
 
-        return view('admin.monitoring.student-detail', compact('student'));
+        return Inertia::render('Admin/Monitoring/StudentDetail', [
+            'student' => $student,
+        ]);
     }
 
     public function exportCsv(Request $request)

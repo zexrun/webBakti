@@ -8,6 +8,7 @@ use App\Models\Directorate;
 use App\Models\Position;
 use App\Models\University;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SettingController extends Controller
 {
@@ -47,16 +48,16 @@ class SettingController extends Controller
         $directorates->appends(['tab' => 'directorates', 'search_directorate' => $searchDirectorate]);
         $positions->appends(['tab' => 'positions', 'search_position' => $searchPosition]);
         $universities->appends(['tab' => 'universities', 'search_university' => $searchUniversity]);
-        
-        return view('admin.settings.index', compact(
-            'directorates', 
-            'positions', 
-            'universities', 
-            'activeTab',
-            'searchDirectorate',
-            'searchPosition', 
-            'searchUniversity'
-        ));
+
+        return Inertia::render('Admin/Settings/Index', [
+            'directorates' => $directorates,
+            'positions' => $positions,
+            'universities' => $universities,
+            'activeTab' => $activeTab,
+            'searchDirectorate' => $searchDirectorate,
+            'searchPosition' => $searchPosition,
+            'searchUniversity' => $searchUniversity,
+        ]);
     }
 
     // Existing methods remain the same...

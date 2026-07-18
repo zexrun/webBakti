@@ -94,7 +94,6 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
     Route::get('/monitoring/supervisor/{supervisor}', [MonitoringController::class, 'showSupervisor'])->name('monitoring.supervisor.show');
     Route::get('/monitoring/export-csv', [MonitoringController::class, 'exportCsv'])->name('monitoring.export-csv');
-    Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings/directorates', [SettingController::class, 'storeDirectorate'])->name('settings.storeDirectorate');

@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class SearchController extends Controller
 {
@@ -144,17 +145,33 @@ class SearchController extends Controller
         // Sort
         $sortBy = $request->get('sort_by', 'created_at');
         $sortDir = $request->get('sort_dir', 'desc');
-        $query->orderBy($sortBy, $sortDir);
+
+        if ($sortBy === 'name') {
+            $query->join('users', 'users.id', '=', 'students.user_id')
+                  ->orderBy('users.name', $sortDir)
+                  ->select('students.*');
+        } else {
+            $query->orderBy($sortBy, $sortDir);
+        }
 
         $students = $query->with('user', 'supervisor.user')
             ->paginate(20)
-            ->appends($request->query());
+            ->withQueryString();
 
-        $supervisors = Supervisor::with('user')->get();
-        $directorates = \App\Models\Directorate::all();
-        $universities = \App\Models\University::all();
-
-        return view('search.advanced-admin', compact('students', 'supervisors', 'directorates', 'universities'));
+        return Inertia::render('Search/AdvancedAdmin', [
+            'students' => $students,
+            'supervisors' => Supervisor::with('user')->get(),
+            'directorates' => \App\Models\Directorate::all(),
+            'universities' => \App\Models\University::all(),
+            'filters' => [
+                'search' => $request->get('search'),
+                'direktorat' => $request->get('direktorat'),
+                'supervisor_id' => $request->get('supervisor_id'),
+                'universitas' => $request->get('universitas'),
+                'sort_by' => $sortBy,
+                'sort_dir' => $sortDir,
+            ],
+        ]);
     }
 
     private function advancedSearchSupervisor(Request $request)
@@ -187,9 +204,17 @@ class SearchController extends Controller
 
         $tasks = $taskQuery->with('submissions')
             ->paginate(20)
-            ->appends($request->query());
+            ->withQueryString();
 
-        return view('search.advanced-supervisor', compact('tasks', 'supervisor'));
+        return Inertia::render('Search/AdvancedSupervisor', [
+            'tasks' => $tasks,
+            'filters' => [
+                'task_search' => $request->get('task_search'),
+                'task_status' => $request->get('task_status'),
+                'due_date_from' => $request->get('due_date_from'),
+                'due_date_to' => $request->get('due_date_to'),
+            ],
+        ]);
     }
 
     private function advancedSearchStudent(Request $request)
@@ -221,9 +246,18 @@ class SearchController extends Controller
             $taskQuery->whereDate('due_date', '<=', $request->get('due_date_to'));
         }
 
-        $tasks = $taskQuery->paginate(20)->appends($request->query());
+        $tasks = $taskQuery->with('submissions')->paginate(20)->withQueryString();
 
-        return view('search.advanced-student', compact('tasks', 'student'));
+        return Inertia::render('Search/AdvancedStudent', [
+            'tasks' => $tasks,
+            'studentId' => $student->id,
+            'filters' => [
+                'task_search' => $request->get('task_search'),
+                'status' => $request->get('status'),
+                'due_date_from' => $request->get('due_date_from'),
+                'due_date_to' => $request->get('due_date_to'),
+            ],
+        ]);
     }
 
     public function saveSearch(Request $request)
