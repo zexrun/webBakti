@@ -22,11 +22,11 @@ function NavLink({ href, icon: Icon, label, active }) {
     <Link
       href={href}
       className={cn(
-        'flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100',
-        active && 'bg-blue-50 text-blue-700 border-r-2 border-blue-600',
+        'flex items-center w-full p-3 rounded-lg text-sm text-sidebar-muted transition-colors duration-150 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+        active && 'bg-sidebar-accent text-sidebar-primary font-medium',
       )}
     >
-      <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-blue-600' : 'text-gray-500')} />
+      <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-sidebar-primary' : 'text-sidebar-muted')} />
       <span className="ms-3">{label}</span>
     </Link>
   )
@@ -41,16 +41,16 @@ function NavGroup({ icon: Icon, label, active, children, defaultOpen }) {
         type="button"
         onClick={() => setOpen(!open)}
         className={cn(
-          'flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100',
-          active && 'bg-blue-50 text-blue-700',
+          'flex items-center w-full p-3 rounded-lg text-sm text-sidebar-muted transition-colors duration-150 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+          active && 'text-sidebar-primary font-medium',
         )}
       >
-        <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-blue-600' : 'text-gray-500')} />
+        <Icon className={cn('w-5 h-5 flex-shrink-0', active ? 'text-sidebar-primary' : 'text-sidebar-muted')} />
         <span className="flex-1 ms-3 text-left">{label}</span>
         <ChevronDown className={cn('w-4 h-4 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <ul className="py-2 space-y-1 ml-6 border-l border-gray-200">{children}</ul>
+        <ul className="py-2 space-y-1 ml-6 border-l border-sidebar-border">{children}</ul>
       )}
     </div>
   )
@@ -62,8 +62,8 @@ function SubLink({ href, label, active }) {
       <Link
         href={href}
         className={cn(
-          'flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100',
-          active && 'bg-blue-50 text-blue-700 font-medium',
+          'flex items-center w-full p-2 pl-3 text-sm text-sidebar-muted rounded-lg transition-colors duration-150 hover:bg-sidebar-accent hover:text-sidebar-foreground',
+          active && 'bg-sidebar-accent text-sidebar-primary font-medium',
         )}
       >
         {label}
@@ -88,32 +88,32 @@ export default function SupervisorLayout({ children }) {
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm">
+    <div className="min-h-screen bg-background">
+      <nav className="fixed top-0 z-50 w-full border-b border-border bg-card">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <button
                 type="button"
-                className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100"
+                className="inline-flex items-center p-2 text-sm text-muted-foreground rounded-lg sm:hidden hover:bg-accent"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
                 <Menu className="w-6 h-6" />
               </button>
               <Link href={r('supervisor.dashboard')} className="flex items-center ms-2 md:me-24">
-                <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-gray-900">
-                  Magang BAKTI
+                <span className="self-center font-heading text-xl font-semibold sm:text-2xl whitespace-nowrap text-foreground">
+                  Magang <span className="text-primary">BAKTI</span>
                 </span>
               </Link>
             </div>
 
             <div className="flex items-center space-x-3">
-              <span className="hidden sm:block text-sm text-gray-700">
-                Halo, <span className="font-medium text-gray-900">{auth?.user?.name}</span>
+              <span className="hidden sm:block text-sm text-muted-foreground">
+                Halo, <span className="font-medium text-foreground">{auth?.user?.name}</span>
               </span>
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
                 <Link href={r('profile.show')}>
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-sm font-medium text-accent-foreground">
                     {auth?.user?.name?.charAt(0)?.toUpperCase()}
                   </span>
                 </Link>
@@ -125,12 +125,12 @@ export default function SupervisorLayout({ children }) {
 
       <aside
         className={cn(
-          'fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 shadow-lg',
+          'fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-sidebar border-r border-sidebar-border',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
         )}
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto bg-white">
-          <nav className="space-y-1 font-medium">
+        <div className="h-full px-3 pb-4 overflow-y-auto">
+          <nav className="space-y-1">
             <NavLink href={r('supervisor.dashboard')} icon={LayoutDashboard} label="Dashboard" active={isActive('supervisor.dashboard')} />
             <NavLink href={r('supervisor.tasks.create')} icon={ClipboardPlus} label="Buat Tugas" active={isActive('supervisor.tasks.create')} />
 
@@ -164,21 +164,21 @@ export default function SupervisorLayout({ children }) {
               <SubLink href={r('supervisor.bulk.automation-settings')} label="Pengaturan Automasi" active={isActive('supervisor.bulk.automation-settings')} />
             </NavGroup>
 
-            <div className="border-t border-gray-200 my-4" />
+            <div className="border-t border-sidebar-border my-4" />
 
             <NavLink href={r('messages.inbox')} icon={MessageSquare} label="Pesan" active={isActive('messages.*')} />
             <NavLink href={r('announcements.index')} icon={Megaphone} label="📢 Pengumuman" active={isActive('announcements.*')} />
 
-            <div className="border-t border-gray-200 my-4" />
+            <div className="border-t border-sidebar-border my-4" />
 
             <NavLink href={r('profile.show')} icon={UserCircle} label="Profile" active={isActive('profile.*')} />
 
             <button
               type="button"
               onClick={handleLogout}
-              className="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-red-50 hover:text-red-700"
+              className="flex items-center w-full p-3 rounded-lg text-sm text-sidebar-muted transition-colors duration-150 hover:bg-sidebar-accent hover:text-destructive"
             >
-              <LogOut className="w-5 h-5 text-gray-500 flex-shrink-0" />
+              <LogOut className="w-5 h-5 flex-shrink-0" />
               <span className="ms-3">Logout</span>
             </button>
           </nav>
