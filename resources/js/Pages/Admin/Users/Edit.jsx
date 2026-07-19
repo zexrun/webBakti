@@ -1,7 +1,8 @@
 import { Link, useForm } from '@inertiajs/react'
-import { Pencil, Save, X } from 'lucide-react'
+import { Save, X } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { Card, CardContent } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
@@ -34,24 +35,14 @@ export default function Edit({ user, directorates, positions }) {
   return (
     <AdminLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <Card>
-          <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-full bg-blue-100 p-3">
-              <Pencil className="h-6 w-6 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Edit Pengguna</h1>
-              <p className="text-muted-foreground">{user.name} ({user.email})</p>
-            </div>
-          </CardContent>
-        </Card>
+        <PageHeader title="Edit Pengguna" description={`${user.name} (${user.email})`} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
-            <div className="border-b border-border bg-muted px-6 py-4">
-              <h2 className="text-lg font-semibold text-foreground">Informasi Dasar</h2>
-            </div>
-            <CardContent className="space-y-6 p-6">
+            <CardHeader className="border-b">
+              <CardTitle>Informasi Dasar</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-5 pt-6">
               <div className="space-y-2">
                 <Label htmlFor="name">Nama Lengkap <span className="text-destructive">*</span></Label>
                 <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required />
@@ -71,9 +62,9 @@ export default function Edit({ user, directorates, positions }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">👨‍💼 Administrator</SelectItem>
-                    <SelectItem value="supervisor">👨‍🏫 Pembimbing</SelectItem>
-                    <SelectItem value="student">🎓 Mahasiswa</SelectItem>
+                    <SelectItem value="admin">Administrator</SelectItem>
+                    <SelectItem value="supervisor">Pembimbing</SelectItem>
+                    <SelectItem value="student">Mahasiswa</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.role && <p className="text-sm text-destructive">{errors.role}</p>}
@@ -83,10 +74,10 @@ export default function Edit({ user, directorates, positions }) {
 
           {data.role === 'student' && (
             <Card>
-              <div className="border-b border-blue-200 bg-blue-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-foreground">Data Mahasiswa</h2>
-              </div>
-              <CardContent className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
+              <CardHeader className="border-b">
+                <CardTitle>Data Mahasiswa</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="nim">NIM</Label>
                   <Input id="nim" value={data.nim} onChange={(e) => setData('nim', e.target.value)} />
@@ -109,10 +100,10 @@ export default function Edit({ user, directorates, positions }) {
 
           {data.role === 'supervisor' && (
             <Card>
-              <div className="border-b border-green-200 bg-green-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-foreground">Data Pembimbing</h2>
-              </div>
-              <CardContent className="p-6">
+              <CardHeader className="border-b">
+                <CardTitle>Data Pembimbing</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6">
                 <div className="space-y-2">
                   <Label htmlFor="nip">NIP</Label>
                   <Input id="nip" value={data.nip} onChange={(e) => setData('nip', e.target.value)} />
@@ -123,10 +114,10 @@ export default function Edit({ user, directorates, positions }) {
 
           {(data.role === 'student' || data.role === 'supervisor') && (
             <Card>
-              <div className="border-b border-purple-200 bg-purple-50 px-6 py-4">
-                <h2 className="text-lg font-semibold text-foreground">Direktorat & Jabatan</h2>
-              </div>
-              <CardContent className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
+              <CardHeader className="border-b">
+                <CardTitle>Direktorat & Jabatan</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="direktorat">Direktorat</Label>
                   <Select
@@ -169,11 +160,11 @@ export default function Edit({ user, directorates, positions }) {
           )}
 
           <Card>
-            <div className="border-b border-yellow-200 bg-yellow-50 px-6 py-4">
-              <h2 className="text-lg font-semibold text-foreground">Ubah Password</h2>
-              <p className="mt-1 text-sm text-yellow-700">Kosongkan jika tidak ingin mengubah password</p>
-            </div>
-            <CardContent className="space-y-6 p-6">
+            <CardHeader className="border-b">
+              <CardTitle>Ubah Password</CardTitle>
+              <CardDescription>Kosongkan jika tidak ingin mengubah password</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5 pt-6">
               <div className="space-y-2">
                 <Label htmlFor="password">Password Baru</Label>
                 <Input id="password" type="password" value={data.password} onChange={(e) => setData('password', e.target.value)} />
@@ -186,12 +177,12 @@ export default function Edit({ user, directorates, positions }) {
             </CardContent>
           </Card>
 
-          <div className="flex flex-col justify-end gap-3 pt-2 sm:flex-row">
-            <Link href={r('admin.users.index')}>
-              <Button type="button" variant="secondary" className="w-full sm:w-auto">
+          <div className="flex flex-col justify-end gap-2 sm:flex-row">
+            <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
+              <Link href={r('admin.users.index')}>
                 <X className="h-4 w-4" /> Batal
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <Button type="submit" disabled={processing} className="w-full sm:w-auto">
               <Save className="h-4 w-4" /> Simpan Perubahan
             </Button>

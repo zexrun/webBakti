@@ -28,6 +28,10 @@
         --input: oklch(0.9 0.012 75);
         --ring: oklch(0.38 0.11 265 / 0.5);
         --radius: 0.75rem;
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --radius-xl: calc(var(--radius) + 4px);
         --chart-1: oklch(0.38 0.11 265);
         --chart-2: oklch(0.68 0.14 55);
         --chart-3: oklch(0.6 0.12 200);
