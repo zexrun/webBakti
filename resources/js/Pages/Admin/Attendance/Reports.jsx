@@ -2,10 +2,14 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Download, FileSpreadsheet, RotateCcw } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { Card, CardContent } from '@/Components/ui/card'
-import { Badge } from '@/Components/ui/badge'
+import PageHeader from '@/Components/PageHeader'
+import StatCard from '@/Components/StatCard'
+import EmptyState from '@/Components/EmptyState'
+import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
+import { cn } from '@/lib/utils'
 
 const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -15,6 +19,19 @@ const monthNames = [
 function average(items, key) {
   if (!items.length) return 0
   return Math.round((items.reduce((sum, item) => sum + item[key], 0) / items.length) * 10) / 10
+}
+
+function CountCell({ value, toneWhenPositive }) {
+  return (
+    <TableCell
+      className={cn(
+        'text-right tabular-nums',
+        value > 0 ? toneWhenPositive : 'text-muted-foreground',
+      )}
+    >
+      {value}
+    </TableCell>
+  )
 }
 
 export default function Reports({ summary, users, month, year, userId }) {
@@ -43,165 +60,123 @@ export default function Reports({ summary, users, month, year, userId }) {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Laporan Kehadiran</h1>
-          <p className="text-muted-foreground">Export dan analisis data kehadiran mahasiswa</p>
-        </div>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Filter & Export</h2>
-
-            <form onSubmit={handleFilter} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Bulan</label>
-                  <Select value={monthFilter} onValueChange={setMonthFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {monthNames.map((name, index) => (
-                        <SelectItem key={name} value={String(index + 1)}>{name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Tahun</label>
-                  <Select value={yearFilter} onValueChange={setYearFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[0, 1, 2].map((offset) => (
-                        <SelectItem key={offset} value={String(currentYear - offset)}>{currentYear - offset}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-foreground">Mahasiswa</label>
-                  <Select value={userIdFilter} onValueChange={setUserIdFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Semua Mahasiswa</SelectItem>
-                      {users.map((user) => (
-                        <SelectItem key={user.id} value={String(user.id)}>
-                          {user.name} ({user.student?.nim ?? '-'})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button type="submit">Terapkan Filter</Button>
-                <Button type="button" variant="secondary" onClick={() => router.get(r('admin.attendance.reports'))}>
-                  <RotateCcw className="h-4 w-4" /> Reset
-                </Button>
-              </div>
-            </form>
-
-            <div className="mt-6 border-t border-border pt-6">
-              <h3 className="mb-3 text-sm font-semibold text-foreground">Export Data</h3>
-              <div className="flex flex-wrap gap-3">
+        <PageHeader
+          title="Laporan Kehadiran"
+          description="Export dan analisis data kehadiran mahasiswa"
+          actions={
+            <>
+              <Button asChild variant="outline" size="sm">
                 <a href={exportUrl('detail')}>
-                  <Button className="bg-green-600 hover:bg-green-700">
-                    <Download className="h-4 w-4" /> Export Detail CSV
-                  </Button>
+                  <Download /> Export Detail
                 </a>
+              </Button>
+              <Button asChild variant="outline" size="sm">
                 <a href={exportUrl('summary')}>
-                  <Button className="bg-green-600 hover:bg-green-700">
-                    <FileSpreadsheet className="h-4 w-4" /> Export Ringkasan CSV
-                  </Button>
+                  <FileSpreadsheet /> Export Ringkasan
                 </a>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </Button>
+            </>
+          }
+        />
+
+        <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-foreground">Bulan</label>
+            <Select value={monthFilter} onValueChange={setMonthFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {monthNames.map((name, index) => (
+                  <SelectItem key={name} value={String(index + 1)}>{name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-foreground">Tahun</label>
+            <Select value={yearFilter} onValueChange={setYearFilter}>
+              <SelectTrigger className="w-28">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[0, 1, 2].map((offset) => (
+                  <SelectItem key={offset} value={String(currentYear - offset)}>{currentYear - offset}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-foreground">Mahasiswa</label>
+            <Select value={userIdFilter} onValueChange={setUserIdFilter}>
+              <SelectTrigger className="w-56">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Mahasiswa</SelectItem>
+                {users.map((user) => (
+                  <SelectItem key={user.id} value={String(user.id)}>
+                    {user.name} ({user.student?.nim ?? '-'})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button type="submit" variant="outline">Terapkan</Button>
+          <Button type="button" variant="ghost" onClick={() => router.get(r('admin.attendance.reports'))}>
+            <RotateCcw /> Reset
+          </Button>
+        </form>
 
         {summary.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-              <Card>
-                <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Total Mahasiswa</p>
-                  <p className="text-2xl font-bold text-foreground">{summary.length}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Rata-rata Hadir</p>
-                  <p className="text-2xl font-bold text-green-600">{average(summary, 'present')}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Rata-rata Terlambat</p>
-                  <p className="text-2xl font-bold text-orange-600">{average(summary, 'late')}</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Rata-rata Tidak Hadir</p>
-                  <p className="text-2xl font-bold text-red-600">{average(summary, 'absent')}</p>
-                </CardContent>
-              </Card>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard label="Total Mahasiswa" value={summary.length} tone="neutral" />
+              <StatCard label="Rata-rata Hadir" value={average(summary, 'present')} tone="green" />
+              <StatCard label="Rata-rata Terlambat" value={average(summary, 'late')} tone="amber" />
+              <StatCard label="Rata-rata Tidak Hadir" value={average(summary, 'absent')} tone="red" />
             </div>
 
             <Card>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-muted">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Nama Mahasiswa</th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">NIM</th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Pembimbing</th>
-                        <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Total Hari</th>
-                        <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Hadir</th>
-                        <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Terlambat</th>
-                        <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Tidak Hadir</th>
-                        <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Rata-rata Jam</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {summary.map((item) => (
-                        <tr key={item.user.id} className="hover:bg-accent">
-                          <td className="px-6 py-4 text-sm font-medium text-foreground">{item.user.name}</td>
-                          <td className="px-6 py-4 text-sm text-muted-foreground">{item.user.student?.nim ?? '-'}</td>
-                          <td className="px-6 py-4 text-sm text-muted-foreground">{item.user.student?.supervisor?.user?.name ?? '-'}</td>
-                          <td className="px-6 py-4 text-center text-sm font-medium text-foreground">{item.total_days}</td>
-                          <td className="px-6 py-4 text-center">
-                            <Badge variant="success">{item.present}</Badge>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <Badge variant="warning">{item.late}</Badge>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <Badge variant="destructive">{item.absent}</Badge>
-                          </td>
-                          <td className="px-6 py-4 text-center text-sm font-medium text-foreground">
-                            {item.avg_hours ? Number(item.avg_hours).toFixed(1) : 0} jam
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Nama Mahasiswa</TableHead>
+                    <TableHead>NIM</TableHead>
+                    <TableHead>Pembimbing</TableHead>
+                    <TableHead className="text-right">Total Hari</TableHead>
+                    <TableHead className="text-right">Hadir</TableHead>
+                    <TableHead className="text-right">Terlambat</TableHead>
+                    <TableHead className="text-right">Tidak Hadir</TableHead>
+                    <TableHead className="text-right">Rata-rata Jam</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {summary.map((item) => (
+                    <TableRow key={item.user.id}>
+                      <TableCell className="font-medium text-foreground">{item.user.name}</TableCell>
+                      <TableCell className="tabular-nums text-muted-foreground">{item.user.student?.nim ?? '-'}</TableCell>
+                      <TableCell className="text-muted-foreground">{item.user.student?.supervisor?.user?.name ?? '-'}</TableCell>
+                      <TableCell className="text-right font-medium tabular-nums text-foreground">{item.total_days}</TableCell>
+                      <CountCell value={item.present} toneWhenPositive="font-medium text-green-700 dark:text-green-400" />
+                      <CountCell value={item.late} toneWhenPositive="font-medium text-amber-700 dark:text-amber-400" />
+                      <CountCell value={item.absent} toneWhenPositive="font-medium text-red-700 dark:text-red-400" />
+                      <TableCell className="text-right tabular-nums text-foreground">
+                        {item.avg_hours ? Number(item.avg_hours).toFixed(1) : 0} jam
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Card>
           </>
         ) : (
           <Card>
-            <CardContent className="p-12 text-center">
-              <FileSpreadsheet className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-              <p className="text-muted-foreground">Tidak ada data kehadiran untuk periode yang dipilih</p>
-            </CardContent>
+            <EmptyState
+              icon={FileSpreadsheet}
+              title="Tidak ada data kehadiran"
+              description="Tidak ada data kehadiran untuk periode yang dipilih."
+            />
           </Card>
         )}
       </div>

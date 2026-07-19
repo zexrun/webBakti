@@ -5,6 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout'
 import PageHeader from '@/Components/PageHeader'
 import StatCard from '@/Components/StatCard'
 import EmptyState from '@/Components/EmptyState'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Input } from '@/Components/ui/input'
@@ -70,11 +71,7 @@ export default function Plotting({ students, supervisors }) {
           description="Pilih dosen pembimbing untuk setiap mahasiswa yang tersedia"
         />
 
-        {flash?.success && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm font-medium text-green-800 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-200">
-            {flash.success}
-          </div>
-        )}
+        {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatCard icon={Users} label="Total Mahasiswa" value={students.length} tone="blue" />

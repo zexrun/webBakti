@@ -4,6 +4,7 @@ import { Plus, Search, Send, Pencil, Trash2, Users as UsersIcon } from 'lucide-r
 import AdminLayout from '@/Layouts/AdminLayout'
 import PageHeader from '@/Components/PageHeader'
 import EmptyState from '@/Components/EmptyState'
+import FlashBanner from '@/Components/FlashBanner'
 import Pagination from '@/Components/Pagination'
 import { Card } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
@@ -11,21 +12,6 @@ import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import { cn } from '@/lib/utils'
-
-function FlashBanner({ type, children }) {
-  return (
-    <div
-      className={cn(
-        'rounded-lg border p-4 text-sm font-medium',
-        type === 'success'
-          ? 'border-green-200 bg-green-50 text-green-800 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-200'
-          : 'border-red-200 bg-red-50 text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200',
-      )}
-    >
-      {children}
-    </div>
-  )
-}
 
 function UserSection({ title, dotColor, users, onDelete }) {
   const r = (name, params) => (window.route ? window.route(name, params) : '#')

@@ -1,16 +1,27 @@
 import { useState } from 'react'
 import { Link } from '@inertiajs/react'
-import { ArrowLeft, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, AlertTriangle, CheckCircle2, MapPin } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { Card, CardContent } from '@/Components/ui/card'
-import { Badge } from '@/Components/ui/badge'
+import PageHeader from '@/Components/PageHeader'
+import EmptyState from '@/Components/EmptyState'
+import UserCell from '@/Components/UserCell'
 import Pagination from '@/Components/Pagination'
+import { Card } from '@/Components/ui/card'
+import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/Components/ui/button'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import ApprovalModal from './ApprovalModal'
 
 const statusVariant = {
   present: 'success',
   late: 'warning',
   absent: 'destructive',
+}
+
+const statusLabel = {
+  present: 'Hadir',
+  late: 'Terlambat',
+  absent: 'Tidak Hadir',
 }
 
 export default function Suspicious({ suspiciousAttendances }) {
@@ -20,102 +31,99 @@ export default function Suspicious({ suspiciousAttendances }) {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="flex items-center gap-2 text-2xl font-bold text-foreground">
-              <AlertTriangle className="h-6 w-6 text-orange-500" /> Kehadiran Mencurigakan
-            </h1>
-            <p className="text-muted-foreground">Kehadiran yang memerlukan review manual karena anomali terdeteksi</p>
-          </div>
-          <Link href={r('admin.attendance.index')}>
-            <button type="button" className="inline-flex items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80">
-              <ArrowLeft className="h-4 w-4" /> Kembali
-            </button>
-          </Link>
-        </div>
+        <PageHeader
+          title="Kehadiran Mencurigakan"
+          description="Kehadiran yang memerlukan review manual karena anomali terdeteksi"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('admin.attendance.index')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
         {suspiciousAttendances.data.length === 0 ? (
-          <Card className="border-green-200 bg-green-50">
-            <CardContent className="p-8 text-center">
-              <CheckCircle2 className="mx-auto mb-2 h-10 w-10 text-green-600" />
-              <p className="text-lg text-green-800">Tidak ada kehadiran mencurigakan</p>
-              <p className="mt-2 text-sm text-green-600">Semua data kehadiran terlihat normal</p>
-            </CardContent>
+          <Card>
+            <EmptyState
+              icon={CheckCircle2}
+              title="Tidak ada kehadiran mencurigakan"
+              description="Semua data kehadiran terlihat normal."
+            />
           </Card>
         ) : (
           <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-red-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Nama</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Tanggal</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Waktu Check-in</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Alasan Anomali</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase text-gray-700">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {suspiciousAttendances.data.map((attendance) => (
-                      <tr key={attendance.id} className="hover:bg-accent">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
-                              <span className="text-xs font-semibold text-red-700">{attendance.user?.name?.charAt(0)?.toUpperCase()}</span>
-                            </div>
-                            <div>
-                              <p className="font-medium text-foreground">{attendance.user?.name}</p>
-                              <p className="text-xs text-muted-foreground">{attendance.user?.email}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">
-                          {new Date(attendance.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">
-                          {attendance.check_in_time ? new Date(attendance.check_in_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge variant={statusVariant[attendance.status] ?? 'secondary'}>
-                            {attendance.status.charAt(0).toUpperCase() + attendance.status.slice(1)}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <div className="space-y-1">
-                            {attendance.location_notes && (
-                              <p className="text-red-600">📍 {attendance.location_notes}</p>
-                            )}
-                            {attendance.latitude && attendance.longitude && (
-                              <p className="text-xs text-muted-foreground">
-                                Koordinat: {Number(attendance.latitude).toFixed(4)}, {Number(attendance.longitude).toFixed(4)}
-                              </p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <button
-                            type="button"
-                            onClick={() => setModalItem({
-                              id: attendance.id,
-                              userName: attendance.user?.name,
-                              date: new Date(attendance.date).toLocaleDateString('id-ID'),
-                            })}
-                            className="rounded bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-                          >
-                            Review
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="border-t border-border p-4">
+            <div className="flex items-center gap-2.5 border-b border-border px-4 py-3.5">
+              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <h3 className="text-base font-semibold text-foreground">Perlu Review</h3>
+              <span className="text-sm tabular-nums text-muted-foreground">({suspiciousAttendances.total})</span>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Nama</TableHead>
+                  <TableHead>Tanggal</TableHead>
+                  <TableHead>Check-in</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Alasan Anomali</TableHead>
+                  <TableHead>Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {suspiciousAttendances.data.map((attendance) => (
+                  <TableRow key={attendance.id}>
+                    <TableCell>
+                      <UserCell name={attendance.user?.name} subtitle={attendance.user?.email} tone="red" />
+                    </TableCell>
+                    <TableCell className="tabular-nums text-muted-foreground">
+                      {new Date(attendance.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </TableCell>
+                    <TableCell className="tabular-nums text-muted-foreground">
+                      {attendance.check_in_time ? new Date(attendance.check_in_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={statusVariant[attendance.status] ?? 'secondary'}>
+                        {statusLabel[attendance.status] ?? attendance.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
+                      <div className="space-y-1">
+                        {attendance.location_notes && (
+                          <p className="flex items-start gap-1.5 text-sm text-red-700 dark:text-red-400">
+                            <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            {attendance.location_notes}
+                          </p>
+                        )}
+                        {attendance.latitude && attendance.longitude && (
+                          <p className="text-xs tabular-nums text-muted-foreground">
+                            Koordinat: {Number(attendance.latitude).toFixed(4)}, {Number(attendance.longitude).toFixed(4)}
+                          </p>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        type="button"
+                        size="xs"
+                        variant="outline"
+                        onClick={() => setModalItem({
+                          id: attendance.id,
+                          userName: attendance.user?.name,
+                          date: new Date(attendance.date).toLocaleDateString('id-ID'),
+                        })}
+                      >
+                        Review
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {suspiciousAttendances.links?.length > 3 && (
+              <div className="border-t border-border px-4 py-3">
                 <Pagination links={suspiciousAttendances.links} />
               </div>
-            </CardContent>
+            )}
           </Card>
         )}
       </div>

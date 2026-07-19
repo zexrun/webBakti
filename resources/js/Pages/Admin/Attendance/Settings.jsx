@@ -2,7 +2,9 @@ import { useEffect } from 'react'
 import { Link, useForm, usePage } from '@inertiajs/react'
 import { Clock, MapPin, Camera, ArrowLeft, Save, LocateFixed } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Checkbox } from '@/Components/ui/checkbox'
@@ -32,10 +34,6 @@ export default function Settings({ settings }) {
     post(r('admin.attendance.settings.update'))
   }
 
-  function useCurrentLocation() {
-    geo.request()
-  }
-
   useEffect(() => {
     if (geo.position) {
       setData('office_latitude', geo.position.latitude)
@@ -47,37 +45,29 @@ export default function Settings({ settings }) {
   return (
     <AdminLayout>
       <div className="mx-auto max-w-4xl space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <h1 className="text-2xl font-bold text-foreground">Pengaturan Absensi</h1>
-            <p className="text-muted-foreground">Kelola pengaturan sistem absensi dan konfigurasi operasional.</p>
-          </CardContent>
-        </Card>
+        <PageHeader
+          title="Pengaturan Absensi"
+          description="Kelola pengaturan sistem absensi dan konfigurasi operasional"
+        />
 
-        {flash?.success && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm font-medium text-green-800">{flash.success}</div>
-        )}
-        {flash?.error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-800">{flash.error}</div>
-        )}
+        {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
+        {flash?.error && <FlashBanner type="danger">{flash.error}</FlashBanner>}
         {geo.status === 'success' && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+          <FlashBanner type="success">
             Lokasi berhasil didapatkan! Latitude: {geo.position.latitude.toFixed(6)}, Longitude: {geo.position.longitude.toFixed(6)}
-          </div>
+          </FlashBanner>
         )}
-        {geo.status === 'error' && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{geo.message}</div>
-        )}
+        {geo.status === 'error' && <FlashBanner type="danger">{geo.message}</FlashBanner>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Clock className="h-5 w-5 text-blue-600" /> Jam Kerja
+            <CardHeader className="border-b">
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" /> Jam Kerja
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Atur jam kerja dan toleransi keterlambatan</p>
+              <CardDescription>Atur jam kerja dan toleransi keterlambatan</CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <CardContent className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-3">
               <div className="space-y-2">
                 <Label htmlFor="work_start_time">Jam Masuk</Label>
                 <Input
@@ -114,13 +104,13 @@ export default function Settings({ settings }) {
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <MapPin className="h-5 w-5 text-green-600" /> Pengaturan Lokasi
+            <CardHeader className="border-b">
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-green-600 dark:text-green-400" /> Pengaturan Lokasi
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Konfigurasi verifikasi lokasi untuk absensi</p>
+              <CardDescription>Konfigurasi verifikasi lokasi untuk absensi</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-5 pt-6">
               <label className="flex items-center gap-3 rounded-lg bg-muted p-4">
                 <Checkbox
                   checked={data.require_location}
@@ -129,7 +119,7 @@ export default function Settings({ settings }) {
                 <span className="text-sm font-medium text-foreground">Wajibkan Verifikasi Lokasi</span>
               </label>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="office_latitude">Latitude Kantor</Label>
                   <Input
@@ -175,20 +165,20 @@ export default function Settings({ settings }) {
                 </div>
               </div>
 
-              <Button type="button" onClick={useCurrentLocation} disabled={geo.status === 'loading'}>
-                <LocateFixed className="h-4 w-4" /> {geo.status === 'loading' ? 'Mendapatkan Lokasi...' : 'Gunakan Lokasi Saat Ini'}
+              <Button type="button" variant="outline" onClick={() => geo.request()} disabled={geo.status === 'loading'}>
+                <LocateFixed /> {geo.status === 'loading' ? 'Mendapatkan Lokasi...' : 'Gunakan Lokasi Saat Ini'}
               </Button>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Camera className="h-5 w-5 text-orange-600" /> Pengaturan Foto
+            <CardHeader className="border-b">
+              <CardTitle className="flex items-center gap-2">
+                <Camera className="h-4 w-4 text-orange-600 dark:text-orange-400" /> Pengaturan Foto
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Konfigurasi persyaratan foto untuk absensi</p>
+              <CardDescription>Konfigurasi persyaratan foto untuk absensi</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <label className="flex items-center gap-3 rounded-lg bg-muted p-4">
                 <Checkbox
                   checked={data.require_photo}
@@ -199,14 +189,14 @@ export default function Settings({ settings }) {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end gap-3">
-            <Link href={r('admin.attendance.index')}>
-              <Button type="button" variant="secondary">
-                <ArrowLeft className="h-4 w-4" /> Kembali
-              </Button>
-            </Link>
+          <div className="flex justify-end gap-2">
+            <Button asChild type="button" variant="outline">
+              <Link href={r('admin.attendance.index')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
             <Button type="submit" disabled={processing}>
-              <Save className="h-4 w-4" /> Simpan Pengaturan
+              <Save /> Simpan Pengaturan
             </Button>
           </div>
         </form>
