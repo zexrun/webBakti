@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useForm } from '@inertiajs/react'
 import { ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
@@ -30,15 +31,17 @@ export default function Edit({ submission }) {
   return (
     <SupervisorLayout>
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Link href={r('supervisor.submissions.index')} className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Beri Nilai Submission</h1>
-            <p className="text-muted-foreground">Tinjau dan nilai submission dari mahasiswa</p>
-          </div>
-        </div>
+        <PageHeader
+          title="Beri Nilai Submission"
+          description="Tinjau dan nilai submission dari mahasiswa"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('supervisor.submissions.index')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
@@ -88,15 +91,11 @@ export default function Edit({ submission }) {
                   {submission.file_path && (
                     <div>
                       <h3 className="mb-2 text-sm font-medium text-foreground">File Submission</h3>
-                      <a
-                        href={`/storage/${submission.file_path}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-md border border-blue-200 bg-blue-50 px-4 py-2 hover:bg-blue-100"
-                      >
-                        <ExternalLink className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium text-blue-600">{submission.file_path.split('/').pop()}</span>
-                      </a>
+                      <Button asChild size="sm" variant="outline">
+                        <a href={`/storage/${submission.file_path}`} target="_blank" rel="noreferrer">
+                          <ExternalLink /> {submission.file_path.split('/').pop()}
+                        </a>
+                      </Button>
                     </div>
                   )}
                 </CardContent>
@@ -148,10 +147,10 @@ export default function Edit({ submission }) {
                     {errors.comments && <p className="mt-1 text-sm text-destructive">{errors.comments}</p>}
                   </div>
 
-                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                  <div className="rounded-lg border border-border bg-muted p-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-700">Preview Nilai:</span>
-                      <span className="text-2xl font-bold text-blue-600">{gradePreview}</span>
+                      <span className="text-sm text-muted-foreground">Preview Nilai:</span>
+                      <span className="text-2xl font-bold text-primary">{gradePreview}</span>
                     </div>
                   </div>
 
@@ -159,14 +158,14 @@ export default function Edit({ submission }) {
                     <Button type="submit" disabled={processing}>
                       <CheckCircle2 className="h-4 w-4" /> Simpan Nilai
                     </Button>
-                    <Link href={r('supervisor.submissions.index')}>
-                      <Button type="button" variant="secondary" className="w-full">Batal</Button>
-                    </Link>
+                    <Button asChild type="button" variant="outline" className="w-full">
+                      <Link href={r('supervisor.submissions.index')}>Batal</Link>
+                    </Button>
                   </div>
                 </form>
 
-                <div className="mt-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-                  <p className="text-xs text-yellow-800">
+                <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
+                  <p className="text-xs text-amber-800 dark:text-amber-200">
                     <strong>Tips:</strong> Berikan feedback yang konstruktif dan spesifik untuk membantu mahasiswa meningkatkan pekerjaan mereka.
                   </p>
                 </div>

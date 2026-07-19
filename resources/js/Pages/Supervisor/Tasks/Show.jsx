@@ -1,6 +1,8 @@
 import { Link, router } from '@inertiajs/react'
 import { ArrowLeft, Pencil, Trash2, Download, Tag, Calendar, User } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
+import UserCell from '@/Components/UserCell'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
@@ -25,27 +27,31 @@ export default function Show({ task, assignedStudents, submissions }) {
   return (
     <SupervisorLayout>
       <div className="mx-auto max-w-5xl space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href={r('supervisor.tasks.index')} className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Detail Tugas</h1>
-              <p className="text-muted-foreground">Kelola dan nilai submission mahasiswa</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Link href={r('supervisor.tasks.edit', task.id)}>
-              <Button variant="secondary">
-                <Pencil className="h-4 w-4" /> Edit
+        <PageHeader
+          title="Detail Tugas"
+          description="Kelola dan nilai submission mahasiswa"
+          actions={
+            <>
+              <Button asChild variant="outline">
+                <Link href={r('supervisor.tasks.index')}>
+                  <ArrowLeft /> Kembali
+                </Link>
               </Button>
-            </Link>
-            <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="h-4 w-4" /> Hapus
-            </Button>
-          </div>
-        </div>
+              <Button asChild variant="outline">
+                <Link href={r('supervisor.tasks.edit', task.id)}>
+                  <Pencil /> Edit
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="text-destructive hover:text-destructive"
+                onClick={handleDelete}
+              >
+                <Trash2 /> Hapus
+              </Button>
+            </>
+          }
+        />
 
         <Card>
           <CardContent className="flex flex-col gap-6 p-6 lg:flex-row lg:justify-between">
@@ -82,14 +88,11 @@ export default function Show({ task, assignedStudents, submissions }) {
               {task.file_path && (
                 <div>
                   <h3 className="mb-2 text-sm font-medium text-foreground">Lampiran</h3>
-                  <a
-                    href={`/storage/${task.file_path}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
-                  >
-                    <Download className="h-4 w-4" /> Unduh Lampiran
-                  </a>
+                  <Button asChild size="sm" variant="outline">
+                    <a href={`/storage/${task.file_path}`} target="_blank" rel="noreferrer">
+                      <Download /> Unduh Lampiran
+                    </a>
+                  </Button>
                 </div>
               )}
             </div>
@@ -104,15 +107,15 @@ export default function Show({ task, assignedStudents, submissions }) {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Sudah Submit</span>
-                    <span className="text-sm font-medium text-green-600">{submittedCount}</span>
+                    <span className="text-sm font-medium tabular-nums text-green-700 dark:text-green-400">{submittedCount}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Sudah Dinilai</span>
-                    <span className="text-sm font-medium text-blue-600">{gradedCount}</span>
+                    <span className="text-sm font-medium tabular-nums text-blue-700 dark:text-blue-400">{gradedCount}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Menunggu Nilai</span>
-                    <span className="text-sm font-medium text-yellow-600">{pendingCount}</span>
+                    <span className="text-sm font-medium tabular-nums text-amber-700 dark:text-amber-400">{pendingCount}</span>
                   </div>
                   <div className="mt-4">
                     <div className="mb-1 flex justify-between text-xs text-muted-foreground">
@@ -128,7 +131,7 @@ export default function Show({ task, assignedStudents, submissions }) {
         </Card>
 
         <div>
-          <h3 className="mb-4 text-xl font-semibold text-foreground">Status Submission Mahasiswa</h3>
+          <h3 className="mb-4 text-lg font-semibold text-foreground">Status Submission Mahasiswa</h3>
 
           <div className="space-y-6">
             {assignedStudents.map((student) => {
@@ -139,17 +142,11 @@ export default function Show({ task, assignedStudents, submissions }) {
 
               return (
                 <Card key={student.id}>
-                  <div className="flex flex-col gap-4 border-b border-border p-6 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                        <span className="text-lg font-semibold text-blue-700">{student.user?.name?.charAt(0)?.toUpperCase()}</span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-foreground">{student.user?.name}</h4>
-                        <p className="text-sm text-muted-foreground">{student.nim ?? 'NIM belum diisi'}</p>
-                        <p className="text-xs text-muted-foreground">{student.user?.email}</p>
-                      </div>
-                    </div>
+                  <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <UserCell
+                      name={student.user?.name}
+                      subtitle={[student.nim ?? 'NIM belum diisi', student.user?.email].filter(Boolean).join(' · ')}
+                    />
                     {isGraded ? (
                       <Badge variant="success">Sudah Dinilai</Badge>
                     ) : isPending ? (
@@ -171,14 +168,11 @@ export default function Show({ task, assignedStudents, submissions }) {
                       {submission.file_path && (
                         <div>
                           <h5 className="mb-2 text-sm font-medium text-foreground">File Submission</h5>
-                          <a
-                            href={`/storage/${submission.file_path}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
-                          >
-                            <Download className="h-4 w-4" /> Unduh File Submission
-                          </a>
+                          <Button asChild size="sm" variant="outline">
+                            <a href={`/storage/${submission.file_path}`} target="_blank" rel="noreferrer">
+                              <Download /> Unduh File Submission
+                            </a>
+                          </Button>
                         </div>
                       )}
 

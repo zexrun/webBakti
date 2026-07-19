@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react'
-import { ArrowLeft, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -29,15 +30,10 @@ export default function Create({ students }) {
   return (
     <SupervisorLayout>
       <div className="mx-auto max-w-4xl space-y-6">
-        <div className="flex items-center gap-4">
-          <Link href={r('supervisor.tasks.index')} className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Buat Tugas Baru</h1>
-            <p className="text-muted-foreground">Isi detail di bawah ini untuk memberikan tugas baru kepada mahasiswa bimbingan</p>
-          </div>
-        </div>
+        <PageHeader
+          title="Buat Tugas Baru"
+          description="Isi detail di bawah ini untuk memberikan tugas baru kepada mahasiswa bimbingan"
+        />
 
         <Card>
           <CardContent className="p-6">
@@ -126,14 +122,12 @@ export default function Create({ students }) {
                 {errors.student_ids && <p className="text-sm text-destructive">{errors.student_ids}</p>}
               </div>
 
-              <div className="flex flex-col justify-end gap-3 border-t border-border pt-6 sm:flex-row">
-                <Link href={r('supervisor.tasks.index')}>
-                  <Button type="button" variant="secondary" className="w-full sm:w-auto">
-                    Batal
-                  </Button>
-                </Link>
+              <div className="flex flex-col justify-end gap-2 border-t border-border pt-5 sm:flex-row">
+                <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
+                  <Link href={r('supervisor.tasks.index')}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing} className="w-full sm:w-auto">
-                  <Save className="h-4 w-4" /> Simpan Tugas
+                  <Save /> Simpan Tugas
                 </Button>
               </div>
             </form>

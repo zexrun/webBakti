@@ -25,7 +25,7 @@ export default function StudentPicker({ students, selectedIds, onChange }) {
       <div className="max-h-64 overflow-y-auto">
         {students.length ? (
           students.map((student) => (
-            <div key={student.id} className="border-b border-border p-3 last:border-b-0 hover:bg-accent">
+            <div key={student.id} className="border-b border-border p-3 transition-colors duration-150 last:border-b-0 hover:bg-muted">
               <label className="flex cursor-pointer items-center gap-3">
                 <Checkbox checked={selectedIds.includes(student.id)} onCheckedChange={() => toggleOne(student.id)} />
                 <div>
@@ -44,9 +44,9 @@ export default function StudentPicker({ students, selectedIds, onChange }) {
       </div>
 
       {students.length > 0 && (
-        <div className="border-t border-blue-200 bg-blue-50 p-3">
-          <p className="text-sm text-blue-700">
-            {selectedIds.length} dari {students.length} mahasiswa dipilih
+        <div className="border-t border-border bg-muted p-3">
+          <p className="text-sm tabular-nums text-muted-foreground">
+            <span className="font-medium text-foreground">{selectedIds.length}</span> dari {students.length} mahasiswa dipilih
           </p>
         </div>
       )}

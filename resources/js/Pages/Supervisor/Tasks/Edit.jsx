@@ -1,6 +1,8 @@
 import { Link, useForm } from '@inertiajs/react'
-import { ArrowLeft, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -37,15 +39,7 @@ export default function Edit({ task, students, assignedStudents }) {
   return (
     <SupervisorLayout>
       <div className="mx-auto max-w-4xl space-y-6">
-        <div className="flex items-center gap-4">
-          <Link href={r('supervisor.tasks.show', task.id)} className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Edit Tugas</h1>
-            <p className="text-muted-foreground">Perbarui detail tugas di bawah ini</p>
-          </div>
-        </div>
+        <PageHeader title="Edit Tugas" description="Perbarui detail tugas di bawah ini" />
 
         <Card>
           <CardContent className="p-6">
@@ -103,9 +97,9 @@ export default function Edit({ task, students, assignedStudents }) {
               <div className="space-y-2">
                 <Label htmlFor="file">Lampiran File (Opsional)</Label>
                 {task.file_path && (
-                  <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800">
+                  <FlashBanner type="success" className="p-3 font-normal">
                     File saat ini: {task.file_path.split('/').pop()}
-                  </div>
+                  </FlashBanner>
                 )}
                 <input
                   id="file"
@@ -130,14 +124,12 @@ export default function Edit({ task, students, assignedStudents }) {
                 {errors.student_ids && <p className="text-sm text-destructive">{errors.student_ids}</p>}
               </div>
 
-              <div className="flex flex-col justify-end gap-3 border-t border-border pt-6 sm:flex-row">
-                <Link href={r('supervisor.tasks.show', task.id)}>
-                  <Button type="button" variant="secondary" className="w-full sm:w-auto">
-                    Batal
-                  </Button>
-                </Link>
+              <div className="flex flex-col justify-end gap-2 border-t border-border pt-5 sm:flex-row">
+                <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
+                  <Link href={r('supervisor.tasks.show', task.id)}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing} className="w-full sm:w-auto">
-                  <Save className="h-4 w-4" /> Simpan Perubahan
+                  <Save /> Simpan Perubahan
                 </Button>
               </div>
             </form>
