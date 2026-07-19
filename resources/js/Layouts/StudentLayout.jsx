@@ -14,6 +14,7 @@ import {
   Menu,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import ThemeToggle from '@/Components/ThemeToggle'
 
 const navItems = [
   { label: 'Dashboard', href: 'student.dashboard', icon: LayoutDashboard, match: 'student.dashboard' },
@@ -60,6 +61,7 @@ export default function StudentLayout({ children }) {
             </div>
 
             <div className="flex items-center space-x-3">
+              <ThemeToggle />
               <span className="hidden sm:block text-sm text-muted-foreground">
                 Halo, <span className="font-medium text-foreground">{auth?.user?.name}</span>
               </span>

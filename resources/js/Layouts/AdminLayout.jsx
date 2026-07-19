@@ -14,6 +14,7 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import ThemeToggle from '@/Components/ThemeToggle'
 
 function NavLink({ href, icon: Icon, label, active }) {
   return (
@@ -106,6 +107,7 @@ export default function AdminLayout({ children }) {
             </div>
 
             <div className="flex items-center space-x-3">
+              <ThemeToggle />
               <span className="hidden sm:block text-sm text-muted-foreground">
                 Halo, <span className="font-medium text-foreground">{auth?.user?.name}</span>
               </span>

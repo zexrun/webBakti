@@ -7,6 +7,16 @@
 
         <title inertia>{{ config('app.name', 'webBakti') }}</title>
 
+        <!-- Set theme class before first paint to avoid flash of wrong theme -->
+        <script>
+            (function () {
+                var t = localStorage.getItem('theme');
+                if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            })();
+        </script>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
