@@ -1,5 +1,6 @@
 import { Link, useForm } from '@inertiajs/react'
 import AdminLayout from '@/Layouts/AdminLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -7,12 +8,31 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Button } from '@/Components/ui/button'
+import { cn } from '@/lib/utils'
 
 const roleOptions = [
-  { value: 'admin', label: '👨‍💼 Admin' },
-  { value: 'supervisor', label: '👨‍🏫 Pembimbing (Supervisor)' },
-  { value: 'student', label: '👨‍🎓 Mahasiswa (Student)' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'supervisor', label: 'Pembimbing (Supervisor)' },
+  { value: 'student', label: 'Mahasiswa (Student)' },
 ]
+
+// Semantic priority colors, shared convention with the announcement badges
+const priorityOptions = [
+  { value: 'low', label: 'Low', hint: 'Informasi umum', dot: 'bg-slate-400' },
+  { value: 'normal', label: 'Normal', hint: 'Informasi penting', dot: 'bg-blue-500' },
+  { value: 'high', label: 'High', hint: 'Sangat penting', dot: 'bg-amber-500' },
+  { value: 'urgent', label: 'Urgent', hint: 'Sangat mendesak', dot: 'bg-red-500' },
+]
+
+function PriorityItem({ option }) {
+  return (
+    <span className="flex items-center gap-2">
+      <span className={cn('h-2 w-2 shrink-0 rounded-full', option.dot)} />
+      {option.label}
+      <span className="text-muted-foreground">— {option.hint}</span>
+    </span>
+  )
+}
 
 export default function Create() {
   const { data, setData, post, processing, errors } = useForm({
@@ -29,7 +49,7 @@ export default function Create() {
     setData(
       'target_roles',
       data.target_roles.includes(role)
-        ? data.target_roles.filter((r) => r !== role)
+        ? data.target_roles.filter((rl) => rl !== role)
         : [...data.target_roles, role],
     )
   }
@@ -42,14 +62,11 @@ export default function Create() {
   return (
     <AdminLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Buat Pengumuman Baru</h1>
-          <p className="text-muted-foreground">Buat pengumuman untuk pengguna sistem</p>
-        </div>
+        <PageHeader title="Buat Pengumuman Baru" description="Buat pengumuman untuk pengguna sistem" />
 
         <Card>
           <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="title">Judul Pengumuman</Label>
                 <Input
@@ -70,24 +87,22 @@ export default function Create() {
                   onChange={(e) => setData('content', e.target.value)}
                   placeholder="Tulis konten pengumuman..."
                 />
-                <p className="text-xs text-muted-foreground">Maximum 5000 karakter</p>
+                <p className="text-xs text-muted-foreground">Maksimum 5000 karakter</p>
                 {errors.content && <p className="text-sm text-destructive">{errors.content}</p>}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="priority">Prioritas</Label>
-                <Select
-                  value={data.priority}
-                  onValueChange={(v) => setData('priority', v)}
-                >
-                  <SelectTrigger id="priority">
+                <Select value={data.priority} onValueChange={(v) => setData('priority', v)}>
+                  <SelectTrigger id="priority" className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">🟢 Low - Informasi umum</SelectItem>
-                    <SelectItem value="normal">🟡 Normal - Informasi penting</SelectItem>
-                    <SelectItem value="high">🟠 High - Sangat penting</SelectItem>
-                    <SelectItem value="urgent">🔴 Urgent - Sangat mendesak</SelectItem>
+                    {priorityOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <PriorityItem option={option} />
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.priority && <p className="text-sm text-destructive">{errors.priority}</p>}
@@ -118,24 +133,22 @@ export default function Create() {
               </label>
 
               <div className="rounded-lg border border-border bg-muted p-4">
-                <p className="mb-2 text-sm font-medium text-foreground">Preview:</p>
-                <div className="rounded border border-border bg-background p-3">
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Preview</p>
+                <div className="rounded-lg border border-border bg-card p-4">
                   <p className="text-sm font-semibold text-foreground">{data.title || 'Judul Pengumuman'}</p>
-                  <p className="mt-3 whitespace-pre-wrap text-sm text-muted-foreground">
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
                     {data.content || 'Isi konten pengumuman akan muncul di sini...'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('admin.announcements.index')}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing}>
                   Buat Pengumuman
                 </Button>
-                <Link href={r('admin.announcements.index')}>
-                  <Button type="button" variant="secondary">
-                    Batal
-                  </Button>
-                </Link>
               </div>
             </form>
           </CardContent>

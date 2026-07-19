@@ -1,31 +1,65 @@
 import { useState } from 'react'
-import { Link, router, useForm, usePage } from '@inertiajs/react'
-import { Building2, Briefcase, GraduationCap, Search, Plus, Pencil, Trash2, ExternalLink, X } from 'lucide-react'
+import { router, useForm, usePage } from '@inertiajs/react'
+import { Building2, Briefcase, GraduationCap, Search, Plus, ExternalLink, X } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { Card, CardContent } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import EmptyState from '@/Components/EmptyState'
+import FlashBanner from '@/Components/FlashBanner'
+import Pagination from '@/Components/Pagination'
+import { Card } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Input } from '@/Components/ui/input'
 import { Label } from '@/Components/ui/label'
 import { Button } from '@/Components/ui/button'
-import Pagination from '@/Components/Pagination'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
+import { cn } from '@/lib/utils'
 
-const tabs = [
-  { key: 'directorates', label: 'Direktorat', icon: Building2, color: 'blue' },
-  { key: 'positions', label: 'Jabatan', icon: Briefcase, color: 'green' },
-  { key: 'universities', label: 'Universitas', icon: GraduationCap, color: 'purple' },
+// Semantic entity colors (§7): blue=direktorat, green=jabatan, purple=universitas
+const tabDefs = [
+  {
+    key: 'directorates',
+    entity: 'directorate',
+    label: 'Direktorat',
+    singular: 'Direktorat',
+    icon: Building2,
+    activeClass: 'border-blue-600 text-blue-700 dark:border-blue-400 dark:text-blue-300',
+    searchParam: 'search_directorate',
+    storeRoute: 'admin.settings.storeDirectorate',
+    updateRoute: 'admin.settings.updateDirectorate',
+    fields: [{ name: 'name', label: 'Nama Direktorat', required: true }],
+  },
+  {
+    key: 'positions',
+    entity: 'position',
+    label: 'Jabatan',
+    singular: 'Jabatan',
+    icon: Briefcase,
+    activeClass: 'border-green-600 text-green-700 dark:border-green-400 dark:text-green-300',
+    searchParam: 'search_position',
+    storeRoute: 'admin.settings.storePosition',
+    updateRoute: 'admin.settings.updatePosition',
+    fields: [{ name: 'name', label: 'Nama Jabatan', required: true }],
+  },
+  {
+    key: 'universities',
+    entity: 'university',
+    label: 'Universitas',
+    singular: 'Universitas',
+    icon: GraduationCap,
+    activeClass: 'border-purple-600 text-purple-700 dark:border-purple-400 dark:text-purple-300',
+    searchParam: 'search_university',
+    storeRoute: 'admin.settings.storeUniversity',
+    updateRoute: 'admin.settings.updateUniversity',
+    fields: [
+      { name: 'name', label: 'Nama Universitas', required: true },
+      { name: 'domain', label: 'Domain' },
+      { name: 'website', label: 'Website', type: 'url' },
+    ],
+  },
 ]
 
-const colorClasses = {
-  blue: { border: 'border-blue-500', text: 'text-blue-600', bg: 'bg-blue-100', badgeText: 'text-blue-800', ring: 'focus:ring-blue-500 focus:border-blue-500', btn: 'bg-blue-600 hover:bg-blue-700' },
-  green: { border: 'border-green-500', text: 'text-green-600', bg: 'bg-green-100', badgeText: 'text-green-800', ring: 'focus:ring-green-500 focus:border-green-500', btn: 'bg-green-600 hover:bg-green-700' },
-  purple: { border: 'border-purple-500', text: 'text-purple-600', bg: 'bg-purple-100', badgeText: 'text-purple-800', ring: 'focus:ring-purple-500 focus:border-purple-500', btn: 'bg-purple-600 hover:bg-purple-700' },
-}
-
-function EntityModal({ open, onClose, title, color, fields, initial, onSubmit, submitLabel }) {
+function EntityModal({ onClose, title, fields, initial, onSubmit, submitLabel }) {
   const { data, setData, processing, errors, reset } = useForm(initial)
-
-  if (!open) return null
-  const classes = colorClasses[color]
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -38,16 +72,21 @@ function EntityModal({ open, onClose, title, color, fields, initial, onSubmit, s
   return (
     <div className="fixed inset-0 z-50 bg-black/50" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+        <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-medium text-foreground">{title}</h3>
-            <button type="button" onClick={onClose} className="text-muted-foreground hover:text-foreground">
-              <X className="h-6 w-6" />
+            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Tutup"
+              className="rounded-md p-1 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
             </button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             {fields.map((field) => (
-              <div key={field.name}>
+              <div key={field.name} className="space-y-2">
                 <Label htmlFor={field.name}>{field.label}</Label>
                 <Input
                   id={field.name}
@@ -55,14 +94,13 @@ function EntityModal({ open, onClose, title, color, fields, initial, onSubmit, s
                   value={data[field.name] ?? ''}
                   onChange={(e) => setData(field.name, e.target.value)}
                   required={field.required}
-                  className={`mt-2 ${classes.ring}`}
                 />
-                {errors[field.name] && <p className="mt-1 text-sm text-destructive">{errors[field.name]}</p>}
+                {errors[field.name] && <p className="text-sm text-destructive">{errors[field.name]}</p>}
               </div>
             ))}
-            <div className="flex justify-end gap-3 pt-2">
-              <Button type="button" variant="secondary" onClick={onClose}>Batal</Button>
-              <Button type="submit" disabled={processing} className={classes.btn}>{submitLabel}</Button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={onClose}>Batal</Button>
+              <Button type="submit" disabled={processing}>{submitLabel}</Button>
             </div>
           </form>
         </div>
@@ -71,28 +109,125 @@ function EntityModal({ open, onClose, title, color, fields, initial, onSubmit, s
   )
 }
 
+function EntityTable({ tab, paginator, searchValue, onSearch, onAdd, onEdit, onDelete }) {
+  const isUniversity = tab.key === 'universities'
+  const Icon = tab.icon
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <form onSubmit={(e) => onSearch(e, tab)} className="flex flex-1 gap-2 sm:max-w-sm">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input name={tab.searchParam} defaultValue={searchValue ?? ''} placeholder={`Cari ${tab.label.toLowerCase()}...`} className="pl-9" />
+          </div>
+          <Button type="submit" variant="outline">Cari</Button>
+        </form>
+        <Button type="button" onClick={() => onAdd(tab)}>
+          <Plus /> Tambah {tab.singular}
+        </Button>
+      </div>
+
+      {paginator.data.length ? (
+        <div className="overflow-hidden rounded-lg border border-border">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-14 text-right">No</TableHead>
+                <TableHead>Nama {tab.singular}</TableHead>
+                {isUniversity && <TableHead>Domain</TableHead>}
+                {isUniversity && <TableHead>Website</TableHead>}
+                <TableHead className="w-36">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginator.data.map((item, index) => (
+                <TableRow key={item.id}>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">{paginator.from + index}</TableCell>
+                  <TableCell className="font-medium text-foreground">{item.name}</TableCell>
+                  {isUniversity && <TableCell className="text-muted-foreground">{item.domain ?? '-'}</TableCell>}
+                  {isUniversity && (
+                    <TableCell>
+                      {item.website ? (
+                        <a
+                          href={item.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-primary hover:underline"
+                        >
+                          {item.website.length > 25 ? `${item.website.slice(0, 25)}...` : item.website}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                  )}
+                  <TableCell>
+                    <div className="flex items-center gap-1.5">
+                      <Button type="button" size="xs" variant="outline" onClick={() => onEdit(tab, item)}>Edit</Button>
+                      <Button
+                        type="button"
+                        size="xs"
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => onDelete(tab, item)}
+                      >
+                        Hapus
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-border">
+          <EmptyState
+            icon={Icon}
+            title={searchValue ? 'Tidak ada hasil' : `Belum ada ${tab.label.toLowerCase()}`}
+            description={searchValue ? 'Coba kata kunci lain.' : `Tambahkan ${tab.label.toLowerCase()} pertama.`}
+          />
+        </div>
+      )}
+
+      {paginator.links?.length > 3 && <Pagination links={paginator.links} />}
+    </div>
+  )
+}
+
 export default function Index({ directorates, positions, universities, activeTab, searchDirectorate, searchPosition, searchUniversity }) {
   const { flash } = usePage().props
-  const [modal, setModal] = useState(null) // { type: 'add'|'edit', entity: 'directorate'|'position'|'university', item }
+  const [modal, setModal] = useState(null) // { type: 'add'|'edit', tab, item }
   const [deleteTarget, setDeleteTarget] = useState(null) // { entity, id, name }
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+
+  const paginators = { directorates, positions, universities }
+  const searches = {
+    directorates: searchDirectorate,
+    positions: searchPosition,
+    universities: searchUniversity,
+  }
+  const currentTab = tabDefs.find((t) => t.key === activeTab) ?? tabDefs[0]
 
   function switchTab(tab) {
     router.get(r('admin.settings.index'), { tab })
   }
 
-  function handleSearch(e, tab, param) {
+  function handleSearch(e, tab) {
     e.preventDefault()
-    router.get(r('admin.settings.index'), { tab, [param]: e.target[param].value })
+    router.get(r('admin.settings.index'), { tab: tab.key, [tab.searchParam]: e.target[tab.searchParam].value })
   }
 
-  function submitCreate(entity, routeName, data, onDone) {
-    router.post(r(routeName), data, { preserveScroll: true, onSuccess: onDone })
-  }
-
-  function submitUpdate(routeName, id, data, onDone) {
-    router.put(r(routeName, id), data, { preserveScroll: true, onSuccess: onDone })
+  function handleModalSubmit(data, onDone) {
+    const { type, tab, item } = modal
+    if (type === 'add') {
+      router.post(r(tab.storeRoute), data, { preserveScroll: true, onSuccess: onDone })
+    } else {
+      router.put(r(tab.updateRoute, item.id), data, { preserveScroll: true, onSuccess: onDone })
+    }
   }
 
   function confirmDelete() {
@@ -112,320 +247,73 @@ export default function Index({ directorates, positions, universities, activeTab
   return (
     <AdminLayout>
       <div className="space-y-6">
+        <PageHeader
+          title="Konfigurasi Sistem"
+          description="Kelola data direktorat, jabatan, dan universitas untuk sistem"
+        />
+
+        {successMessage && <FlashBanner type="success">{successMessage}</FlashBanner>}
+
         <Card>
-          <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Konfigurasi Sistem</h1>
-              <p className="text-muted-foreground">Kelola data direktorat, jabatan, dan universitas untuk sistem</p>
-            </div>
-            <div className="flex gap-2">
-              <div className="rounded-lg bg-blue-50 px-3 py-2">
-                <span className="text-sm font-medium text-blue-800">{directorates.total} Direktorat</span>
-              </div>
-              <div className="rounded-lg bg-green-50 px-3 py-2">
-                <span className="text-sm font-medium text-green-800">{positions.total} Jabatan</span>
-              </div>
-              <div className="rounded-lg bg-purple-50 px-3 py-2">
-                <span className="text-sm font-medium text-purple-800">{universities.total} Universitas</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          <nav className="flex gap-6 overflow-x-auto border-b border-border px-4">
+            {tabDefs.map((tab) => {
+              const Icon = tab.icon
+              const isActive = currentTab.key === tab.key
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => switchTab(tab.key)}
+                  className={cn(
+                    'flex items-center gap-2 whitespace-nowrap border-b-2 py-3 text-sm font-medium transition-colors duration-150',
+                    isActive ? tab.activeClass : 'border-transparent text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                  <Badge variant="secondary">{paginators[tab.key].total}</Badge>
+                </button>
+              )
+            })}
+          </nav>
 
-        {successMessage && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm font-medium text-green-800">{successMessage}</div>
-        )}
-
-        <Card className="overflow-hidden">
-          <div className="border-b border-border">
-            <nav className="-mb-px flex space-x-8 px-6">
-              {tabs.map((tab) => {
-                const Icon = tab.icon
-                const isActive = activeTab === tab.key
-                const classes = colorClasses[tab.color]
-                const total = { directorates, positions, universities }[tab.key].total
-                return (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => switchTab(tab.key)}
-                    className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium ${
-                      isActive ? `${classes.border} ${classes.text}` : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {tab.label}
-                    <Badge variant="secondary">{total}</Badge>
-                  </button>
-                )
-              })}
-            </nav>
+          <div className="p-4 sm:p-6">
+            <EntityTable
+              tab={currentTab}
+              paginator={paginators[currentTab.key]}
+              searchValue={searches[currentTab.key]}
+              onSearch={handleSearch}
+              onAdd={(tab) => setModal({ type: 'add', tab })}
+              onEdit={(tab, item) => setModal({ type: 'edit', tab, item })}
+              onDelete={(tab, item) => setDeleteTarget({ entity: tab.entity, id: item.id, name: item.name })}
+            />
           </div>
-
-          <CardContent className="p-6">
-            {activeTab === 'directorates' && (
-              <div className="space-y-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium text-foreground">Kelola Direktorat</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Tambah, edit, atau hapus direktorat</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <form onSubmit={(e) => handleSearch(e, 'directorates', 'search_directorate')} className="flex">
-                      <div className="relative">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input name="search_directorate" defaultValue={searchDirectorate ?? ''} placeholder="Cari direktorat..." className="pl-9" />
-                      </div>
-                      <Button type="submit" variant="secondary" className="ml-2">Cari</Button>
-                    </form>
-                    <Button type="button" className="bg-blue-600 hover:bg-blue-700" onClick={() => setModal({ type: 'add', entity: 'directorate' })}>
-                      <Plus className="h-4 w-4" /> Tambah Direktorat
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="overflow-hidden rounded-lg ring-1 ring-border">
-                  <table className="min-w-full divide-y divide-border">
-                    <thead className="bg-muted">
-                      <tr>
-                        <th className="w-16 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">No</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Nama Direktorat</th>
-                        <th className="w-32 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {directorates.data.length ? (
-                        directorates.data.map((dir, index) => (
-                          <tr key={dir.id} className="hover:bg-accent">
-                            <td className="px-6 py-4 text-sm text-muted-foreground">{directorates.from + index}</td>
-                            <td className="px-6 py-4 text-sm font-medium text-foreground">{dir.name}</td>
-                            <td className="px-6 py-4 text-sm font-medium">
-                              <div className="flex gap-3">
-                                <button type="button" onClick={() => setModal({ type: 'edit', entity: 'directorate', item: dir })} className="text-blue-600 hover:text-blue-900">Edit</button>
-                                <button type="button" onClick={() => setDeleteTarget({ entity: 'directorate', id: dir.id, name: dir.name })} className="text-destructive hover:opacity-80">Hapus</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={3} className="px-6 py-12 text-center">
-                            <Building2 className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                            <h3 className="mb-1 text-sm font-medium text-foreground">{searchDirectorate ? 'Tidak ada hasil' : 'Belum ada direktorat'}</h3>
-                            <p className="text-sm text-muted-foreground">{searchDirectorate ? 'Coba kata kunci lain' : 'Tambahkan direktorat pertama'}</p>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-
-                <Pagination links={directorates.links} />
-              </div>
-            )}
-
-            {activeTab === 'positions' && (
-              <div className="space-y-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium text-foreground">Kelola Jabatan</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Tambah, edit, atau hapus jabatan</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <form onSubmit={(e) => handleSearch(e, 'positions', 'search_position')} className="flex">
-                      <div className="relative">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input name="search_position" defaultValue={searchPosition ?? ''} placeholder="Cari jabatan..." className="pl-9" />
-                      </div>
-                      <Button type="submit" variant="secondary" className="ml-2">Cari</Button>
-                    </form>
-                    <Button type="button" className="bg-green-600 hover:bg-green-700" onClick={() => setModal({ type: 'add', entity: 'position' })}>
-                      <Plus className="h-4 w-4" /> Tambah Jabatan
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="overflow-hidden rounded-lg ring-1 ring-border">
-                  <table className="min-w-full divide-y divide-border">
-                    <thead className="bg-muted">
-                      <tr>
-                        <th className="w-16 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">No</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Nama Jabatan</th>
-                        <th className="w-32 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {positions.data.length ? (
-                        positions.data.map((pos, index) => (
-                          <tr key={pos.id} className="hover:bg-accent">
-                            <td className="px-6 py-4 text-sm text-muted-foreground">{positions.from + index}</td>
-                            <td className="px-6 py-4 text-sm font-medium text-foreground">{pos.name}</td>
-                            <td className="px-6 py-4 text-sm font-medium">
-                              <div className="flex gap-3">
-                                <button type="button" onClick={() => setModal({ type: 'edit', entity: 'position', item: pos })} className="text-blue-600 hover:text-blue-900">Edit</button>
-                                <button type="button" onClick={() => setDeleteTarget({ entity: 'position', id: pos.id, name: pos.name })} className="text-destructive hover:opacity-80">Hapus</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={3} className="px-6 py-12 text-center">
-                            <Briefcase className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                            <h3 className="mb-1 text-sm font-medium text-foreground">{searchPosition ? 'Tidak ada hasil' : 'Belum ada jabatan'}</h3>
-                            <p className="text-sm text-muted-foreground">{searchPosition ? 'Coba kata kunci lain' : 'Tambahkan jabatan pertama'}</p>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-
-                <Pagination links={positions.links} />
-              </div>
-            )}
-
-            {activeTab === 'universities' && (
-              <div className="space-y-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h3 className="text-lg font-medium text-foreground">Kelola Universitas</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Tambah, edit, atau hapus universitas</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <form onSubmit={(e) => handleSearch(e, 'universities', 'search_university')} className="flex">
-                      <div className="relative">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input name="search_university" defaultValue={searchUniversity ?? ''} placeholder="Cari universitas..." className="pl-9" />
-                      </div>
-                      <Button type="submit" variant="secondary" className="ml-2">Cari</Button>
-                    </form>
-                    <Button type="button" className="bg-purple-600 hover:bg-purple-700" onClick={() => setModal({ type: 'add', entity: 'university' })}>
-                      <Plus className="h-4 w-4" /> Tambah Universitas
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="overflow-hidden rounded-lg ring-1 ring-border">
-                  <table className="min-w-full divide-y divide-border">
-                    <thead className="bg-muted">
-                      <tr>
-                        <th className="w-16 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">No</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Nama Universitas</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Domain</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Website</th>
-                        <th className="w-32 px-6 py-3 text-left text-xs font-medium uppercase text-muted-foreground">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {universities.data.length ? (
-                        universities.data.map((uni, index) => (
-                          <tr key={uni.id} className="hover:bg-accent">
-                            <td className="px-6 py-4 text-sm text-muted-foreground">{universities.from + index}</td>
-                            <td className="px-6 py-4 text-sm font-medium text-foreground">{uni.name}</td>
-                            <td className="px-6 py-4 text-sm text-muted-foreground">{uni.domain ?? '-'}</td>
-                            <td className="px-6 py-4 text-sm">
-                              {uni.website ? (
-                                <a href={uni.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
-                                  {uni.website.length > 25 ? `${uni.website.slice(0, 25)}...` : uni.website}
-                                  <ExternalLink className="h-3 w-3" />
-                                </a>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 text-sm font-medium">
-                              <div className="flex gap-3">
-                                <button type="button" onClick={() => setModal({ type: 'edit', entity: 'university', item: uni })} className="text-blue-600 hover:text-blue-900">Edit</button>
-                                <button type="button" onClick={() => setDeleteTarget({ entity: 'university', id: uni.id, name: uni.name })} className="text-destructive hover:opacity-80">Hapus</button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={5} className="px-6 py-12 text-center">
-                            <GraduationCap className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                            <h3 className="mb-1 text-sm font-medium text-foreground">{searchUniversity ? 'Tidak ada hasil' : 'Belum ada universitas'}</h3>
-                            <p className="text-sm text-muted-foreground">{searchUniversity ? 'Coba kata kunci lain' : 'Tambahkan universitas pertama'}</p>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-
-                <Pagination links={universities.links} />
-              </div>
-            )}
-          </CardContent>
         </Card>
       </div>
 
-      {modal?.entity === 'directorate' && (
+      {modal && (
         <EntityModal
-          open
           onClose={() => setModal(null)}
-          title={modal.type === 'add' ? 'Tambah Direktorat' : 'Edit Direktorat'}
-          color="blue"
-          fields={[{ name: 'name', label: 'Nama Direktorat', required: true }]}
-          initial={{ name: modal.item?.name ?? '' }}
+          title={`${modal.type === 'add' ? 'Tambah' : 'Edit'} ${modal.tab.singular}`}
+          fields={modal.tab.fields}
+          initial={Object.fromEntries(modal.tab.fields.map((f) => [f.name, modal.item?.[f.name] ?? '']))}
           submitLabel={modal.type === 'add' ? 'Simpan' : 'Update'}
-          onSubmit={(data, onDone) =>
-            modal.type === 'add'
-              ? submitCreate('directorate', 'admin.settings.storeDirectorate', data, onDone)
-              : submitUpdate('admin.settings.updateDirectorate', modal.item.id, data, onDone)
-          }
-        />
-      )}
-
-      {modal?.entity === 'position' && (
-        <EntityModal
-          open
-          onClose={() => setModal(null)}
-          title={modal.type === 'add' ? 'Tambah Jabatan' : 'Edit Jabatan'}
-          color="green"
-          fields={[{ name: 'name', label: 'Nama Jabatan', required: true }]}
-          initial={{ name: modal.item?.name ?? '' }}
-          submitLabel={modal.type === 'add' ? 'Simpan' : 'Update'}
-          onSubmit={(data, onDone) =>
-            modal.type === 'add'
-              ? submitCreate('position', 'admin.settings.storePosition', data, onDone)
-              : submitUpdate('admin.settings.updatePosition', modal.item.id, data, onDone)
-          }
-        />
-      )}
-
-      {modal?.entity === 'university' && (
-        <EntityModal
-          open
-          onClose={() => setModal(null)}
-          title={modal.type === 'add' ? 'Tambah Universitas' : 'Edit Universitas'}
-          color="purple"
-          fields={[
-            { name: 'name', label: 'Nama Universitas', required: true },
-            { name: 'domain', label: 'Domain' },
-            { name: 'website', label: 'Website', type: 'url' },
-          ]}
-          initial={{ name: modal.item?.name ?? '', domain: modal.item?.domain ?? '', website: modal.item?.website ?? '' }}
-          submitLabel={modal.type === 'add' ? 'Simpan' : 'Update'}
-          onSubmit={(data, onDone) =>
-            modal.type === 'add'
-              ? submitCreate('university', 'admin.settings.storeUniversity', data, onDone)
-              : submitUpdate('admin.settings.updateUniversity', modal.item.id, data, onDone)
-          }
+          onSubmit={handleModalSubmit}
         />
       )}
 
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={(e) => e.target === e.currentTarget && setDeleteTarget(null)}>
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={(e) => e.target === e.currentTarget && setDeleteTarget(null)}
+        >
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
             <h3 className="text-lg font-semibold text-foreground">Hapus Data</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Yakin ingin menghapus <strong>{deleteTarget.name}</strong>? Tindakan ini tidak dapat dibatalkan.
+              Yakin ingin menghapus <strong className="text-foreground">{deleteTarget.name}</strong>? Tindakan ini tidak dapat dibatalkan.
             </p>
-            <div className="mt-6 flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
+            <div className="mt-6 flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setDeleteTarget(null)}>Batal</Button>
               <Button type="button" variant="destructive" onClick={confirmDelete}>Hapus</Button>
             </div>
           </div>

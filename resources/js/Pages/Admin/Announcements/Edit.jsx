@@ -1,5 +1,7 @@
 import { Link, useForm } from '@inertiajs/react'
 import AdminLayout from '@/Layouts/AdminLayout'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -7,11 +9,19 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Button } from '@/Components/ui/button'
+import { cn } from '@/lib/utils'
 
 const roleOptions = [
-  { value: 'admin', label: '👨‍💼 Admin' },
-  { value: 'supervisor', label: '👨‍🏫 Pembimbing (Supervisor)' },
-  { value: 'student', label: '👨‍🎓 Mahasiswa (Student)' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'supervisor', label: 'Pembimbing (Supervisor)' },
+  { value: 'student', label: 'Mahasiswa (Student)' },
+]
+
+const priorityOptions = [
+  { value: 'low', label: 'Low', dot: 'bg-slate-400' },
+  { value: 'normal', label: 'Normal', dot: 'bg-blue-500' },
+  { value: 'high', label: 'High', dot: 'bg-amber-500' },
+  { value: 'urgent', label: 'Urgent', dot: 'bg-red-500' },
 ]
 
 export default function Edit({ announcement }) {
@@ -29,7 +39,7 @@ export default function Edit({ announcement }) {
     setData(
       'target_roles',
       data.target_roles.includes(role)
-        ? data.target_roles.filter((r) => r !== role)
+        ? data.target_roles.filter((rl) => rl !== role)
         : [...data.target_roles, role],
     )
   }
@@ -42,14 +52,11 @@ export default function Edit({ announcement }) {
   return (
     <AdminLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Edit Pengumuman</h1>
-          <p className="text-muted-foreground">Ubah konten pengumuman</p>
-        </div>
+        <PageHeader title="Edit Pengumuman" description="Ubah konten pengumuman" />
 
         <Card>
           <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="title">Judul Pengumuman</Label>
                 <Input
@@ -73,18 +80,19 @@ export default function Edit({ announcement }) {
 
               <div className="space-y-2">
                 <Label htmlFor="priority">Prioritas</Label>
-                <Select
-                  value={data.priority}
-                  onValueChange={(v) => setData('priority', v)}
-                >
-                  <SelectTrigger id="priority">
+                <Select value={data.priority} onValueChange={(v) => setData('priority', v)}>
+                  <SelectTrigger id="priority" className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">🟢 Low</SelectItem>
-                    <SelectItem value="normal">🟡 Normal</SelectItem>
-                    <SelectItem value="high">🟠 High</SelectItem>
-                    <SelectItem value="urgent">🔴 Urgent</SelectItem>
+                    {priorityOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <span className="flex items-center gap-2">
+                          <span className={cn('h-2 w-2 shrink-0 rounded-full', option.dot)} />
+                          {option.label}
+                        </span>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.priority && <p className="text-sm text-destructive">{errors.priority}</p>}
@@ -106,35 +114,26 @@ export default function Edit({ announcement }) {
                 {errors.target_roles && <p className="text-sm text-destructive">{errors.target_roles}</p>}
               </div>
 
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                {announcement.published_at ? (
-                  <p className="text-sm text-blue-800">
-                    <strong>Status:</strong>{' '}
-                    {new Date(announcement.published_at).toLocaleString('id-ID', {
+              <FlashBanner type="info">
+                <strong>Status:</strong>{' '}
+                {announcement.published_at
+                  ? `Dipublikasikan ${new Date(announcement.published_at).toLocaleString('id-ID', {
                       day: '2-digit',
                       month: 'short',
                       year: 'numeric',
                       hour: '2-digit',
                       minute: '2-digit',
-                    })}{' '}
-                    - Dipublikasikan
-                  </p>
-                ) : (
-                  <p className="text-sm text-blue-800">
-                    <strong>Status:</strong> Draft (belum dipublikasikan)
-                  </p>
-                )}
-              </div>
+                    })}`
+                  : 'Draft (belum dipublikasikan)'}
+              </FlashBanner>
 
-              <div className="flex gap-3">
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('admin.announcements.index')}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing}>
                   Simpan Perubahan
                 </Button>
-                <Link href={r('admin.announcements.index')}>
-                  <Button type="button" variant="secondary">
-                    Batal
-                  </Button>
-                </Link>
               </div>
             </form>
           </CardContent>
