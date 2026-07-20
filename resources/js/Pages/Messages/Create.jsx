@@ -1,11 +1,15 @@
 import { Link, useForm } from '@inertiajs/react'
+import { ArrowLeft } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
+
+const roleLabel = { admin: 'Admin', supervisor: 'Pembimbing', student: 'Mahasiswa' }
 
 export default function Create({ recipients }) {
   const { data, setData, post, processing, errors } = useForm({
@@ -24,27 +28,31 @@ export default function Create({ recipients }) {
   return (
     <RoleLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Buat Pesan Baru</h1>
-          <p className="text-muted-foreground">Kirim pesan ke pengguna lain</p>
-        </div>
+        <PageHeader
+          title="Buat Pesan Baru"
+          description="Kirim pesan ke pengguna lain"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('messages.inbox')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
         <Card>
           <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="recipient_id">Penerima</Label>
-                <Select
-                  value={data.recipient_id}
-                  onValueChange={(v) => setData('recipient_id', v)}
-                >
+                <Select value={data.recipient_id} onValueChange={(v) => setData('recipient_id', v)}>
                   <SelectTrigger id="recipient_id" className="w-full">
                     <SelectValue placeholder="Pilih penerima..." />
                   </SelectTrigger>
                   <SelectContent>
                     {recipients.map((user) => (
                       <SelectItem key={user.id} value={String(user.id)}>
-                        {user.name} ({user.role.charAt(0).toUpperCase() + user.role.slice(1)})
+                        {user.name} ({roleLabel[user.role] ?? user.role})
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -72,29 +80,25 @@ export default function Create({ recipients }) {
                   onChange={(e) => setData('body', e.target.value)}
                   placeholder="Tulis pesan Anda..."
                 />
-                <p className="text-xs text-muted-foreground">Maximum 5000 karakter</p>
+                <p className="text-xs text-muted-foreground">Maksimum 5000 karakter</p>
                 {errors.body && <p className="text-sm text-destructive">{errors.body}</p>}
               </div>
 
               <div className="rounded-lg border border-border bg-muted p-4">
-                <p className="mb-2 text-sm font-medium text-foreground">Preview:</p>
-                <div className="rounded border border-border bg-background p-3">
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Preview</p>
+                <div className="rounded-lg border border-border bg-card p-4">
                   <p className="text-sm font-semibold text-foreground">{data.subject || 'Subjek pesan'}</p>
-                  <p className="mt-3 whitespace-pre-wrap text-sm text-muted-foreground">
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
                     {data.body || 'Isi pesan akan muncul di sini...'}
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <Button type="submit" disabled={processing}>
-                  Kirim Pesan
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('messages.inbox')}>Batal</Link>
                 </Button>
-                <Link href={r('messages.inbox')}>
-                  <Button type="button" variant="secondary">
-                    Batal
-                  </Button>
-                </Link>
+                <Button type="submit" disabled={processing}>Kirim Pesan</Button>
               </div>
             </form>
           </CardContent>

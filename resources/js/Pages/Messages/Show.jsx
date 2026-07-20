@@ -1,7 +1,10 @@
 import { Link, router, useForm, usePage } from '@inertiajs/react'
 import { ArrowLeft, Trash2, Check } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import UserCell from '@/Components/UserCell'
+import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
+import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 
@@ -13,9 +16,7 @@ export default function Show({ message, conversation }) {
 
   function handleReply(e) {
     e.preventDefault()
-    post(r('messages.reply', message.id), {
-      onSuccess: () => reset(),
-    })
+    post(r('messages.reply', message.id), { onSuccess: () => reset() })
   }
 
   function handleDelete() {
@@ -27,57 +28,53 @@ export default function Show({ message, conversation }) {
   return (
     <RoleLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <div className="flex items-center justify-between">
-          <Link href={r('messages.inbox')} className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Inbox
-          </Link>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="inline-flex items-center gap-1 text-sm font-medium text-destructive hover:text-destructive/80"
-          >
-            <Trash2 className="h-4 w-4" /> Hapus
-          </button>
-        </div>
+        <PageHeader
+          title={message.subject}
+          actions={
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link href={r('messages.inbox')}>
+                  <ArrowLeft /> Kembali
+                </Link>
+              </Button>
+              <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={handleDelete}>
+                <Trash2 /> Hapus
+              </Button>
+            </>
+          }
+        />
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {conversation.map((msg) => (
             <Card key={msg.id}>
-              <CardContent className="p-6">
-                <div className="mb-3 flex items-start justify-between">
-                  <div>
-                    <p className="font-semibold text-foreground">{msg.sender?.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(msg.created_at).toLocaleString('id-ID', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                  </div>
+              <CardContent className="p-5">
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <UserCell
+                    name={msg.sender?.name}
+                    subtitle={new Date(msg.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  />
                   {msg.recipient_id === auth.user.id && msg.is_read && (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Check className="h-3 w-3" /> Terbaca
+                      <Check className="h-3.5 w-3.5" /> Terbaca
                     </span>
                   )}
                 </div>
-                <p className="mb-2 text-sm font-medium text-foreground">{msg.subject}</p>
-                <p className="whitespace-pre-wrap text-foreground">{msg.body}</p>
+                <p className="whitespace-pre-wrap text-sm text-foreground">{msg.body}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Balas Pesan</CardTitle>
+          <CardHeader className="border-b">
+            <CardTitle>Balas Pesan</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <form onSubmit={handleReply} className="space-y-4">
               <div className="space-y-2">
+                <Label htmlFor="body" className="sr-only">Balasan</Label>
                 <Textarea
+                  id="body"
                   rows={5}
                   value={data.body}
                   onChange={(e) => setData('body', e.target.value)}
@@ -85,9 +82,9 @@ export default function Show({ message, conversation }) {
                 />
                 {errors.body && <p className="text-sm text-destructive">{errors.body}</p>}
               </div>
-              <Button type="submit" disabled={processing}>
-                Kirim Balasan
-              </Button>
+              <div className="flex justify-end">
+                <Button type="submit" disabled={processing}>Kirim Balasan</Button>
+              </div>
             </form>
           </CardContent>
         </Card>
