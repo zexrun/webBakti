@@ -2,10 +2,15 @@ import { useMemo, useState } from 'react'
 import { useForm, usePage } from '@inertiajs/react'
 import { Users, GraduationCap, CalendarRange, Award, CheckCircle2, Clock, Search, ChevronDown, Download } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
-import { Card, CardContent } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
+import { Badge } from '@/Components/ui/badge'
+import { Progress } from '@/Components/ui/progress'
+import { cn } from '@/lib/utils'
 
 function UniversityCombobox({ universities, value, onChange }) {
   const [open, setOpen] = useState(false)
@@ -27,35 +32,32 @@ function UniversityCombobox({ universities, value, onChange }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-md border-2 border-border bg-background px-4 py-3 text-left text-sm shadow-sm hover:border-muted-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+        className="flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 text-left text-sm outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring dark:bg-input"
       >
-        <span className="truncate">{value || 'Pilih Universitas'}</span>
-        <ChevronDown className={`ml-2 h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className="truncate">{value || <span className="text-muted-foreground">Pilih Universitas</span>}</span>
+        <ChevronDown className={cn('ml-2 h-4 w-4 shrink-0 text-muted-foreground transition-transform', open && 'rotate-180')} />
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute z-20 mt-2 max-h-64 w-full overflow-hidden rounded-lg border border-border bg-background shadow-lg">
-            <div className="border-b border-border bg-muted px-4 py-3">
+          <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-border bg-popover shadow-md">
+            <div className="border-b border-border p-2">
               <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  autoFocus
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari atau tambah universitas..."
-                  className="w-full rounded-md border border-border bg-background py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                />
+                <Input autoFocus value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari atau tambah universitas..." className="pl-9" />
               </div>
             </div>
-            <ul className="max-h-48 overflow-y-auto text-sm">
+            <ul className="max-h-56 overflow-y-auto p-1 text-sm">
               {filtered.map((item) => (
                 <li key={item}>
                   <button
                     type="button"
                     onClick={() => select(item)}
-                    className={`flex w-full items-center px-4 py-3 text-left hover:bg-accent ${value === item ? 'bg-accent text-primary' : ''}`}
+                    className={cn(
+                      'flex w-full items-center rounded-sm px-2.5 py-2 text-left transition-colors duration-150 hover:bg-muted',
+                      value === item && 'bg-muted font-medium text-primary',
+                    )}
                   >
                     {item}
                   </button>
@@ -63,13 +65,13 @@ function UniversityCombobox({ universities, value, onChange }) {
               ))}
               {filtered.length === 0 && search && (
                 <li>
-                  <button type="button" onClick={() => select(search)} className="flex w-full items-center px-4 py-3 text-left hover:bg-accent">
+                  <button type="button" onClick={() => select(search)} className="flex w-full items-center rounded-sm px-2.5 py-2 text-left transition-colors duration-150 hover:bg-muted">
                     Gunakan "{search}"
                   </button>
                 </li>
               )}
               {filtered.length === 0 && !search && (
-                <li className="px-4 py-6 text-center text-sm text-muted-foreground">Universitas tidak ditemukan</li>
+                <li className="px-2.5 py-6 text-center text-sm text-muted-foreground">Universitas tidak ditemukan</li>
               )}
             </ul>
           </div>
@@ -80,19 +82,11 @@ function UniversityCombobox({ universities, value, onChange }) {
 }
 
 const progressSteps = [
-  { key: 'hasProposal', label: 'P', title: 'Proposal (25%)', color: 'bg-orange-500' },
-  { key: 'hasLaporanAkhir', label: 'L', title: 'Laporan (50%)', color: 'bg-yellow-500' },
-  { key: 'hasAssessment', label: 'N', title: 'Dinilai (75%)', color: 'bg-blue-500' },
-  { key: 'hasCertificate', label: 'S', title: 'Sertifikat (100%)', color: 'bg-green-500' },
+  { key: 'hasProposal', title: 'Proposal (25%)', dot: 'bg-orange-500' },
+  { key: 'hasLaporanAkhir', title: 'Laporan (50%)', dot: 'bg-amber-500' },
+  { key: 'hasAssessment', title: 'Dinilai (75%)', dot: 'bg-blue-500' },
+  { key: 'hasCertificate', title: 'Sertifikat (100%)', dot: 'bg-green-500' },
 ]
-
-const progressBarColor = {
-  0: 'bg-muted-foreground/40',
-  25: 'bg-orange-500',
-  50: 'bg-yellow-500',
-  75: 'bg-blue-500',
-  100: 'bg-green-500',
-}
 
 export default function Edit({ student, universities, certificateProgress }) {
   const { flash } = usePage().props
@@ -115,235 +109,137 @@ export default function Edit({ student, universities, certificateProgress }) {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-4xl space-y-6">
-        <Card className="border-blue-100">
-          <CardContent className="flex items-center justify-between p-6">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Informasi Magang Saya</h1>
-              <p className="mt-1 text-muted-foreground">Kelola informasi dan data magang Anda 🎓</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
-              </p>
-            </div>
-            <div className="rounded-lg bg-blue-50 px-4 py-2">
-              <span className="text-sm font-medium text-blue-700">Status: <strong>Aktif</strong></span>
-            </div>
-          </CardContent>
-        </Card>
+        <PageHeader
+          title="Informasi Magang Saya"
+          description="Kelola informasi dan data magang Anda"
+          actions={<Badge variant="success">Status: Aktif</Badge>}
+        />
 
-        {flash?.success && (
-          <div className="rounded-lg border-l-4 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 p-4 text-sm font-medium text-green-700">
-            {flash.success}
-          </div>
-        )}
+        {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
-        <Card className="border-blue-100">
-          <CardContent className="p-8">
-            <div className="mb-6 flex items-center gap-4">
-              <div className="rounded-full bg-blue-100 p-3">
-                <GraduationCap className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">Data Mahasiswa</h3>
-                <p className="text-muted-foreground">Informasi pribadi dan akademik</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="rounded-lg border border-border bg-gradient-to-r from-muted to-blue-50 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-lg bg-muted-foreground/80 p-2">
-                    <Users className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-foreground">Dosen Pembimbing</h4>
-                    <p className="text-sm text-muted-foreground">Pembimbing yang ditugaskan</p>
-                  </div>
-                </div>
-                <Input value={student.supervisor?.user?.name ?? 'Belum Ditugaskan'} disabled readOnly className="bg-muted font-medium" />
+        <Card>
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="h-4 w-4 text-muted-foreground" /> Data Mahasiswa
+            </CardTitle>
+            <CardDescription>Informasi pribadi dan akademik</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-muted-foreground" /> Dosen Pembimbing
+                </Label>
+                <Input value={student.supervisor?.user?.name ?? 'Belum Ditugaskan'} disabled readOnly />
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <div className="space-y-2">
                   <Label htmlFor="nim">NIM</Label>
-                  <Input
-                    id="nim"
-                    value={data.nim}
-                    onChange={(e) => setData('nim', e.target.value)}
-                    placeholder="Masukkan NIM"
-                    className="mt-2"
-                    required
-                  />
-                  {errors.nim && <p className="mt-1 text-sm text-destructive">{errors.nim}</p>}
+                  <Input id="nim" value={data.nim} onChange={(e) => setData('nim', e.target.value)} placeholder="Masukkan NIM" required />
+                  {errors.nim && <p className="text-sm text-destructive">{errors.nim}</p>}
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="semester">Semester</Label>
-                  <Input
-                    id="semester"
-                    type="number"
-                    min={1}
-                    max={14}
-                    value={data.semester}
-                    onChange={(e) => setData('semester', e.target.value)}
-                    placeholder="Semester saat ini"
-                    className="mt-2"
-                    required
-                  />
-                  {errors.semester && <p className="mt-1 text-sm text-destructive">{errors.semester}</p>}
+                  <Input id="semester" type="number" min={1} max={14} value={data.semester} onChange={(e) => setData('semester', e.target.value)} placeholder="Semester saat ini" required />
+                  {errors.semester && <p className="text-sm text-destructive">{errors.semester}</p>}
                 </div>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="universitas">Universitas</Label>
-                <div className="mt-2">
-                  <UniversityCombobox universities={universities} value={data.universitas} onChange={(v) => setData('universitas', v)} />
-                </div>
-                {errors.universitas && <p className="mt-1 text-sm text-destructive">{errors.universitas}</p>}
+                <UniversityCombobox universities={universities} value={data.universitas} onChange={(v) => setData('universitas', v)} />
+                {errors.universitas && <p className="text-sm text-destructive">{errors.universitas}</p>}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="program_studi">Program Studi</Label>
-                <Input
-                  id="program_studi"
-                  value={data.program_studi}
-                  onChange={(e) => setData('program_studi', e.target.value)}
-                  placeholder="Contoh: Teknik Informatika"
-                  className="mt-2"
-                  required
-                />
-                {errors.program_studi && <p className="mt-1 text-sm text-destructive">{errors.program_studi}</p>}
+                <Input id="program_studi" value={data.program_studi} onChange={(e) => setData('program_studi', e.target.value)} placeholder="Contoh: Teknik Informatika" required />
+                {errors.program_studi && <p className="text-sm text-destructive">{errors.program_studi}</p>}
               </div>
 
-              <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-lg bg-blue-500 p-2">
-                    <CalendarRange className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-foreground">Periode Magang</h4>
-                    <p className="text-sm text-muted-foreground">Tentukan waktu pelaksanaan magang</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
+              <div className="space-y-3 rounded-lg border border-border p-4">
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <CalendarRange className="h-4 w-4 text-muted-foreground" /> Periode Magang
+                </p>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  <div className="space-y-2">
                     <Label htmlFor="periode_mulai">Tanggal Mulai</Label>
-                    <Input
-                      id="periode_mulai"
-                      type="date"
-                      value={data.periode_mulai}
-                      onChange={(e) => setData('periode_mulai', e.target.value)}
-                      className="mt-2"
-                      required
-                    />
-                    {errors.periode_mulai && <p className="mt-1 text-sm text-destructive">{errors.periode_mulai}</p>}
+                    <Input id="periode_mulai" type="date" value={data.periode_mulai} onChange={(e) => setData('periode_mulai', e.target.value)} required />
+                    {errors.periode_mulai && <p className="text-sm text-destructive">{errors.periode_mulai}</p>}
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label htmlFor="periode_selesai">Tanggal Selesai</Label>
-                    <Input
-                      id="periode_selesai"
-                      type="date"
-                      value={data.periode_selesai}
-                      onChange={(e) => setData('periode_selesai', e.target.value)}
-                      className="mt-2"
-                      required
-                    />
-                    {errors.periode_selesai && <p className="mt-1 text-sm text-destructive">{errors.periode_selesai}</p>}
+                    <Input id="periode_selesai" type="date" value={data.periode_selesai} onChange={(e) => setData('periode_selesai', e.target.value)} required />
+                    {errors.periode_selesai && <p className="text-sm text-destructive">{errors.periode_selesai}</p>}
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-end border-t border-border pt-5">
                 <Button type="submit" disabled={processing}>Simpan Perubahan</Button>
               </div>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="border-blue-100">
-          <CardContent className="p-8">
-            <div className="mb-6 flex items-center gap-4">
-              <div className="rounded-full bg-yellow-100 p-3">
-                <Award className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">Sertifikat Magang</h3>
-                <p className="text-muted-foreground">Status dan unduhan sertifikat kelulusan</p>
-              </div>
-            </div>
-
+        <Card>
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-4 w-4 text-muted-foreground" /> Sertifikat Magang
+            </CardTitle>
+            <CardDescription>Status dan unduhan sertifikat kelulusan</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
             {certificateProgress.hasCertificate ? (
-              <div className="rounded-lg border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-full bg-green-500 p-2">
-                    <CheckCircle2 className="h-5 w-5 text-white" />
-                  </div>
+              <div className="rounded-lg border border-green-200 bg-green-50 p-5 dark:border-green-500/30 dark:bg-green-500/10">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
                   <div>
-                    <h4 className="text-md font-semibold text-green-900">Sertifikat Tersedia!</h4>
-                    <p className="text-sm text-green-700">Selamat! Sertifikat kelulusan magang Anda sudah siap diunduh</p>
+                    <h4 className="font-semibold text-green-900 dark:text-green-200">Sertifikat Tersedia!</h4>
+                    <p className="text-sm text-green-700 dark:text-green-300">Selamat! Sertifikat kelulusan magang Anda sudah siap diunduh.</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-green-600">
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs tabular-nums text-green-700 dark:text-green-300">
                     {student.final_assessment?.certificate_generated_at &&
-                      `Dibuat pada: ${new Date(student.final_assessment.certificate_generated_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}
+                      `Dibuat pada ${new Date(student.final_assessment.certificate_generated_at).toLocaleString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`}
                   </p>
-                  <a
-                    href={r('student.pdf.certificate.download')}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md bg-green-600 px-6 py-3 text-sm font-medium text-white shadow-lg hover:bg-green-700 hover:shadow-xl"
-                  >
-                    <Download className="h-4 w-4" /> Download Sertifikat
-                  </a>
+                  <Button asChild>
+                    <a href={r('student.pdf.certificate.download')} target="_blank" rel="noreferrer">
+                      <Download /> Download Sertifikat
+                    </a>
+                  </Button>
                 </div>
               </div>
             ) : (
-              <div className="rounded-lg border border-border bg-gradient-to-r from-muted to-blue-50 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-full bg-muted-foreground/60 p-2">
-                    <Clock className="h-5 w-5 text-white" />
-                  </div>
+              <div className="space-y-4 rounded-lg border border-border bg-muted/50 p-5">
+                <div className="flex items-start gap-3">
+                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
                   <div>
-                    <h4 className="text-md font-semibold text-foreground">Sertifikat Belum Tersedia</h4>
-                    <p className="text-sm text-muted-foreground">Menunggu proses penilaian akhir dari pembimbing</p>
+                    <h4 className="font-semibold text-foreground">Sertifikat Belum Tersedia</h4>
+                    <p className="text-sm text-muted-foreground">Menunggu proses penilaian akhir dari pembimbing.</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <div className="h-2 rounded-full bg-muted">
-                      <div
-                        className={`h-2 rounded-full transition-all duration-500 ease-out ${progressBarColor[certificateProgress.percent]}`}
-                        style={{ width: `${certificateProgress.percent}%` }}
-                      />
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Progress: {certificateProgress.text}</span>
+                    <span className="font-semibold tabular-nums text-foreground">{certificateProgress.percent}%</span>
+                  </div>
+                  <Progress value={certificateProgress.percent} />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
+                  {progressSteps.map((step) => (
+                    <div key={step.key} className="flex items-center gap-2">
+                      <span className={cn('h-2 w-2 shrink-0 rounded-full', certificateProgress[step.key] ? step.dot : 'bg-muted-foreground/30')} />
+                      <span className={certificateProgress[step.key] ? 'text-foreground' : 'text-muted-foreground'}>{step.title}</span>
                     </div>
-                    <div className="mt-2 flex items-center justify-between">
-                      <p className="text-xs text-muted-foreground">Progress: {certificateProgress.text}</p>
-                      <div className="flex items-center gap-1">
-                        {progressSteps.map((step) => (
-                          <div key={step.key} className="flex items-center">
-                            <CheckCircle2 className={`h-3 w-3 ${certificateProgress[step.key] ? 'text-green-500' : 'text-muted-foreground/30'}`} />
-                            <span className="ml-1 text-xs text-muted-foreground">{step.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <span className="text-sm font-medium text-muted-foreground">{certificateProgress.percent}%</span>
+                  ))}
                 </div>
 
-                <div className="mt-4 rounded-lg bg-muted p-3">
-                  <p className="mb-2 text-xs font-medium text-foreground">Keterangan Progress:</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground md:grid-cols-4">
-                    {progressSteps.map((step) => (
-                      <div key={step.key} className="flex items-center">
-                        <span className={`mr-2 h-2 w-2 rounded-full ${step.color}`} />
-                        <span>{step.title}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <p className="mt-4 text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Sertifikat akan tersedia setelah pembimbing menyelesaikan penilaian akhir dan men-generate sertifikat kelulusan Anda.
                 </p>
               </div>

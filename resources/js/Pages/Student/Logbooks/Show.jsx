@@ -1,14 +1,13 @@
 import { Link } from '@inertiajs/react'
 import { ArrowLeft, Clock, Smile, FileText, Image as ImageIcon, Pencil } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 
 const feelingEmoji = {
-  Senang: '😊',
-  'Biasa Saja': '😐',
-  'Menemukan Kendala': '😥',
+  Senang: '😊', 'Biasa Saja': '😐', 'Menemukan Kendala': '😥',
 }
 
 function durationLabel(start, end) {
@@ -26,62 +25,64 @@ export default function Show({ logbook }) {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <div className="flex items-center justify-between">
-          <Link href={r('student.logbooks.index')} className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Daftar Laporan
-          </Link>
-          <Link href={r('student.logbooks.edit', logbook.id)}>
-            <Button variant="secondary" size="sm">
-              <Pencil className="h-4 w-4" /> Edit
-            </Button>
-          </Link>
-        </div>
+        <PageHeader
+          title="Detail Logbook"
+          description="Laporan kegiatan harian Anda"
+          actions={
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link href={r('student.logbooks.edit', logbook.id)}>
+                  <Pencil /> Edit
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href={r('student.logbooks.index')}>
+                  <ArrowLeft /> Kembali
+                </Link>
+              </Button>
+            </>
+          }
+        />
 
         <Card>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <Badge className="mb-2">
-                  {new Date(logbook.activity_date).toLocaleDateString('id-ID', {
-                    weekday: 'long',
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </Badge>
-                <CardTitle>{logbook.title}</CardTitle>
-              </div>
-              {logbook.is_verified ? (
-                <Badge variant="success">Sudah Dilihat</Badge>
-              ) : (
-                <Badge variant="warning">Menunggu Review</Badge>
-              )}
+          <div className="flex flex-col gap-4 border-b border-border p-5 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <Badge variant="outline" className="mb-2 tabular-nums">
+                {new Date(logbook.activity_date).toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
+              </Badge>
+              <h2 className="font-heading text-lg font-semibold text-foreground">{logbook.title}</h2>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            <Badge variant={logbook.is_verified ? 'success' : 'warning'}>
+              {logbook.is_verified ? 'Sudah Dilihat' : 'Menunggu Review'}
+            </Badge>
+          </div>
+
+          <CardContent className="space-y-5 p-5">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="rounded-lg bg-muted p-4">
-                <p className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Clock className="h-4 w-4" /> Waktu Kegiatan
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Clock className="h-4 w-4 text-muted-foreground" /> Waktu Kegiatan
                 </p>
-                <p className="text-lg font-bold text-foreground">
-                  {logbook.start_time.slice(0, 5)} - {logbook.end_time.slice(0, 5)}
+                <p className="mt-1 text-lg font-bold tabular-nums text-foreground">
+                  {logbook.start_time.slice(0, 5)}–{logbook.end_time.slice(0, 5)}
                 </p>
                 <p className="text-xs text-muted-foreground">Durasi: {durationLabel(logbook.start_time, logbook.end_time)}</p>
               </div>
 
               <div className="rounded-lg bg-muted p-4">
-                <p className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Smile className="h-4 w-4" /> Perasaan
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Smile className="h-4 w-4 text-muted-foreground" /> Perasaan
                 </p>
-                <p className="text-2xl">{feelingEmoji[logbook.feeling] ?? '😊'}</p>
-                <p className="text-sm font-semibold text-foreground">{logbook.feeling}</p>
+                <p className="mt-1 flex items-center gap-2">
+                  <span className="text-2xl" aria-hidden="true">{feelingEmoji[logbook.feeling] ?? '😊'}</span>
+                  <span className="text-sm font-semibold text-foreground">{logbook.feeling}</span>
+                </p>
               </div>
             </div>
 
             <div>
               <p className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
-                <FileText className="h-4 w-4" /> Deskripsi Kegiatan
+                <FileText className="h-4 w-4 text-muted-foreground" /> Deskripsi Kegiatan
               </p>
               <div className="whitespace-pre-wrap rounded-lg bg-muted p-4 text-sm text-foreground">
                 {logbook.description}
@@ -91,7 +92,7 @@ export default function Show({ logbook }) {
             {logbook.file_path && (
               <div>
                 <p className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
-                  <ImageIcon className="h-4 w-4" /> Dokumentasi Kegiatan
+                  <ImageIcon className="h-4 w-4 text-muted-foreground" /> Dokumentasi Kegiatan
                 </p>
                 <a href={`/storage/${logbook.file_path}`} target="_blank" rel="noreferrer">
                   <img

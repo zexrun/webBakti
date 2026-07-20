@@ -35,21 +35,24 @@ export default function ExceptionModal({ open, onClose }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/50" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-lg bg-background shadow-xl">
-          <div className="flex-shrink-0 border-b border-border px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">Ajukan Izin/Sakit</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Buat pengajuan izin atau sakit</p>
-              </div>
-              <button type="button" onClick={onClose} className="text-muted-foreground hover:text-foreground">
-                <X className="h-6 w-6" />
-              </button>
+        <div className="flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border border-border bg-card shadow-lg">
+          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-border px-6 py-4">
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Ajukan Izin/Sakit</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Buat pengajuan izin atau sakit</p>
             </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Tutup"
+              className="rounded-md p-1 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="date">Tanggal</Label>
                 <Input
@@ -103,8 +106,8 @@ export default function ExceptionModal({ open, onClose }) {
                 {errors.attachment && <p className="text-sm text-destructive">{errors.attachment}</p>}
               </div>
 
-              <Button type="submit" disabled={processing} className="w-full bg-yellow-600 hover:bg-yellow-700">
-                <Send className="h-4 w-4" /> Ajukan Permohonan
+              <Button type="submit" disabled={processing} className="w-full">
+                <Send /> Ajukan Permohonan
               </Button>
             </form>
           </div>

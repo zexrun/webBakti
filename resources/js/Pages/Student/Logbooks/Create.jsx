@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { Link, useForm } from '@inertiajs/react'
-import { NotebookPen, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -45,12 +46,7 @@ export default function Create() {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-foreground">
-            <NotebookPen className="h-6 w-6" /> Buat Laporan Harian
-          </h1>
-          <p className="text-muted-foreground">Catat kegiatan magang Anda hari ini</p>
-        </div>
+        <PageHeader title="Buat Laporan Harian" description="Catat kegiatan magang Anda hari ini" />
 
         <Card>
           <CardContent className="p-6">
@@ -140,7 +136,7 @@ export default function Create() {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="block w-full rounded-md border-2 border-dashed border-input px-3 py-2 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
+                  className="block w-full rounded-md border border-dashed border-input px-3 py-2 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
                 />
                 <p className="text-xs text-muted-foreground">PNG, JPG hingga 10MB</p>
                 {imagePreview && (
@@ -149,14 +145,12 @@ export default function Create() {
                 {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-border pt-6">
-                <Link href={r('student.logbooks.index')}>
-                  <Button type="button" variant="secondary">
-                    Batal
-                  </Button>
-                </Link>
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('student.logbooks.index')}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing}>
-                  <Save className="h-4 w-4" /> Simpan Laporan
+                  <Save /> Simpan Laporan
                 </Button>
               </div>
             </form>

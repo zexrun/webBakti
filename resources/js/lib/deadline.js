@@ -40,3 +40,14 @@ export function formatDeadline(dueDate) {
 
   return { text, color, isOverdue }
 }
+
+/**
+ * Maps a deadline color hint to a static, dark-safe Tailwind text class.
+ * Static so Tailwind's content scan emits it — never build `text-${color}-600`.
+ */
+export const deadlineToneClass = {
+  red: 'text-red-600 dark:text-red-400',
+  yellow: 'text-amber-600 dark:text-amber-400',
+  green: 'text-green-600 dark:text-green-400',
+  gray: 'text-muted-foreground',
+}

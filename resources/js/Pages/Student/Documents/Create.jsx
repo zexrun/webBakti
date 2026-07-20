@@ -1,6 +1,7 @@
-import { useForm } from '@inertiajs/react'
-import { Upload } from 'lucide-react'
+import { Link, useForm } from '@inertiajs/react'
+import { ArrowLeft, Upload } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -24,11 +25,21 @@ export default function Create() {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Upload Dokumen Baru</h1>
+        <PageHeader
+          title="Upload Dokumen Baru"
+          description="Tambahkan dokumen magang baru"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('student.documents.index')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
         <Card>
           <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="document_name">Nama Dokumen</Label>
                 <Input
@@ -62,14 +73,14 @@ export default function Create() {
                   type="file"
                   required
                   onChange={(e) => setData('file', e.target.files[0])}
-                  className="block w-full text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
+                  className="block w-full rounded-md border border-dashed border-input px-3 py-2 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
                 />
                 {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end border-t border-border pt-5">
                 <Button type="submit" disabled={processing}>
-                  <Upload className="h-4 w-4" /> Upload
+                  <Upload /> Upload
                 </Button>
               </div>
             </form>

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useForm } from '@inertiajs/react'
-import { NotebookPen, Save } from 'lucide-react'
+import { Save } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
+import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -45,12 +46,7 @@ export default function Edit({ logbook }) {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-bold text-foreground">
-            <NotebookPen className="h-6 w-6" /> Edit Laporan Harian
-          </h1>
-          <p className="text-muted-foreground">Perbarui laporan kegiatan magang Anda</p>
-        </div>
+        <PageHeader title="Edit Laporan Harian" description="Perbarui laporan kegiatan magang Anda" />
 
         <Card>
           <CardContent className="p-6">
@@ -144,7 +140,7 @@ export default function Edit({ logbook }) {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="block w-full rounded-md border-2 border-dashed border-input px-3 py-2 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
+                  className="block w-full rounded-md border border-dashed border-input px-3 py-2 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground"
                 />
                 <p className="text-xs text-muted-foreground">Kosongkan jika tidak ingin mengganti foto</p>
                 {imagePreview && (
@@ -153,14 +149,12 @@ export default function Edit({ logbook }) {
                 {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-border pt-6">
-                <Link href={r('student.logbooks.show', logbook.id)}>
-                  <Button type="button" variant="secondary">
-                    Batal
-                  </Button>
-                </Link>
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('student.logbooks.show', logbook.id)}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing}>
-                  <Save className="h-4 w-4" /> Simpan Perubahan
+                  <Save /> Simpan Perubahan
                 </Button>
               </div>
             </form>
