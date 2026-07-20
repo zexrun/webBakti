@@ -16,13 +16,15 @@ use Inertia\Response;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(): Response
     {
-        return view('admin.dashboard', $this->dashboardData());
+        // UI baru sudah di-cutover penuh: dashboard utama kini me-render React.
+        return $this->dashboardInertia();
     }
 
     /**
-     * Versi Inertia/React dari dashboard admin (dalam migrasi UI baru).
+     * Versi Inertia/React dari dashboard admin. Alias route *.dashboard.new
+     * tetap dipertahankan agar tautan lama tidak putus.
      */
     public function dashboardInertia(): Response
     {

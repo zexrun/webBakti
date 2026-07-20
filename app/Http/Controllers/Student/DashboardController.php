@@ -14,15 +14,15 @@ class DashboardController extends Controller
     /**
      * Menampilkan dashboard mahasiswa yang dipersonalisasi dengan berbagai widgets.
      */
-    public function index()
+    public function index(): Response
     {
-        $data = $this->dashboardData();
-
-        return view('student.dashboard', $data);
+        // UI baru sudah di-cutover penuh: dashboard utama kini me-render React.
+        return $this->indexInertia();
     }
 
     /**
-     * Versi Inertia/React dari dashboard mahasiswa (dalam migrasi UI baru).
+     * Versi Inertia/React dari dashboard mahasiswa. Alias route
+     * *.dashboard.new tetap dipertahankan agar tautan lama tidak putus.
      */
     public function indexInertia(): Response
     {
