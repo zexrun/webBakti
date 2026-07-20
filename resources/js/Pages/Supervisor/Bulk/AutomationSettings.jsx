@@ -1,10 +1,14 @@
 import { Link, useForm, usePage } from '@inertiajs/react'
+import { ArrowLeft } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Button } from '@/Components/ui/button'
+import { cn } from '@/lib/utils'
 
 const reminderDayOptions = [1, 3, 7, 14]
 
@@ -33,24 +37,24 @@ export default function AutomationSettings({ settings }) {
   return (
     <SupervisorLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Pengaturan Automasi</h1>
-            <p className="text-muted-foreground">Kelola pengingat otomatis untuk deadline dan submission</p>
-          </div>
-          <Link href={r('supervisor.dashboard')} className="text-sm font-medium text-primary hover:underline">
-            ← Kembali
-          </Link>
-        </div>
+        <PageHeader
+          title="Pengaturan Automasi"
+          description="Kelola pengingat otomatis untuk deadline dan submission"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('supervisor.dashboard')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
-        {flash?.success && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm font-medium text-green-800">{flash.success}</div>
-        )}
+        {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
         <Card>
-          <CardContent className="space-y-6 p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-3 rounded-lg bg-muted p-4">
+          <CardContent className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-3 rounded-lg border border-border p-4">
                 <label className="flex items-center gap-3">
                   <Checkbox
                     checked={data.auto_deadline_reminder}
@@ -61,26 +65,31 @@ export default function AutomationSettings({ settings }) {
                 <p className="text-xs text-muted-foreground">Kirim notifikasi ke mahasiswa sebelum deadline tugas tiba</p>
 
                 {data.auto_deadline_reminder && (
-                  <div className="space-y-2 pt-2">
+                  <div className="space-y-2 border-t border-border pt-3">
                     <Label>Kirim Pengingat (hari sebelum deadline)</Label>
-                    <div className="flex flex-wrap gap-3">
-                      {reminderDayOptions.map((day) => (
-                        <label key={day} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2">
-                          <input
-                            type="checkbox"
-                            checked={data.reminder_days_before.includes(day)}
-                            onChange={() => toggleReminderDay(day)}
-                          />
-                          <span className="text-sm text-foreground">{day} hari</span>
-                        </label>
-                      ))}
+                    <div className="flex flex-wrap gap-2">
+                      {reminderDayOptions.map((day) => {
+                        const active = data.reminder_days_before.includes(day)
+                        return (
+                          <label
+                            key={day}
+                            className={cn(
+                              'flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors duration-150',
+                              active ? 'border-primary bg-indigo-50 dark:bg-indigo-500/10' : 'border-border hover:bg-muted',
+                            )}
+                          >
+                            <Checkbox checked={active} onCheckedChange={() => toggleReminderDay(day)} />
+                            <span className="text-foreground">{day} hari</span>
+                          </label>
+                        )
+                      })}
                     </div>
                     {errors.reminder_days_before && <p className="text-sm text-destructive">{errors.reminder_days_before}</p>}
                   </div>
                 )}
               </div>
 
-              <div className="space-y-3 rounded-lg bg-muted p-4">
+              <div className="space-y-3 rounded-lg border border-border p-4">
                 <label className="flex items-center gap-3">
                   <Checkbox
                     checked={data.auto_submission_reminder}
@@ -91,7 +100,7 @@ export default function AutomationSettings({ settings }) {
                 <p className="text-xs text-muted-foreground">Kirim notifikasi ke mahasiswa yang belum submit tugas</p>
 
                 {data.auto_submission_reminder && (
-                  <div className="space-y-2 pt-2">
+                  <div className="space-y-2 border-t border-border pt-3">
                     <Label htmlFor="submission_reminder_days">Kirim Pengingat Setiap (hari)</Label>
                     <Input
                       id="submission_reminder_days"
@@ -100,18 +109,18 @@ export default function AutomationSettings({ settings }) {
                       max={30}
                       value={data.submission_reminder_days}
                       onChange={(e) => setData('submission_reminder_days', e.target.value)}
-                      className="max-w-xs"
+                      className="max-w-[12rem]"
                     />
                     {errors.submission_reminder_days && <p className="text-sm text-destructive">{errors.submission_reminder_days}</p>}
                   </div>
                 )}
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('supervisor.dashboard')}>Batal</Link>
+                </Button>
                 <Button type="submit" disabled={processing}>Simpan Pengaturan</Button>
-                <Link href={r('supervisor.dashboard')}>
-                  <Button type="button" variant="secondary">Batal</Button>
-                </Link>
               </div>
             </form>
           </CardContent>

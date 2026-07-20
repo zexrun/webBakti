@@ -1,82 +1,83 @@
 import { useState } from 'react'
 import { Link } from '@inertiajs/react'
-import { CheckCircle2, ChevronDown, FileText, Award, Download } from 'lucide-react'
+import { CheckCircle2, ChevronDown, FileText, Award, Download, Users, FileCheck } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
+import StatCard from '@/Components/StatCard'
+import EmptyState from '@/Components/EmptyState'
+import UserCell from '@/Components/UserCell'
+import Pagination from '@/Components/Pagination'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
-import Pagination from '@/Components/Pagination'
+import { Progress } from '@/Components/ui/progress'
+import { cn } from '@/lib/utils'
 
-function ActionsMenu({ student, hasProposal, hasLaporanAkhir, documentsComplete, hasFinalAssessment, certificateGenerated }) {
+function ActionsMenu({ student, documentsComplete, hasFinalAssessment, certificateGenerated }) {
   const [open, setOpen] = useState(false)
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+
+  const itemClass = 'flex items-center gap-3 px-4 py-2 text-sm text-foreground transition-colors duration-150 hover:bg-muted'
 
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent"
+        className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors duration-150 hover:bg-muted"
       >
         Aksi
-        <ChevronDown className="h-4 w-4" />
+        <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-20 mt-2 w-64 rounded-md border border-border bg-background shadow-lg">
-            <div className="py-1">
-              <Link
-                href={r('supervisor.students.documents', student.id)}
-                className="flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-accent"
-              >
-                <FileText className="h-4 w-4 text-blue-500" /> Lihat Dokumen
-              </Link>
+          <div className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-popover py-1 shadow-md">
+            <Link href={r('supervisor.students.documents', student.id)} className={itemClass}>
+              <FileText className="h-4 w-4 text-blue-500" /> Lihat Dokumen
+            </Link>
 
-              <div className="my-1 border-t border-border" />
+            <div className="my-1 border-t border-border" />
 
-              {hasFinalAssessment ? (
-                <Link
-                  href={r('supervisor.students.assessment.edit', student.id)}
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-orange-700 hover:bg-orange-50"
-                >
-                  <Award className="h-4 w-4 text-orange-500" /> Edit Penilaian
-                </Link>
-              ) : (
-                <Link
-                  href={r('supervisor.students.assessment.create', student.id)}
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-orange-700 hover:bg-orange-50"
-                >
-                  <Award className="h-4 w-4 text-orange-500" /> Berikan Penilaian
-                </Link>
-              )}
+            <Link
+              href={hasFinalAssessment
+                ? r('supervisor.students.assessment.edit', student.id)
+                : r('supervisor.students.assessment.create', student.id)}
+              className={itemClass}
+            >
+              <Award className="h-4 w-4 text-amber-500" />
+              {hasFinalAssessment ? 'Edit Penilaian' : 'Berikan Penilaian'}
+            </Link>
 
-              <div className="my-1 border-t border-border" />
+            <div className="my-1 border-t border-border" />
 
-              {documentsComplete && hasFinalAssessment ? (
-                <a
-                  href={r('supervisor.pdf.certificate.generate', student.id)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-green-700 hover:bg-green-50"
-                >
-                  <Download className="h-4 w-4 text-green-500" />
-                  {certificateGenerated ? 'Download Sertifikat' : 'Generate Sertifikat'}
-                </a>
-              ) : (
-                <div className="px-4 py-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-3">
-                    <Download className="h-4 w-4" /> Generate Sertifikat
-                  </div>
-                  <p className="ml-7 mt-1 text-xs text-destructive">
-                    {!documentsComplete ? 'Dokumen belum lengkap' : 'Belum dinilai'}
-                  </p>
+            {documentsComplete && hasFinalAssessment ? (
+              <a href={r('supervisor.pdf.certificate.generate', student.id)} target="_blank" rel="noreferrer" className={itemClass}>
+                <Download className="h-4 w-4 text-green-500" />
+                {certificateGenerated ? 'Download Sertifikat' : 'Generate Sertifikat'}
+              </a>
+            ) : (
+              <div className="px-4 py-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-3">
+                  <Download className="h-4 w-4" /> Generate Sertifikat
                 </div>
-              )}
-            </div>
+                <p className="ml-7 mt-1 text-xs text-destructive">
+                  {!documentsComplete ? 'Dokumen belum lengkap' : 'Belum dinilai'}
+                </p>
+              </div>
+            )}
           </div>
         </>
       )}
+    </div>
+  )
+}
+
+function StatusDot({ ok, label }) {
+  return (
+    <div className="flex items-center gap-2 text-xs">
+      <span className={cn('h-2 w-2 rounded-full', ok ? 'bg-green-500' : 'bg-muted-foreground/40')} />
+      <span className="text-muted-foreground">{label}</span>
     </div>
   )
 }
@@ -91,25 +92,14 @@ export default function Index({ students }) {
   return (
     <SupervisorLayout>
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Daftar Mahasiswa Bimbingan</h1>
-            <p className="text-muted-foreground">Kelola dan pantau progress mahasiswa yang Anda bimbing</p>
-          </div>
-          <div className="flex gap-4">
-            <Card>
-              <CardContent className="border-l-4 border-blue-500 p-4">
-                <p className="text-sm text-muted-foreground">Total Mahasiswa</p>
-                <p className="text-2xl font-bold text-foreground">{students.total}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="border-l-4 border-green-500 p-4">
-                <p className="text-sm text-muted-foreground">Dokumen Lengkap</p>
-                <p className="text-2xl font-bold text-foreground">{completedDocs}</p>
-              </CardContent>
-            </Card>
-          </div>
+        <PageHeader
+          title="Daftar Mahasiswa Bimbingan"
+          description="Kelola dan pantau progress mahasiswa yang Anda bimbing"
+        />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <StatCard icon={Users} label="Total Mahasiswa" value={students.total} tone="blue" />
+          <StatCard icon={FileCheck} label="Dokumen Lengkap" value={completedDocs} tone="green" />
         </div>
 
         <div className="space-y-4">
@@ -129,57 +119,39 @@ export default function Index({ students }) {
 
               return (
                 <Card key={student.id}>
-                  <CardContent className="p-6">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex flex-1 items-start gap-4">
-                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600">
-                          <span className="text-lg font-semibold text-white">
-                            {student.user.name.charAt(0).toUpperCase()}
-                          </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <UserCell
+                            name={student.user.name}
+                            subtitle={[student.nim ?? 'NIM belum diisi', student.universitas].filter(Boolean).join(' · ')}
+                          />
+                          {certificateGenerated && (
+                            <Badge variant="success">
+                              <CheckCircle2 /> Selesai
+                            </Badge>
+                          )}
                         </div>
 
-                        <div className="min-w-0 flex-1">
-                          <div className="mb-1 flex items-center gap-2">
-                            <h3 className="truncate text-lg font-semibold text-foreground">{student.user.name}</h3>
-                            {certificateGenerated && (
-                              <Badge variant="success">
-                                <CheckCircle2 className="mr-1 h-3 w-3" /> Selesai
-                              </Badge>
-                            )}
+                        <div className="mt-4 max-w-md">
+                          <div className="mb-1.5 flex items-center justify-between text-sm">
+                            <span className="font-medium text-foreground">Progress Magang</span>
+                            <span className="tabular-nums text-muted-foreground">{progress}%</span>
                           </div>
+                          <Progress value={progress} />
+                        </div>
 
-                          <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-3">
-                            <div><span className="font-medium">NIM:</span> {student.nim ?? 'Belum diisi'}</div>
-                            <div className="truncate"><span className="font-medium">Email:</span> {student.user.email}</div>
-                            <div className="truncate"><span className="font-medium">Universitas:</span> {student.universitas ?? 'Belum diisi'}</div>
-                          </div>
-
-                          <div className="mt-4">
-                            <div className="mb-1 flex items-center justify-between text-sm">
-                              <span className="font-medium text-foreground">Progress Magang</span>
-                              <span className="text-muted-foreground">{progress}%</span>
-                            </div>
-                            <div className="h-2 w-full rounded-full bg-muted">
-                              <div
-                                className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300"
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="mt-4 flex flex-wrap gap-3">
-                            <StatusDot ok={hasProposal} label="Proposal" />
-                            <StatusDot ok={hasLaporanAkhir} label="Laporan Akhir" />
-                            <StatusDot ok={hasFinalAssessment} label="Penilaian" />
-                            <StatusDot ok={certificateGenerated} label="Sertifikat" />
-                          </div>
+                        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+                          <StatusDot ok={hasProposal} label="Proposal" />
+                          <StatusDot ok={hasLaporanAkhir} label="Laporan Akhir" />
+                          <StatusDot ok={hasFinalAssessment} label="Penilaian" />
+                          <StatusDot ok={certificateGenerated} label="Sertifikat" />
                         </div>
                       </div>
 
                       <ActionsMenu
                         student={student}
-                        hasProposal={hasProposal}
-                        hasLaporanAkhir={hasLaporanAkhir}
                         documentsComplete={documentsComplete}
                         hasFinalAssessment={hasFinalAssessment}
                         certificateGenerated={certificateGenerated}
@@ -190,26 +162,18 @@ export default function Index({ students }) {
               )
             })
           ) : (
-            <div className="py-12 text-center">
-              <h3 className="text-lg font-medium text-foreground">Belum ada mahasiswa bimbingan</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Anda belum memiliki mahasiswa yang dibimbing. Mahasiswa akan muncul di sini setelah admin melakukan plotting pembimbing.
-              </p>
-            </div>
+            <Card>
+              <EmptyState
+                icon={Users}
+                title="Belum ada mahasiswa bimbingan"
+                description="Mahasiswa akan muncul di sini setelah admin melakukan plotting pembimbing."
+              />
+            </Card>
           )}
         </div>
 
-        <Pagination links={students.links} />
+        {students.links?.length > 3 && <Pagination links={students.links} />}
       </div>
     </SupervisorLayout>
-  )
-}
-
-function StatusDot({ ok, label }) {
-  return (
-    <div className="flex items-center text-xs">
-      <div className={`mr-2 h-2 w-2 rounded-full ${ok ? 'bg-green-400' : 'bg-red-400'}`} />
-      <span className="text-muted-foreground">{label}</span>
-    </div>
   )
 }

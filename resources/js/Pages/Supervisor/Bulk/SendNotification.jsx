@@ -1,11 +1,16 @@
 import { Link, useForm, usePage } from '@inertiajs/react'
+import { ArrowLeft } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
+import PageHeader from '@/Components/PageHeader'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { Input } from '@/Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
+import { cn } from '@/lib/utils'
+import StudentChecklist, { priorityOptions } from './StudentChecklist'
 
 export default function SendNotification({ students }) {
   const { flash } = usePage().props
@@ -33,57 +38,54 @@ export default function SendNotification({ students }) {
   return (
     <SupervisorLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Kirim Notifikasi Massal</h1>
-            <p className="text-muted-foreground">Kirim pesan/notifikasi ke multiple mahasiswa sekaligus</p>
-          </div>
-          <Link href={r('supervisor.dashboard')} className="text-sm font-medium text-primary hover:underline">
-            ← Kembali
-          </Link>
-        </div>
+        <PageHeader
+          title="Kirim Notifikasi Massal"
+          description="Kirim pesan/notifikasi ke multiple mahasiswa sekaligus"
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('supervisor.dashboard')}>
+                <ArrowLeft /> Kembali
+              </Link>
+            </Button>
+          }
+        />
 
-        {flash?.success && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm font-medium text-green-800">{flash.success}</div>
-        )}
+        {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
         <Card>
-          <CardContent className="space-y-6 p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-3">
+          <CardContent className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
                 <Label>Tipe Penerima</Label>
-                <label className="flex cursor-pointer items-center gap-3">
-                  <input type="radio" name="type" checked={data.type === 'all'} onChange={() => setData('type', 'all')} />
-                  <span className="text-foreground">Semua Mahasiswa</span>
-                </label>
-                <label className="flex cursor-pointer items-center gap-3">
-                  <input type="radio" name="type" checked={data.type === 'selected'} onChange={() => setData('type', 'selected')} />
-                  <span className="text-foreground">Pilih Mahasiswa Tertentu</span>
-                </label>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {[
+                    { value: 'all', label: 'Semua Mahasiswa' },
+                    { value: 'selected', label: 'Pilih Mahasiswa Tertentu' },
+                  ].map((opt) => (
+                    <label
+                      key={opt.value}
+                      className={cn(
+                        'flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-sm transition-colors duration-150',
+                        data.type === opt.value ? 'border-primary bg-indigo-50 dark:bg-indigo-500/10' : 'border-border hover:bg-muted',
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name="type"
+                        checked={data.type === opt.value}
+                        onChange={() => setData('type', opt.value)}
+                        className="accent-[var(--primary)]"
+                      />
+                      <span className="text-foreground">{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               {data.type === 'selected' && (
                 <div className="space-y-2">
                   <Label>Pilih Mahasiswa</Label>
-                  <div className="max-h-64 overflow-y-auto rounded-lg border border-border bg-muted p-3">
-                    {students.length ? (
-                      students.map((student) => (
-                        <label key={student.id} className="flex cursor-pointer items-center rounded px-2 py-2 hover:bg-accent">
-                          <input
-                            type="checkbox"
-                            checked={data.student_ids.includes(student.id)}
-                            onChange={() => toggleStudent(student.id)}
-                            className="rounded"
-                          />
-                          <span className="ml-3 text-sm text-foreground">
-                            {student.user.name} ({student.nim})
-                          </span>
-                        </label>
-                      ))
-                    ) : (
-                      <p className="text-sm text-muted-foreground">Belum ada mahasiswa</p>
-                    )}
-                  </div>
+                  <StudentChecklist students={students} selectedIds={data.student_ids} onToggle={toggleStudent} />
                   {errors.student_ids && <p className="text-sm text-destructive">{errors.student_ids}</p>}
                 </div>
               )}
@@ -111,7 +113,7 @@ export default function SendNotification({ students }) {
                   maxLength={1000}
                   required
                 />
-                <p className="text-xs text-muted-foreground">Maximum 1000 karakter</p>
+                <p className="text-xs text-muted-foreground">Maksimum 1000 karakter</p>
                 {errors.message && <p className="text-sm text-destructive">{errors.message}</p>}
               </div>
 
@@ -122,29 +124,32 @@ export default function SendNotification({ students }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">🟢 Low - Informasi umum</SelectItem>
-                    <SelectItem value="normal">🟡 Normal - Pemberitahuan standar</SelectItem>
-                    <SelectItem value="high">🟠 High - Perhatian dibutuhkan</SelectItem>
-                    <SelectItem value="urgent">🔴 Urgent - Segera dibalas</SelectItem>
+                    {priorityOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <span className="flex items-center gap-2">
+                          <span className={cn('h-2 w-2 shrink-0 rounded-full', option.dot)} />
+                          {option.label}
+                          <span className="text-muted-foreground">— {option.hint}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="rounded-lg bg-muted p-4">
-                <p className="mb-2 text-sm font-medium text-foreground">Preview:</p>
-                <div className="rounded border border-border bg-background p-3">
+              <div className="rounded-lg border border-border bg-muted p-4">
+                <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Preview</p>
+                <div className="rounded-lg border border-border bg-card p-4">
                   <p className="text-sm font-semibold text-foreground">{data.title || 'Judul Notifikasi'}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{data.message || 'Isi pesan anda akan muncul di sini...'}</p>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <Button type="submit" disabled={processing} className="bg-green-600 hover:bg-green-700">
-                  Kirim Notifikasi
+              <div className="flex justify-end gap-2 border-t border-border pt-5">
+                <Button asChild type="button" variant="outline">
+                  <Link href={r('supervisor.dashboard')}>Batal</Link>
                 </Button>
-                <Link href={r('supervisor.dashboard')}>
-                  <Button type="button" variant="secondary">Batal</Button>
-                </Link>
+                <Button type="submit" disabled={processing}>Kirim Notifikasi</Button>
               </div>
             </form>
           </CardContent>

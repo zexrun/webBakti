@@ -1,8 +1,42 @@
 import { Link } from '@inertiajs/react'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Users, FileCheck, UserX, TrendingUp } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
-import { Card, CardContent } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import StatCard from '@/Components/StatCard'
+import EmptyState from '@/Components/EmptyState'
+import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
+import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
+import { Progress } from '@/Components/ui/progress'
+import { cn } from '@/lib/utils'
+
+function InfoRow({ label, value }) {
+  return (
+    <div>
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm text-foreground">{value ?? '-'}</p>
+    </div>
+  )
+}
+
+function MetricRow({ label, value, tone }) {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-muted p-3">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className={cn('text-xl font-semibold tabular-nums', tone ?? 'text-foreground')}>{value}</span>
+    </div>
+  )
+}
+
+// Sequential magnitude → single indigo hue, thin rounded bar on a recessive track.
+function Meter({ value }) {
+  return (
+    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+      <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
+    </div>
+  )
+}
 
 export default function TaskAnalytics({
   taskInfo,
@@ -19,212 +53,152 @@ export default function TaskAnalytics({
 
   return (
     <SupervisorLayout>
-      <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Analisis Tugas</h1>
-            <p className="text-muted-foreground">{taskInfo.title}</p>
-          </div>
-          <Link href={r('supervisor.analytics.dashboard')}>
-            <Button type="button" variant="secondary">
-              <ArrowLeft className="h-4 w-4" /> Kembali
+      <div className="space-y-6">
+        <PageHeader
+          title="Analisis Tugas"
+          description={taskInfo.title}
+          actions={
+            <Button asChild variant="outline" size="sm">
+              <Link href={r('supervisor.analytics.dashboard')}>
+                <ArrowLeft /> Kembali
+              </Link>
             </Button>
-          </Link>
-        </div>
+          }
+        />
 
         <Card>
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Informasi Tugas</h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <div>
-                <p className="text-sm text-muted-foreground">Judul</p>
-                <p className="text-lg font-medium text-foreground">{taskInfo.title}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Dibuat</p>
-                <p className="text-lg font-medium text-foreground">
-                  {new Date(taskInfo.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Deadline</p>
-                <p className="text-lg font-medium text-foreground">
-                  {new Date(taskInfo.due_date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                </p>
-              </div>
+          <CardHeader className="border-b">
+            <CardTitle>Informasi Tugas</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-6">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              <InfoRow label="Judul" value={taskInfo.title} />
+              <InfoRow label="Dibuat" value={new Date(taskInfo.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })} />
+              <InfoRow label="Deadline" value={new Date(taskInfo.due_date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })} />
             </div>
             {taskInfo.description && (
-              <div className="mt-4 border-t border-border pt-4">
-                <p className="mb-2 text-sm text-muted-foreground">Deskripsi</p>
-                <p className="text-foreground/80">{taskInfo.description}</p>
+              <div className="border-t border-border pt-4">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Deskripsi</p>
+                <p className="mt-1 text-sm text-foreground">{taskInfo.description}</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Card>
-            <CardContent className="p-6">
-              <p className="mb-1 text-sm text-muted-foreground">Total Assigned</p>
-              <p className="text-3xl font-bold text-blue-600">{submissionStats.total_assigned}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <p className="mb-1 text-sm text-muted-foreground">Submitted</p>
-              <p className="text-3xl font-bold text-green-600">{submissionStats.submitted}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <p className="mb-1 text-sm text-muted-foreground">Not Submitted</p>
-              <p className="text-3xl font-bold text-red-600">{submissionStats.not_submitted}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <p className="mb-1 text-sm text-muted-foreground">Submission Rate</p>
-              <p className="text-3xl font-bold text-orange-600">{submissionStats.submission_rate}%</p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard icon={Users} label="Total Assigned" value={submissionStats.total_assigned} tone="blue" />
+          <StatCard icon={FileCheck} label="Submitted" value={submissionStats.submitted} tone="green" />
+          <StatCard icon={UserX} label="Not Submitted" value={submissionStats.not_submitted} tone="red" />
+          <StatCard icon={TrendingUp} label="Submission Rate" value={`${submissionStats.submission_rate}%`} tone="orange" />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Statistik Nilai</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Rata-rata</span>
-                  <span className="text-2xl font-bold text-blue-600">{gradeStats.average}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Tertinggi</span>
-                  <span className="text-2xl font-bold text-green-600">{gradeStats.highest}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Terendah</span>
-                  <span className="text-2xl font-bold text-red-600">{gradeStats.lowest}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Median</span>
-                  <span className="text-2xl font-bold text-purple-600">{gradeStats.median}</span>
-                </div>
-              </div>
+            <CardHeader className="border-b">
+              <CardTitle>Statistik Nilai</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3 pt-6">
+              <MetricRow label="Rata-rata" value={gradeStats.average} />
+              <MetricRow label="Median" value={gradeStats.median} />
+              <MetricRow label="Tertinggi" value={gradeStats.highest} tone="text-green-700 dark:text-green-400" />
+              <MetricRow label="Terendah" value={gradeStats.lowest} tone="text-red-700 dark:text-red-400" />
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Distribusi Nilai</h2>
-              <div className="space-y-3">
-                {Object.entries(gradeDistribution).map(([range, count]) => (
-                  <div key={range}>
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="text-sm text-foreground">{range}</span>
-                      <span className="text-sm font-medium text-foreground">{count}</span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-muted">
-                      <div
-                        className="h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"
-                        style={{ width: `${(count / maxDistribution) * 100}%` }}
-                      />
-                    </div>
+            <CardHeader className="border-b">
+              <CardTitle>Distribusi Nilai</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              {Object.entries(gradeDistribution).map(([range, count]) => (
+                <div key={range}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-foreground">{range}</span>
+                    <span className="tabular-nums text-muted-foreground">{count}</span>
                   </div>
-                ))}
-              </div>
+                  <Meter value={(count / maxDistribution) * 100} />
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
 
         <Card>
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Status Penilaian</h2>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-lg bg-green-50 p-3">
-                <span className="text-sm text-gray-600">Sudah Dinilai</span>
-                <span className="text-2xl font-bold text-green-600">{submissionStats.graded}</span>
-              </div>
-              <div className="flex items-center justify-between rounded-lg bg-yellow-50 p-3">
-                <span className="text-sm text-gray-600">Menunggu Penilaian</span>
-                <span className="text-2xl font-bold text-yellow-600">{submissionStats.pending_grade}</span>
-              </div>
-              <div className="mt-4 h-3 w-full rounded-full bg-muted">
-                <div className="h-3 rounded-full bg-green-600" style={{ width: `${gradedPercentage}%` }} />
-              </div>
-              <p className="mt-2 text-center text-xs text-muted-foreground">{gradedPercentage}% Complete</p>
+          <CardHeader className="border-b">
+            <CardTitle>Status Penilaian</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-6">
+            <div className="grid grid-cols-2 gap-3">
+              <MetricRow label="Sudah Dinilai" value={submissionStats.graded} tone="text-green-700 dark:text-green-400" />
+              <MetricRow label="Menunggu Penilaian" value={submissionStats.pending_grade} tone="text-amber-700 dark:text-amber-400" />
+            </div>
+            <div>
+              <Progress value={gradedPercentage} />
+              <p className="mt-2 text-center text-xs tabular-nums text-muted-foreground">{gradedPercentage}% selesai</p>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Performa Mahasiswa</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-border bg-muted">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Nama Mahasiswa</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Waktu Submit</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Nilai</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Feedback</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {studentPerformance.length ? (
-                    studentPerformance.map((submission, index) => (
-                      <tr key={index} className="hover:bg-accent">
-                        <td className="px-6 py-4">
-                          <Link href={r('supervisor.analytics.student', submission.student_id)} className="font-medium text-primary hover:underline">
-                            {submission.student_name}
-                          </Link>
-                        </td>
-                        <td className="px-6 py-4 text-center text-sm text-muted-foreground">
-                          {new Date(submission.submitted_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {submission.grade !== null ? (
-                            <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">{submission.grade}</span>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">
-                          {submission.feedback ? `${submission.feedback.slice(0, 50)}...` : '-'}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          {submission.status === 'Graded' ? (
-                            <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">Graded</span>
-                          ) : (
-                            <span className="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">Pending</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">Belum ada submission</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
+          <div className="border-b border-border px-4 py-3.5">
+            <h3 className="text-base font-semibold text-foreground">Performa Mahasiswa</h3>
+          </div>
+          {studentPerformance.length ? (
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Nama Mahasiswa</TableHead>
+                  <TableHead>Waktu Submit</TableHead>
+                  <TableHead className="text-right">Nilai</TableHead>
+                  <TableHead>Feedback</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {studentPerformance.map((submission, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Link href={r('supervisor.analytics.student', submission.student_id)} className="font-medium text-primary hover:underline">
+                        {submission.student_name}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="tabular-nums text-muted-foreground">
+                      {new Date(submission.submitted_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {submission.grade !== null ? <Badge variant="secondary">{submission.grade}</Badge> : <span className="text-muted-foreground">-</span>}
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate whitespace-normal text-muted-foreground">
+                      {submission.feedback ?? '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={submission.status === 'Graded' ? 'success' : 'warning'}>
+                        {submission.status === 'Graded' ? 'Dinilai' : 'Pending'}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <EmptyState icon={Users} title="Belum ada submission" />
+          )}
         </Card>
 
         {notSubmittedStudents.length > 0 && (
-          <Card className="border-red-200 bg-red-50">
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-red-900">Mahasiswa Belum Submit</h2>
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                {notSubmittedStudents.map((student, index) => (
-                  <div key={index} className="rounded-lg border border-red-200 bg-white p-3">
-                    <p className="font-medium text-gray-900">{student.name}</p>
-                    <p className="text-sm text-gray-600">{student.nim}</p>
-                  </div>
-                ))}
-              </div>
+          <Card>
+            <div className="flex items-center gap-2.5 border-b border-border px-4 py-3.5">
+              <UserX className="h-4 w-4 text-red-600 dark:text-red-400" />
+              <h3 className="text-base font-semibold text-foreground">Mahasiswa Belum Submit</h3>
+              <span className="text-sm tabular-nums text-muted-foreground">({notSubmittedStudents.length})</span>
+            </div>
+            <CardContent className="grid grid-cols-1 gap-3 pt-6 md:grid-cols-2">
+              {notSubmittedStudents.map((student, index) => (
+                <div key={index} className="rounded-lg border border-border p-3">
+                  <p className="text-sm font-medium text-foreground">{student.name}</p>
+                  <p className="text-xs text-muted-foreground">{student.nim}</p>
+                </div>
+              ))}
             </CardContent>
           </Card>
         )}

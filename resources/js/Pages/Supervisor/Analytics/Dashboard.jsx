@@ -1,16 +1,47 @@
 import { Link } from '@inertiajs/react'
+import { Users, ClipboardList, FileText, CheckCircle2 } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
-import { Card, CardContent } from '@/Components/ui/card'
+import PageHeader from '@/Components/PageHeader'
+import StatCard from '@/Components/StatCard'
+import EmptyState from '@/Components/EmptyState'
+import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
+import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/Components/ui/button'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 
-function StatCard({ label, value, color, sub }) {
+// Sequential magnitude → single indigo hue, thin rounded bar on a recessive track.
+function Meter({ value, className }) {
   return (
-    <Card>
-      <CardContent className="p-6">
-        <p className="mb-1 text-sm text-muted-foreground">{label}</p>
-        <p className={`text-3xl font-bold ${color}`}>{value}</p>
-        {sub && <p className="mt-2 text-xs text-muted-foreground">{sub}</p>}
-      </CardContent>
-    </Card>
+    <div className={className}>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(value, 100)}%` }} />
+      </div>
+    </div>
+  )
+}
+
+function GradeStat({ label, value }) {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-muted p-3">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className="text-xl font-semibold tabular-nums text-foreground">{value}</span>
+    </div>
+  )
+}
+
+// Highlight list rows (top / at-risk) share one shape, differing only in tone.
+function HighlightRow({ name, meta, value, metaTone, href }) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-border p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium text-foreground">{name}</p>
+        <p className={`truncate text-xs ${metaTone}`}>{meta}</p>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="text-lg font-semibold tabular-nums text-foreground">{value}</p>
+        <Link href={href} className="text-xs text-primary hover:underline">Lihat laporan</Link>
+      </div>
+    </div>
   )
 }
 
@@ -31,168 +62,136 @@ export default function Dashboard({
 
   return (
     <SupervisorLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Analytics & Performance</h1>
-          <p className="text-muted-foreground">Analisis performa mahasiswa dan tugas secara menyeluruh</p>
-        </div>
+      <div className="space-y-6">
+        <PageHeader title="Analitik & Performa" description="Analisis performa mahasiswa dan tugas secara menyeluruh" />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <StatCard label="Total Mahasiswa" value={totalStudents} color="text-blue-600" />
-          <StatCard label="Total Tugas" value={totalTasks} color="text-purple-600" />
-          <StatCard label="Total Submission" value={totalSubmissions} color="text-green-600" />
-          <StatCard label="Sudah Dinilai" value={gradedSubmissions} color="text-orange-600" sub={`${completePercent}% Complete`} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard icon={Users} label="Total Mahasiswa" value={totalStudents} tone="blue" />
+          <StatCard icon={ClipboardList} label="Total Tugas" value={totalTasks} tone="purple" />
+          <StatCard icon={FileText} label="Total Submission" value={totalSubmissions} tone="green" />
+          <StatCard icon={CheckCircle2} label="Sudah Dinilai" value={gradedSubmissions} hint={`${completePercent}% selesai`} tone="orange" />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Statistik Nilai</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Rata-rata</span>
-                  <span className="text-2xl font-bold text-blue-600">{gradeStats.average}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Nilai Tertinggi</span>
-                  <span className="text-2xl font-bold text-green-600">{gradeStats.highest}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Nilai Terendah</span>
-                  <span className="text-2xl font-bold text-red-600">{gradeStats.lowest}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-lg bg-muted p-3">
-                  <span className="text-sm text-muted-foreground">Median</span>
-                  <span className="text-2xl font-bold text-purple-600">{gradeStats.median}</span>
-                </div>
-              </div>
+            <CardHeader className="border-b">
+              <CardTitle>Statistik Nilai</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3 pt-6">
+              <GradeStat label="Rata-rata" value={gradeStats.average} />
+              <GradeStat label="Median" value={gradeStats.median} />
+              <GradeStat label="Tertinggi" value={gradeStats.highest} />
+              <GradeStat label="Terendah" value={gradeStats.lowest} />
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Distribusi Nilai</h2>
-              <div className="space-y-3">
-                {Object.entries(gradeDistribution).map(([range, count]) => (
-                  <div key={range}>
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="text-sm text-foreground">{range}</span>
-                      <span className="text-sm font-medium text-foreground">{count}</span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-muted">
-                      <div
-                        className="h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"
-                        style={{ width: `${(count / maxDistribution) * 100}%` }}
-                      />
-                    </div>
+            <CardHeader className="border-b">
+              <CardTitle>Distribusi Nilai</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              {Object.entries(gradeDistribution).map(([range, count]) => (
+                <div key={range}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="text-foreground">{range}</span>
+                    <span className="tabular-nums text-muted-foreground">{count}</span>
                   </div>
-                ))}
-              </div>
+                  <Meter value={(count / maxDistribution) * 100} />
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
 
         <Card>
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Performa Tugas</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-border bg-muted">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Judul Tugas</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Dikumpul</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Dinilai</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Completion Rate</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Nilai Rata-rata</th>
-                    <th className="px-6 py-3 text-center text-sm font-semibold text-foreground">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {taskPerformance.length ? (
-                    taskPerformance.map((task) => (
-                      <tr key={task.id} className="hover:bg-accent">
-                        <td className="px-6 py-4 text-sm font-medium text-foreground">{task.title}</td>
-                        <td className="px-6 py-4 text-center text-sm text-muted-foreground">{task.submitted}</td>
-                        <td className="px-6 py-4 text-center text-sm text-muted-foreground">{task.graded}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-center">
-                            <div className="h-2 w-16 rounded-full bg-muted">
-                              <div className="h-2 rounded-full bg-blue-600" style={{ width: `${task.completion_rate}%` }} />
-                            </div>
-                            <span className="ml-2 text-xs font-medium text-foreground">{task.completion_rate}%</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">{task.average_grade}</span>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <Link href={r('supervisor.analytics.task', task.id)} className="text-sm font-medium text-primary hover:underline">
-                            Lihat Detail
-                          </Link>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className="px-6 py-8 text-center text-muted-foreground">Belum ada data tugas</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
+          <div className="border-b border-border px-4 py-3.5">
+            <h3 className="text-base font-semibold text-foreground">Performa Tugas</h3>
+          </div>
+          {taskPerformance.length ? (
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Judul Tugas</TableHead>
+                  <TableHead className="text-right">Dikumpul</TableHead>
+                  <TableHead className="text-right">Dinilai</TableHead>
+                  <TableHead className="w-48">Completion Rate</TableHead>
+                  <TableHead className="text-right">Nilai Rata-rata</TableHead>
+                  <TableHead>Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {taskPerformance.map((task) => (
+                  <TableRow key={task.id}>
+                    <TableCell className="font-medium text-foreground">{task.title}</TableCell>
+                    <TableCell className="text-right tabular-nums text-muted-foreground">{task.submitted}</TableCell>
+                    <TableCell className="text-right tabular-nums text-muted-foreground">{task.graded}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Meter value={task.completion_rate} className="flex-1" />
+                        <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">{task.completion_rate}%</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant="secondary">{task.average_grade}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button asChild size="xs" variant="outline">
+                        <Link href={r('supervisor.analytics.task', task.id)}>Detail</Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <EmptyState icon={ClipboardList} title="Belum ada data tugas" />
+          )}
         </Card>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Mahasiswa Terbaik</h2>
-              <div className="space-y-3">
-                {topStudents.length ? (
-                  topStudents.map((student) => (
-                    <div key={student.student_id} className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{student.student_name}</p>
-                        <p className="text-xs text-gray-600">{student.submission_count} submission</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-green-600">{student.average_grade}</p>
-                        <Link href={r('supervisor.analytics.student', student.student_id)} className="text-xs text-green-600 hover:text-green-800">
-                          Lihat laporan
-                        </Link>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="py-4 text-center text-sm text-muted-foreground">Belum ada data</p>
-                )}
-              </div>
+            <CardHeader className="border-b">
+              <CardTitle>Mahasiswa Terbaik</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              {topStudents.length ? (
+                topStudents.map((student) => (
+                  <HighlightRow
+                    key={student.student_id}
+                    name={student.student_name}
+                    meta={`${student.submission_count} submission`}
+                    metaTone="text-muted-foreground"
+                    value={student.average_grade}
+                    href={r('supervisor.analytics.student', student.student_id)}
+                  />
+                ))
+              ) : (
+                <p className="py-4 text-center text-sm text-muted-foreground">Belum ada data.</p>
+              )}
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-foreground">Mahasiswa Perlu Perhatian</h2>
-              <div className="space-y-3">
-                {atRiskStudents.length ? (
-                  atRiskStudents.map((student) => (
-                    <div key={student.student_id} className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-3">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{student.student_name}</p>
-                        <p className="text-xs text-red-600">{student.reason}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-red-600">{student.average_grade}</p>
-                        <Link href={r('supervisor.analytics.student', student.student_id)} className="text-xs text-red-600 hover:text-red-800">
-                          Lihat laporan
-                        </Link>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="py-4 text-center text-sm text-green-600">Semua mahasiswa baik-baik saja! ✓</p>
-                )}
-              </div>
+            <CardHeader className="border-b">
+              <CardTitle>Mahasiswa Perlu Perhatian</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-6">
+              {atRiskStudents.length ? (
+                atRiskStudents.map((student) => (
+                  <HighlightRow
+                    key={student.student_id}
+                    name={student.student_name}
+                    meta={student.reason}
+                    metaTone="text-destructive"
+                    value={student.average_grade}
+                    href={r('supervisor.analytics.student', student.student_id)}
+                  />
+                ))
+              ) : (
+                <div className="flex items-center justify-center gap-2 py-4 text-sm text-green-700 dark:text-green-400">
+                  <CheckCircle2 className="h-4 w-4" /> Semua mahasiswa baik-baik saja.
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
