@@ -1,9 +1,11 @@
 import { Link, useForm } from '@inertiajs/react'
-import { Mail, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import GuestLayout from '@/Layouts/GuestLayout'
 import { Card, CardContent } from '@/Components/ui/card'
+import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
+import { AuthHeader, AuthBanner } from './auth-parts'
 
 export default function ForgotPassword({ status }) {
   const { data, setData, post, processing, errors } = useForm({ email: '' })
@@ -19,32 +21,17 @@ export default function ForgotPassword({ status }) {
     <GuestLayout>
       <Card>
         <CardContent className="p-6">
-          <div className="mb-6 text-center">
-            <h1 className="mb-1 text-2xl font-bold text-foreground">Lupa Password?</h1>
-            <p className="text-sm text-muted-foreground">
-              Masukkan alamat email Anda dan kami akan mengirimkan link untuk reset password.
-            </p>
-          </div>
+          <AuthHeader
+            title="Lupa Password?"
+            description="Masukkan alamat email Anda dan kami akan mengirimkan link untuk reset password."
+          />
 
-          {status && (
-            <div className="mb-4 flex items-center gap-2 rounded border-l-4 border-green-400 bg-green-50 p-3">
-              <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-green-500" />
-              <p className="text-sm text-green-700">{status}</p>
-            </div>
-          )}
-
-          {errors.email && (
-            <div className="mb-4 flex items-start gap-2 rounded border-l-4 border-red-400 bg-red-50 p-3">
-              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
-              <p className="text-sm text-red-600">{errors.email}</p>
-            </div>
-          )}
+          {status && <AuthBanner type="success">{status}</AuthBanner>}
+          {errors.email && <AuthBanner type="error">{errors.email}</AuthBanner>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="mb-1 block text-sm font-medium text-foreground">
-                Alamat Email
-              </label>
+            <div className="space-y-2">
+              <Label htmlFor="email">Alamat Email</Label>
               <div className="relative">
                 <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -60,18 +47,16 @@ export default function ForgotPassword({ status }) {
               </div>
             </div>
 
-            <div className="pt-2">
-              <Button type="submit" disabled={processing} className="w-full">
-                Kirim Link Reset Password
-              </Button>
-            </div>
+            <Button type="submit" disabled={processing} className="w-full">
+              Kirim Link Reset Password
+            </Button>
           </form>
 
-          <div className="mt-4 text-center">
+          <p className="mt-4 text-center">
             <Link href={r('login')} className="text-sm text-primary hover:underline">
               Kembali ke halaman login
             </Link>
-          </div>
+          </p>
         </CardContent>
       </Card>
     </GuestLayout>

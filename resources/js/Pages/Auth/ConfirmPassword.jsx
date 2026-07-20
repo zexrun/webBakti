@@ -1,9 +1,10 @@
 import { useForm } from '@inertiajs/react'
+import { ShieldCheck } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
+import { AuthHeader, PasswordInput } from './auth-parts'
 
 export default function ConfirmPassword() {
   const { data, setData, post, processing, errors } = useForm({ password: '' })
@@ -20,29 +21,20 @@ export default function ConfirmPassword() {
       <div className="mx-auto max-w-md">
         <Card>
           <CardContent className="p-6">
-            <p className="mb-4 text-sm text-muted-foreground">
-              Ini adalah area aman aplikasi. Mohon konfirmasi password Anda sebelum melanjutkan.
-            </p>
+            <AuthHeader
+              icon={ShieldCheck}
+              title="Konfirmasi Password"
+              description="Ini adalah area aman aplikasi. Mohon konfirmasi password Anda sebelum melanjutkan."
+            />
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={data.password}
-                  onChange={(e) => setData('password', e.target.value)}
-                  className="mt-1"
-                  required
-                  autoFocus
-                  autoComplete="current-password"
-                />
-                {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password}</p>}
+                <PasswordInput id="password" value={data.password} onChange={(e) => setData('password', e.target.value)} autoFocus autoComplete="current-password" />
+                {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
               </div>
 
-              <div className="flex justify-end">
-                <Button type="submit" disabled={processing}>Konfirmasi</Button>
-              </div>
+              <Button type="submit" disabled={processing} className="w-full">Konfirmasi</Button>
             </form>
           </CardContent>
         </Card>

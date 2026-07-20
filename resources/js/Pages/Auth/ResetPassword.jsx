@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
+import { AuthHeader, PasswordInput } from './auth-parts'
 
 export default function ResetPassword({ email, token }) {
   const { data, setData, post, processing, errors } = useForm({
@@ -24,58 +25,28 @@ export default function ResetPassword({ email, token }) {
     <GuestLayout>
       <Card>
         <CardContent className="p-6">
-          <div className="mb-6 text-center">
-            <h1 className="mb-1 text-2xl font-bold text-foreground">Reset Password</h1>
-            <p className="text-sm text-muted-foreground">Buat password baru untuk akun Anda</p>
-          </div>
+          <AuthHeader title="Reset Password" description="Buat password baru untuk akun Anda" />
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={data.email}
-                onChange={(e) => setData('email', e.target.value)}
-                className="mt-1"
-                required
-                autoFocus
-                autoComplete="username"
-              />
-              {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email}</p>}
+              <Input id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required autoFocus autoComplete="username" />
+              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="password">Password Baru</Label>
-              <Input
-                id="password"
-                type="password"
-                value={data.password}
-                onChange={(e) => setData('password', e.target.value)}
-                className="mt-1"
-                required
-                autoComplete="new-password"
-              />
-              {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password}</p>}
+              <PasswordInput id="password" value={data.password} onChange={(e) => setData('password', e.target.value)} autoComplete="new-password" />
+              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="password_confirmation">Konfirmasi Password Baru</Label>
-              <Input
-                id="password_confirmation"
-                type="password"
-                value={data.password_confirmation}
-                onChange={(e) => setData('password_confirmation', e.target.value)}
-                className="mt-1"
-                required
-                autoComplete="new-password"
-              />
-              {errors.password_confirmation && <p className="mt-1 text-sm text-destructive">{errors.password_confirmation}</p>}
+              <PasswordInput id="password_confirmation" value={data.password_confirmation} onChange={(e) => setData('password_confirmation', e.target.value)} autoComplete="new-password" />
+              {errors.password_confirmation && <p className="text-sm text-destructive">{errors.password_confirmation}</p>}
             </div>
 
-            <div className="flex justify-end pt-2">
-              <Button type="submit" disabled={processing}>Reset Password</Button>
-            </div>
+            <Button type="submit" disabled={processing} className="w-full">Reset Password</Button>
           </form>
         </CardContent>
       </Card>
