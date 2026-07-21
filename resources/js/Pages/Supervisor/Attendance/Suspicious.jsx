@@ -11,6 +11,8 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import ApprovalModal from '@/Components/ApprovalModal'
+import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
+import PhotoLightbox from '@/Components/PhotoLightbox'
 
 const statusVariant = {
   present: 'success',
@@ -26,6 +28,7 @@ const statusLabel = {
 
 export default function Suspicious({ suspiciousAttendances }) {
   const [modalItem, setModalItem] = useState(null)
+  const [lightbox, setLightbox] = useState(null)
   const r = (name) => (window.route ? window.route(name) : '#')
 
   return (
@@ -66,6 +69,7 @@ export default function Suspicious({ suspiciousAttendances }) {
                   <TableHead>Check-in</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Alasan Anomali</TableHead>
+                  <TableHead className="hidden lg:table-cell">Foto</TableHead>
                   <TableHead>Aksi</TableHead>
                 </TableRow>
               </TableHeader>
@@ -101,6 +105,20 @@ export default function Suspicious({ suspiciousAttendances }) {
                         )}
                       </div>
                     </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <div className="flex items-center gap-1.5">
+                        <AttendancePhotoThumb
+                          url={attendance.check_in_photo_url}
+                          label="Check-in"
+                          onClick={() => setLightbox({ url: attendance.check_in_photo_url, caption: `Check-in — ${attendance.user?.name}` })}
+                        />
+                        <AttendancePhotoThumb
+                          url={attendance.check_out_photo_url}
+                          label="Check-out"
+                          onClick={() => setLightbox({ url: attendance.check_out_photo_url, caption: `Check-out — ${attendance.user?.name}` })}
+                        />
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Button
                         type="button"
@@ -110,6 +128,8 @@ export default function Suspicious({ suspiciousAttendances }) {
                           id: attendance.id,
                           userName: attendance.user?.name,
                           date: new Date(attendance.date).toLocaleDateString('id-ID'),
+                          checkInPhotoUrl: attendance.check_in_photo_url,
+                          checkOutPhotoUrl: attendance.check_out_photo_url,
                         })}
                       >
                         Review
@@ -135,6 +155,13 @@ export default function Suspicious({ suspiciousAttendances }) {
         item={modalItem}
         notesRequired
         routePrefix="supervisor"
+      />
+
+      <PhotoLightbox
+        open={Boolean(lightbox)}
+        onClose={() => setLightbox(null)}
+        url={lightbox?.url}
+        caption={lightbox?.caption}
       />
     </SupervisorLayout>
   )
