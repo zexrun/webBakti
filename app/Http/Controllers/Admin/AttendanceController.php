@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesAttendanceActions;
 use App\Models\Attendance;
 use App\Models\AttendanceException;
 use App\Models\AttendanceSetting;
@@ -17,6 +18,8 @@ use Inertia\Response;
 
 class AttendanceController extends Controller
 {
+    use HandlesAttendanceActions;
+
     public function index(Request $request): Response
     {
         $date = $request->get('date', Carbon::today()->format('Y-m-d'));
@@ -59,45 +62,7 @@ class AttendanceController extends Controller
 
     public function approve(Request $request, $type, $id)
     {
-        $request->validate([
-            'action' => 'required|in:approve,reject',
-            'notes' => 'nullable|string|max:500',
-        ]);
-
-        $user = Auth::user();
-
-        if ($type === 'attendance') {
-            $item = Attendance::with('user.student')->findOrFail($id);
-
-            // Authorization: Supervisor must supervise this student
-            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
-                abort(403, 'Anda tidak berhak mengapprove attendance student ini.');
-            }
-
-            $item->update([
-                'supervisor_approval' => $request->action === 'approve' ? 'approved' : 'rejected',
-                'supervisor_notes' => $request->notes,
-                'approved_by' => Auth::id(),
-                'approved_at' => now(),
-            ]);
-        } else {
-            $item = AttendanceException::with('user.student')->findOrFail($id);
-
-            // Authorization: Supervisor must supervise this student
-            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
-                abort(403, 'Anda tidak berhak mengapprove exception student ini.');
-            }
-
-            $item->update([
-                'status' => $request->action === 'approve' ? 'approved' : 'rejected',
-                'supervisor_notes' => $request->notes,
-                'approved_by' => Auth::id(),
-                'approved_at' => now(),
-            ]);
-        }
-
-        $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
-        return back()->with('success', "Item berhasil {$message}!");
+        return $this->approveAttendanceOrException($request, $type, (int) $id);
     }
 
     public function suspicious(): Response
@@ -113,21 +78,7 @@ class AttendanceController extends Controller
 
     public function reviewSuspicious(Request $request, Attendance $attendance)
     {
-        $request->validate([
-            'action' => 'required|in:approve,reject',
-            'notes' => 'required|string|max:500',
-        ]);
-
-        $attendance->update([
-            'requires_manual_review' => false,
-            'location_verification_status' => $request->action === 'approve' ? 'verified' : 'flagged',
-            'location_notes' => $request->notes,
-            'approved_by' => Auth::id(),
-            'approved_at' => now(),
-        ]);
-
-        $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
-        return back()->with('success', "Kehadiran berhasil di-review dan {$message}!");
+        return $this->reviewSuspiciousAttendance($request, $attendance);
     }
 
     public function settings(): Response
@@ -255,101 +206,5 @@ class AttendanceController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
         return $response;
-    }
-
-    private function exportDetailedCsv($handle, $attendances)
-    {
-        $headers = [
-            'Tanggal',
-            'Nama Mahasiswa',
-            'Nim',
-            'Pembimbing',
-            'Direktorat',
-            'Waktu Masuk',
-            'Waktu Keluar',
-            'Jam Kerja',
-            'Status',
-            'Lokasi',
-            'Catatan',
-        ];
-
-        fputcsv($handle, $headers);
-
-        foreach ($attendances as $attendance) {
-            $checkInTime = $attendance->check_in_time
-                ? Carbon::parse($attendance->check_in_time)->format('H:i:s')
-                : '-';
-            $checkOutTime = $attendance->check_out_time
-                ? Carbon::parse($attendance->check_out_time)->format('H:i:s')
-                : '-';
-
-            $row = [
-                Carbon::parse($attendance->date)->format('d-m-Y'),
-                $attendance->user->name,
-                $attendance->user->student->nim ?? '-',
-                $attendance->user->student?->supervisor?->user->name ?? '-',
-                $attendance->user->student?->supervisor?->direktorat ?? '-',
-                $checkInTime,
-                $checkOutTime,
-                $attendance->working_hours ?? '-',
-                ucfirst($attendance->status),
-                $attendance->location_name ?? '-',
-                $attendance->location_notes ?? '-',
-            ];
-
-            fputcsv($handle, $row);
-        }
-    }
-
-    private function exportSummaryCsv($handle, $attendances)
-    {
-        $headers = [
-            'Nama Mahasiswa',
-            'NIM',
-            'Pembimbing',
-            'Total Hari Kerja',
-            'Hadir',
-            'Terlambat',
-            'Tidak Hadir',
-            'Rata-rata Jam Kerja',
-        ];
-
-        fputcsv($handle, $headers);
-
-        $summary = $attendances->groupBy('user_id')->map(function ($userAttendances) {
-            $totalHours = 0;
-            $countWithHours = 0;
-
-            foreach ($userAttendances->where('check_out_time', '!=', null) as $att) {
-                $totalHours += $att->working_hours ?? 0;
-                $countWithHours++;
-            }
-
-            $avgHours = $countWithHours > 0 ? round($totalHours / $countWithHours, 2) : 0;
-
-            return [
-                'user' => $userAttendances->first()->user,
-                'total_days' => $userAttendances->count(),
-                'present' => $userAttendances->where('status', 'present')->count(),
-                'late' => $userAttendances->where('status', 'late')->count(),
-                'absent' => $userAttendances->where('status', 'absent')->count(),
-                'avg_hours' => $avgHours,
-            ];
-        });
-
-        foreach ($summary as $item) {
-            $row = [
-                $item['user']->name,
-                $item['user']->student->nim ?? '-',
-                $item['user']->student?->supervisor?->user->name ?? '-',
-                $item['total_days'],
-                $item['present'],
-                $item['late'],
-                $item['absent'],
-                $item['avg_hours'] . ' jam',
-            ];
-
-            fputcsv($handle, $row);
-        }
     }
 }
