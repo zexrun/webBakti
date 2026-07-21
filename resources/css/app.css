@@ -1,7 +1,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -46,8 +45,8 @@
         --sidebar-border: oklch(1 0 0 / 8%);
         --sidebar-ring: oklch(0.68 0.14 55 / 0.5);
         --sidebar-muted: oklch(0.75 0.02 265);
-        --font-heading: 'Fraunces Variable', serif;
-        --font-sans: 'Geist Variable', sans-serif;
+        --font-heading: 'Inter Variable', sans-serif;
+        --font-sans: 'Inter Variable', sans-serif;
     }
   .dark {
         --background: oklch(0.19 0.02 265);
