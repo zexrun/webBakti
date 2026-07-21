@@ -28,7 +28,13 @@ function DecisionOption({ value, current, onSelect, icon: Icon, label, toneClass
   )
 }
 
-export default function ApprovalModal({ open, onClose, type, item, notesRequired = false }) {
+/**
+ * Shared approve/reject modal for both Admin and Supervisor attendance
+ * pages. `routePrefix` selects which role's route names to build
+ * ('admin' or 'supervisor') — both roles' controllers expose the same
+ * route shape (attendance.approve, attendance.suspicious.review).
+ */
+export default function ApprovalModal({ open, onClose, type, item, notesRequired = false, routePrefix }) {
   const [decision, setDecision] = useState('')
   const { data, setData, post, processing, errors, reset } = useForm({ action: '', notes: '' })
 
@@ -53,8 +59,8 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
     setData('action', decision)
 
     const endpoint = type === 'suspicious'
-      ? r('admin.attendance.suspicious.review', item.id)
-      : r('admin.attendance.approve', [item.approvalType, item.id])
+      ? r(`${routePrefix}.attendance.suspicious.review`, item.id)
+      : r(`${routePrefix}.attendance.approve`, [item.approvalType, item.id])
 
     post(endpoint, {
       data: { action: decision, notes: data.notes },

@@ -10,7 +10,7 @@ import { Card } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
-import ApprovalModal from './ApprovalModal'
+import ApprovalModal from '@/Components/ApprovalModal'
 
 const statusVariant = {
   present: 'success',
@@ -134,6 +134,7 @@ export default function Suspicious({ suspiciousAttendances }) {
         type="suspicious"
         item={modalItem}
         notesRequired
+        routePrefix="admin"
       />
     </AdminLayout>
   )

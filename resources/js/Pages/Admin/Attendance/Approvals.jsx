@@ -12,7 +12,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import { cn } from '@/lib/utils'
-import ApprovalModal from './ApprovalModal'
+import ApprovalModal from '@/Components/ApprovalModal'
 
 const statusVariant = {
   present: 'success',
@@ -256,6 +256,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
         onClose={() => setModalItem(null)}
         type={modalType}
         item={modalItem}
+        routePrefix="admin"
       />
     </AdminLayout>
   )

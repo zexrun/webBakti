@@ -13,7 +13,7 @@ import { Input } from '@/Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
-import ApprovalModal from './ApprovalModal'
+import ApprovalModal from '@/Components/ApprovalModal'
 
 const statusVariant = {
   present: 'success',
@@ -213,6 +213,7 @@ export default function Index({ attendances, stats, date, status }) {
         onClose={() => setModalItem(null)}
         type="attendance"
         item={modalItem}
+        routePrefix="admin"
       />
     </AdminLayout>
   )
