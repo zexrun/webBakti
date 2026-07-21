@@ -12,6 +12,9 @@ import {
   SlidersHorizontal,
   MessageSquare,
   Megaphone,
+  CalendarCheck,
+  AlertTriangle,
+  FileText,
 } from 'lucide-react'
 import AppShell from '@/Layouts/AppShell'
 
@@ -28,6 +31,15 @@ const nav = [
       { label: 'Tugas Mahasiswa', icon: ClipboardList, route: 'supervisor.tasks.index', match: 'supervisor.tasks.index' },
       { label: 'Daftar Mahasiswa', icon: Users, route: 'supervisor.students.list.index', match: 'supervisor.students.list.*' },
       { label: 'Logbook Mahasiswa', icon: NotebookPen, route: 'supervisor.logbooks.index', match: 'supervisor.logbooks.*' },
+    ],
+  },
+  {
+    label: 'Attendance',
+    items: [
+      { label: 'Kehadiran', icon: CalendarCheck, route: 'supervisor.attendance.index', match: 'supervisor.attendance.index' },
+      { label: 'Approval', icon: ClipboardCheck, route: 'supervisor.attendance.approvals', match: 'supervisor.attendance.approvals' },
+      { label: 'Laporan', icon: FileText, route: 'supervisor.attendance.reports', match: 'supervisor.attendance.reports' },
+      { label: 'Mencurigakan', icon: AlertTriangle, route: 'supervisor.attendance.suspicious', match: 'supervisor.attendance.suspicious' },
     ],
   },
   {
