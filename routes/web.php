@@ -33,6 +33,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Supervisor\AttendanceController as SupervisorAttendanceController;
 use App\Http\Controllers\Supervisor\AnalyticsController;
 use App\Http\Controllers\Supervisor\BulkOperationController;
 use App\Http\Controllers\SearchController;
@@ -184,6 +185,16 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 
     Route::get('certificate/{student}/generate', [FinalAssessmentController::class, 'generateCertificate'])->name('pdf.certificate.generate');
     Route::get('certificate/{student}/download', [FinalAssessmentController::class, 'downloadCertificate'])->name('pdf.certificate.download');
+
+    Route::prefix('attendance')->name('attendance.')->group(function () {
+        Route::get('/', [SupervisorAttendanceController::class, 'index'])->name('index');
+        Route::get('/approvals', [SupervisorAttendanceController::class, 'approvals'])->name('approvals');
+        Route::post('/approve/{type}/{id}', [SupervisorAttendanceController::class, 'approve'])->name('approve');
+        Route::get('/suspicious', [SupervisorAttendanceController::class, 'suspicious'])->name('suspicious');
+        Route::post('/suspicious/{attendance}/review', [SupervisorAttendanceController::class, 'reviewSuspicious'])->name('suspicious.review');
+        Route::get('/reports', [SupervisorAttendanceController::class, 'reports'])->name('reports');
+        Route::get('/export-csv', [SupervisorAttendanceController::class, 'exportCsv'])->name('export-csv');
+    });
 
     Route::get('/students/{student}/documents', [SupervisorController::class, 'showDocuments'])->name('students.documents');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
