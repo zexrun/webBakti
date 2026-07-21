@@ -4,6 +4,8 @@ import { CheckCircle2, XCircle, X } from 'lucide-react'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { cn } from '@/lib/utils'
+import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
+import PhotoLightbox from '@/Components/PhotoLightbox'
 
 function DecisionOption({ value, current, onSelect, icon: Icon, label, toneClass }) {
   const selected = current === value
@@ -36,6 +38,7 @@ function DecisionOption({ value, current, onSelect, icon: Icon, label, toneClass
  */
 export default function ApprovalModal({ open, onClose, type, item, notesRequired = false, routePrefix }) {
   const [decision, setDecision] = useState('')
+  const [lightbox, setLightbox] = useState(null)
   const { data, setData, post, processing, errors, reset } = useForm({ action: '', notes: '' })
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
@@ -43,6 +46,7 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
   useEffect(() => {
     if (!open) {
       setDecision('')
+      setLightbox(null)
       reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,6 +99,24 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5 px-6 py-5">
+            {(item.checkInPhotoUrl || item.checkOutPhotoUrl) && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">Foto Presensi</label>
+                <div className="flex items-center gap-3">
+                  <AttendancePhotoThumb
+                    url={item.checkInPhotoUrl}
+                    label="Check-in"
+                    onClick={() => setLightbox({ url: item.checkInPhotoUrl, caption: `Check-in — ${item.userName}` })}
+                  />
+                  <AttendancePhotoThumb
+                    url={item.checkOutPhotoUrl}
+                    label="Check-out"
+                    onClick={() => setLightbox({ url: item.checkOutPhotoUrl, caption: `Check-out — ${item.userName}` })}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground">Keputusan</label>
               <DecisionOption
@@ -140,6 +162,13 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
           </form>
         </div>
       </div>
+
+      <PhotoLightbox
+        open={Boolean(lightbox)}
+        onClose={() => setLightbox(null)}
+        url={lightbox?.url}
+        caption={lightbox?.caption}
+      />
     </div>
   )
 }
