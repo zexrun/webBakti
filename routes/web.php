@@ -185,13 +185,6 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::get('certificate/{student}/generate', [FinalAssessmentController::class, 'generateCertificate'])->name('pdf.certificate.generate');
     Route::get('certificate/{student}/download', [FinalAssessmentController::class, 'downloadCertificate'])->name('pdf.certificate.download');
 
-    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('admin.attendance.index');
-    Route::get('/attendance/approvals', [AdminAttendanceController::class, 'approvals'])->name('admin.attendance.approvals');
-    Route::post('/attendance/approve/{type}/{id}', [AdminAttendanceController::class, 'approve'])->name('admin.attendance.approve');
-    Route::get('/attendance/reports', [AdminAttendanceController::class, 'reports'])->name('admin.attendance.reports');
-    Route::get('/attendance/settings', [AdminAttendanceController::class, 'settings'])->name('admin.attendance.settings');
-    Route::post('/attendance/settings', [AdminAttendanceController::class, 'updateSettings'])->name('admin.attendance.settings.update');
-
     Route::get('/students/{student}/documents', [SupervisorController::class, 'showDocuments'])->name('students.documents');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
 });
