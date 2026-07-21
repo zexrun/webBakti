@@ -13,6 +13,8 @@ import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import { cn } from '@/lib/utils'
 import ApprovalModal from '@/Components/ApprovalModal'
+import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
+import PhotoLightbox from '@/Components/PhotoLightbox'
 
 const statusVariant = {
   present: 'success',
@@ -64,6 +66,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
   const [tab, setTab] = useState('attendance')
   const [modalItem, setModalItem] = useState(null)
   const [modalType, setModalType] = useState('attendance')
+  const [lightbox, setLightbox] = useState(null)
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
@@ -81,6 +84,8 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
       approvalType,
       userName: item.user?.name,
       date: new Date(item.date).toLocaleDateString('id-ID'),
+      checkInPhotoUrl: approvalType === 'attendance' ? item.check_in_photo_url : null,
+      checkOutPhotoUrl: approvalType === 'attendance' ? item.check_out_photo_url : null,
     })
   }
 
@@ -139,6 +144,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
                       <TableHead className="hidden md:table-cell">Check In/Out</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="hidden sm:table-cell">Diajukan</TableHead>
+                      <TableHead className="hidden lg:table-cell">Foto</TableHead>
                       <TableHead>Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -165,6 +171,20 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
                         </TableCell>
                         <TableCell className="hidden tabular-nums text-muted-foreground sm:table-cell">
                           {new Date(attendance.created_at).toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <div className="flex items-center gap-1.5">
+                            <AttendancePhotoThumb
+                              url={attendance.check_in_photo_url}
+                              label="Check-in"
+                              onClick={() => setLightbox({ url: attendance.check_in_photo_url, caption: `Check-in — ${attendance.user?.name}` })}
+                            />
+                            <AttendancePhotoThumb
+                              url={attendance.check_out_photo_url}
+                              label="Check-out"
+                              onClick={() => setLightbox({ url: attendance.check_out_photo_url, caption: `Check-out — ${attendance.user?.name}` })}
+                            />
+                          </div>
                         </TableCell>
                         <TableCell>
                           <RowActions
@@ -257,6 +277,13 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
         type={modalType}
         item={modalItem}
         routePrefix="admin"
+      />
+
+      <PhotoLightbox
+        open={Boolean(lightbox)}
+        onClose={() => setLightbox(null)}
+        url={lightbox?.url}
+        caption={lightbox?.caption}
       />
     </AdminLayout>
   )
