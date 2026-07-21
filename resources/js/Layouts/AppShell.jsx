@@ -3,6 +3,7 @@ import { Link, usePage, router } from '@inertiajs/react'
 import { LogOut, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import ThemeToggle from '@/Components/ThemeToggle'
+import NotificationBell from '@/Components/NotificationBell'
 
 const roleLabels = {
   admin: 'Administrator',
@@ -138,6 +139,7 @@ export default function AppShell({ nav, homeRoute, children }) {
 
           <div className="flex-1" />
 
+          <NotificationBell />
           <ThemeToggle />
           <span className="hidden text-sm text-muted-foreground md:block">
             Halo, <span className="font-medium text-foreground">{auth?.user?.name}</span>
