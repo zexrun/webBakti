@@ -96,11 +96,11 @@ trait HandlesAttendanceActions
         fputcsv($handle, $headers);
 
         foreach ($attendances as $attendance) {
-            $checkInTime = $attendance->check_in_time
-                ? Carbon::parse($attendance->check_in_time)->format('H:i:s')
+            $checkInTime = $attendance->check_in
+                ? $attendance->check_in->format('H:i:s')
                 : '-';
-            $checkOutTime = $attendance->check_out_time
-                ? Carbon::parse($attendance->check_out_time)->format('H:i:s')
+            $checkOutTime = $attendance->check_out
+                ? $attendance->check_out->format('H:i:s')
                 : '-';
 
             fputcsv($handle, [
@@ -132,7 +132,7 @@ trait HandlesAttendanceActions
             $totalHours = 0;
             $countWithHours = 0;
 
-            foreach ($userAttendances->where('check_out_time', '!=', null) as $att) {
+            foreach ($userAttendances->where('check_out', '!=', null) as $att) {
                 $totalHours += $att->working_hours ?? 0;
                 $countWithHours++;
             }
