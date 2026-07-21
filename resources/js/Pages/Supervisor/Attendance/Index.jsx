@@ -14,6 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import ApprovalModal from '@/Components/ApprovalModal'
+import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
+import PhotoLightbox from '@/Components/PhotoLightbox'
 
 const statusVariant = {
   present: 'success',
@@ -39,6 +41,7 @@ function time(value) {
 
 export default function Index({ attendances, stats, date, status }) {
   const [modalItem, setModalItem] = useState(null)
+  const [lightbox, setLightbox] = useState(null)
   const [statusFilter, setStatusFilter] = useState(status ?? 'all')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
@@ -126,6 +129,7 @@ export default function Index({ attendances, stats, date, status }) {
                     <TableHead className="hidden text-right lg:table-cell">Durasi</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="hidden sm:table-cell">Approval</TableHead>
+                    <TableHead className="hidden lg:table-cell">Foto</TableHead>
                     <TableHead>Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -155,6 +159,20 @@ export default function Index({ attendances, stats, date, status }) {
                           {attendance.supervisor_approval === 'approved' ? 'Disetujui' : attendance.supervisor_approval === 'rejected' ? 'Ditolak' : 'Pending'}
                         </Badge>
                       </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <div className="flex items-center gap-1.5">
+                          <AttendancePhotoThumb
+                            url={attendance.check_in_photo_url}
+                            label="Check-in"
+                            onClick={() => setLightbox({ url: attendance.check_in_photo_url, caption: `Check-in — ${attendance.user?.name}` })}
+                          />
+                          <AttendancePhotoThumb
+                            url={attendance.check_out_photo_url}
+                            label="Check-out"
+                            onClick={() => setLightbox({ url: attendance.check_out_photo_url, caption: `Check-out — ${attendance.user?.name}` })}
+                          />
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1.5">
                           <Button
@@ -166,6 +184,8 @@ export default function Index({ attendances, stats, date, status }) {
                               approvalType: 'attendance',
                               userName: attendance.user?.name,
                               date: new Date(attendance.date).toLocaleDateString('id-ID'),
+                              checkInPhotoUrl: attendance.check_in_photo_url,
+                              checkOutPhotoUrl: attendance.check_out_photo_url,
                             })}
                           >
                             Detail
@@ -209,6 +229,13 @@ export default function Index({ attendances, stats, date, status }) {
         type="attendance"
         item={modalItem}
         routePrefix="supervisor"
+      />
+
+      <PhotoLightbox
+        open={Boolean(lightbox)}
+        onClose={() => setLightbox(null)}
+        url={lightbox?.url}
+        caption={lightbox?.caption}
       />
     </SupervisorLayout>
   )
