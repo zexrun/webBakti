@@ -57,6 +57,11 @@ class Attendance extends Model
         'requires_manual_review' => 'boolean',
     ];
 
+    protected $appends = [
+        'check_in_photo_url',
+        'check_out_photo_url',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -74,6 +79,16 @@ class Attendance extends Model
         }
 
         return $this->check_in->diffInHours($this->check_out);
+    }
+
+    public function getCheckInPhotoUrlAttribute()
+    {
+        return $this->check_in_photo ? Storage::disk('public')->url($this->check_in_photo) : null;
+    }
+
+    public function getCheckOutPhotoUrlAttribute()
+    {
+        return $this->check_out_photo ? Storage::disk('public')->url($this->check_out_photo) : null;
     }
 
     public function getIsLateAttribute()
