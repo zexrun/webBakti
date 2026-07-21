@@ -31,7 +31,7 @@ trait HandlesAttendanceActions
         if ($type === 'attendance') {
             $item = Attendance::with('user.student')->findOrFail($id);
 
-            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
+            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->supervisor?->id) {
                 abort(403, 'Anda tidak berhak mengapprove attendance student ini.');
             }
 
@@ -44,7 +44,7 @@ trait HandlesAttendanceActions
         } else {
             $item = AttendanceException::with('user.student')->findOrFail($id);
 
-            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->id) {
+            if ($user->role === 'supervisor' && $item->user->student?->supervisor_id !== $user->supervisor?->id) {
                 abort(403, 'Anda tidak berhak mengapprove exception student ini.');
             }
 
@@ -70,7 +70,7 @@ trait HandlesAttendanceActions
         $user = Auth::user();
         $attendance->loadMissing('user.student');
 
-        if ($user->role === 'supervisor' && $attendance->user->student?->supervisor_id !== $user->id) {
+        if ($user->role === 'supervisor' && $attendance->user->student?->supervisor_id !== $user->supervisor?->id) {
             abort(403, 'Anda tidak berhak me-review attendance student ini.');
         }
 
