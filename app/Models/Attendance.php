@@ -60,6 +60,8 @@ class Attendance extends Model
     protected $appends = [
         'check_in_photo_url',
         'check_out_photo_url',
+        'working_hours',
+        'is_late',
     ];
 
     public function user()
@@ -100,17 +102,5 @@ class Attendance extends Model
         $checkIn = Carbon::parse($this->check_in->format('H:i:s'));
         
         return $checkIn->gt($workStart->addMinutes($settings->late_tolerance_minutes));
-    }
-
-    public function getStatusBadgeAttribute()
-    {
-        $badges = [
-            'present' => 'bg-green-100 text-green-800',
-            'late' => 'bg-yellow-100 text-yellow-800',
-            'absent' => 'bg-red-100 text-red-800',
-            'pending' => 'bg-gray-100 text-gray-800',
-        ];
-
-        return $badges[$this->status] ?? $badges['pending'];
     }
 }
