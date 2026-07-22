@@ -20,27 +20,16 @@ class DocumentController extends Controller
 {
     /**
      * Menampilkan daftar dokumen milik mahasiswa.
+     *
+     * Rute ini (student.documents.index) di-gate middleware role:student,
+     * jadi selalu diakses oleh mahasiswa untuk dokumennya sendiri. Supervisor
+     * melihat dokumen mahasiswa bimbingannya lewat rute terpisah
+     * (SupervisorController::showDocuments).
      */
     public function index(Request $request): InertiaResponse
     {
-        $user = Auth::user();
-
-        // Jika supervisor, butuh student_id
-        if ($user->role === 'supervisor') {
-            $studentId = $request->query('student_id');
-            $student = Student::findOrFail($studentId);
-
-            // Validasi bahwa supervisor-nya benar
-            if ($student->supervisor_id !== $user->id) {
-                abort(403, 'Tidak berhak mengakses dokumen ini');
-            }
-
-            $documents = $student->documents;
-        } else {
-            // Student hanya melihat dokumen miliknya
-            $student = $user->student;
-            $documents = $student->documents;
-        }
+        $student = Auth::user()->student;
+        $documents = $student->documents;
 
         return Inertia::render('Student/Documents/Index', compact('documents', 'student'));
     }
