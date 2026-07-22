@@ -83,7 +83,7 @@ export default function Suspicious({ suspiciousAttendances }) {
                       {new Date(attendance.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </TableCell>
                     <TableCell className="tabular-nums text-muted-foreground">
-                      {attendance.check_in_time ? new Date(attendance.check_in_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                      {attendance.check_in ? new Date(attendance.check_in).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={statusVariant[attendance.status] ?? 'secondary'}>
@@ -98,9 +98,9 @@ export default function Suspicious({ suspiciousAttendances }) {
                             {attendance.location_notes}
                           </p>
                         )}
-                        {attendance.latitude && attendance.longitude && (
+                        {attendance.check_in_latitude && attendance.check_in_longitude && (
                           <p className="text-xs tabular-nums text-muted-foreground">
-                            Koordinat: {Number(attendance.latitude).toFixed(4)}, {Number(attendance.longitude).toFixed(4)}
+                            Koordinat: {Number(attendance.check_in_latitude).toFixed(4)}, {Number(attendance.check_in_longitude).toFixed(4)}
                           </p>
                         )}
                       </div>
