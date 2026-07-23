@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -143,6 +144,42 @@ class ProfileController extends Controller
         }
 
         return Redirect::route('profile.show')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Update the authenticated user's profile photo and face descriptor.
+     * Available to every role - the photo/descriptor are stored on User,
+     * not on a role-specific model, and are used as the face-verification
+     * reference at student check-in (irrelevant for non-student roles,
+     * but harmless to store).
+     */
+    public function updateProfilePhoto(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'photo' => 'required|image|max:2048',
+            'face_descriptor' => 'required|string',
+        ]);
+
+        $descriptor = json_decode($request->input('face_descriptor'), true);
+
+        if (!is_array($descriptor) || count($descriptor) !== 128) {
+            return back()->with('error', 'Wajah tidak terdeteksi pada foto. Silakan coba lagi.');
+        }
+
+        $user = $request->user();
+
+        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+            Storage::disk('public')->delete($user->profile_photo);
+        }
+
+        $photoPath = $request->file('photo')->store('users/profile', 'public');
+
+        $user->update([
+            'profile_photo' => $photoPath,
+            'face_descriptor' => $descriptor,
+        ]);
+
+        return redirect()->route('profile.edit')->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     /**

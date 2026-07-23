@@ -7,7 +7,6 @@ use App\Models\University;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
@@ -81,35 +80,6 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('student.info.edit')->with('success', "Data status mahasiswa berhasil diperbarui");
-    }
-
-    public function updateProfilePhoto(Request $request)
-    {
-        $request->validate([
-            'photo' => 'required|image|max:2048',
-            'face_descriptor' => 'required|string',
-        ]);
-
-        $descriptor = json_decode($request->input('face_descriptor'), true);
-
-        if (!is_array($descriptor) || count($descriptor) !== 128) {
-            return back()->with('error', 'Wajah tidak terdeteksi pada foto. Silakan coba lagi.');
-        }
-
-        $student = Auth::user()->student;
-
-        if ($student->profile_photo && Storage::disk('public')->exists($student->profile_photo)) {
-            Storage::disk('public')->delete($student->profile_photo);
-        }
-
-        $photoPath = $request->file('photo')->store('students/profile', 'public');
-
-        $student->update([
-            'profile_photo' => $photoPath,
-            'face_descriptor' => $descriptor,
-        ]);
-
-        return redirect()->route('student.info.edit')->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     public function generateCertificate()
