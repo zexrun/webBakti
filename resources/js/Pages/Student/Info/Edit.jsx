@@ -4,7 +4,6 @@ import { Users, GraduationCap, CalendarRange, Award, CheckCircle2, Clock, Search
 import StudentLayout from '@/Layouts/StudentLayout'
 import PageHeader from '@/Components/PageHeader'
 import FlashBanner from '@/Components/FlashBanner'
-import ProfilePhotoCard from './ProfilePhotoCard'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -187,10 +186,7 @@ export default function Edit({ student, universities, certificateProgress }) {
             </CardContent>
           </Card>
 
-          <div className="space-y-6 self-start">
-            <ProfilePhotoCard profilePhotoUrl={student.profile_photo_url} />
-
-            <Card>
+          <Card className="self-start">
             <CardHeader className="border-b">
               <CardTitle className="flex items-center gap-2">
                 <Award className="h-4 w-4 text-muted-foreground" /> Sertifikat Magang
@@ -252,8 +248,7 @@ export default function Edit({ student, universities, certificateProgress }) {
                 </div>
               )}
             </CardContent>
-            </Card>
-          </div>
+          </Card>
         </div>
       </div>
     </StudentLayout>
