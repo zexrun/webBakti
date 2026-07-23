@@ -20,7 +20,16 @@ class Logbook extends Model
         'feeling',
         'file_path',
         'is_verified',
+        'feedback',
+        'feedback_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'feedback_at' => 'datetime',
+        ];
+    }
 
     public function student()
     {
