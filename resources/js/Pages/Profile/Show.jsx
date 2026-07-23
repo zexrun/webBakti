@@ -47,8 +47,12 @@ export default function Show({ user }) {
           <div className="space-y-6 lg:col-span-1">
             <Card>
               <CardContent className="flex flex-col items-center p-6 text-center">
-                <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-sidebar text-3xl font-bold text-sidebar-primary-foreground">
-                  {user.name.charAt(0).toUpperCase()}
+                <div className="mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-sidebar text-3xl font-bold text-sidebar-primary-foreground">
+                  {user.profile_photo_url ? (
+                    <img src={user.profile_photo_url} alt={user.name} className="h-full w-full object-cover" />
+                  ) : (
+                    user.name.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <h2 className="text-lg font-bold text-foreground">{user.name}</h2>
                 <span className={cn('mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium', role.className)}>
