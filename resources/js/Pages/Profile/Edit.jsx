@@ -4,6 +4,7 @@ import { X, Save, Eye, EyeOff } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
 import PageHeader from '@/Components/PageHeader'
 import FlashBanner from '@/Components/FlashBanner'
+import ProfilePhotoCard from '@/Components/ProfilePhotoCard'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -71,14 +72,7 @@ export default function Edit({ user }) {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-1">
-              <Card>
-                <CardContent className="flex flex-col items-center p-6 text-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-sidebar text-3xl font-bold text-sidebar-primary-foreground">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <p className="mt-3 text-sm font-medium text-foreground">{user.name}</p>
-                </CardContent>
-              </Card>
+              <ProfilePhotoCard profilePhotoUrl={user.profile_photo_url} />
 
               <Card>
                 <CardHeader className="border-b">
