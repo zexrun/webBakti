@@ -16,6 +16,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import ApprovalModal from '@/Components/ApprovalModal'
 import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
 import PhotoLightbox from '@/Components/PhotoLightbox'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const statusVariant = {
   present: 'success',
@@ -44,6 +45,7 @@ export default function Index({ attendances, stats, date, status }) {
   const [lightbox, setLightbox] = useState(null)
   const [statusFilter, setStatusFilter] = useState(status ?? 'all')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
   function handleFilter(e) {
     e.preventDefault()
@@ -54,8 +56,9 @@ export default function Index({ attendances, stats, date, status }) {
     })
   }
 
-  function quickApprove(attendance) {
-    if (confirm('Apakah Anda yakin ingin menyetujui absensi ini?')) {
+  async function quickApprove(attendance) {
+    const confirmed = await confirm({ title: 'Setujui absensi ini?' })
+    if (confirmed) {
       router.post(r('admin.attendance.approve', ['attendance', attendance.id]), { action: 'approve' }, { preserveScroll: true })
     }
   }

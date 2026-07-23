@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils'
 import ApprovalModal from '@/Components/ApprovalModal'
 import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
 import PhotoLightbox from '@/Components/PhotoLightbox'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const statusVariant = {
   present: 'success',
@@ -69,10 +70,15 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
   const [lightbox, setLightbox] = useState(null)
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
-  function quickAction(id, approvalType, action) {
+  async function quickAction(id, approvalType, action) {
     const label = action === 'approve' ? 'menyetujui' : 'menolak'
-    if (confirm(`Yakin ingin ${label} item ini?`)) {
+    const confirmed = await confirm({
+      title: `Yakin ingin ${label} item ini?`,
+      variant: action === 'approve' ? 'default' : 'destructive',
+    })
+    if (confirmed) {
       router.post(r('admin.attendance.approve', [approvalType, id]), { action }, { preserveScroll: true })
     }
   }
