@@ -17,7 +17,7 @@ export function useCamera() {
   async function start() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, aspectRatio: { ideal: 16 / 9 } },
       })
       streamRef.current = stream
       if (videoRef.current) {
@@ -42,9 +42,22 @@ export function useCamera() {
       const canvas = canvasRef.current
       if (!video || !canvas) return resolve(null)
 
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      canvas.getContext('2d').drawImage(video, 0, 0)
+      const sourceWidth = video.videoWidth
+      const sourceHeight = video.videoHeight
+      const targetRatio = 16 / 9
+
+      let cropWidth = sourceWidth
+      let cropHeight = sourceWidth / targetRatio
+      if (cropHeight > sourceHeight) {
+        cropHeight = sourceHeight
+        cropWidth = sourceHeight * targetRatio
+      }
+      const cropX = (sourceWidth - cropWidth) / 2
+      const cropY = (sourceHeight - cropHeight) / 2
+
+      canvas.width = cropWidth
+      canvas.height = cropHeight
+      canvas.getContext('2d').drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight)
 
       canvas.toBlob(
         (blob) => {
