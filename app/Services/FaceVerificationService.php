@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Log;
 class FaceVerificationService
 {
     /**
-     * face-api.js's commonly-used threshold for "same person" - a
      * Euclidean distance below this between two descriptors is
-     * considered a match. Fixed for now; not user-configurable.
+     * considered a match, tuned for SsdMobilenetv1 (stricter than the
+     * 0.6 commonly quoted for TinyFaceDetector - lowered after logged
+     * evidence showed TinyFaceDetector's descriptors didn't separate
+     * different people's faces clearly enough at 0.6). Fixed for now;
+     * not user-configurable.
      */
-    private const MATCH_THRESHOLD = 0.6;
+    private const MATCH_THRESHOLD = 0.5;
 
     /**
      * Verify a check-in descriptor against a student's reference.

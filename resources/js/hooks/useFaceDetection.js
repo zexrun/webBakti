@@ -6,15 +6,23 @@ const MODEL_URL = '/models/face-api'
 let modelsLoadingPromise = null
 
 /**
- * Loads face-api.js's TinyFaceDetector + FaceLandmark68Net +
+ * Loads face-api.js's SsdMobilenetv1 + FaceLandmark68Net +
  * FaceRecognitionNet models once (shared across every hook instance
  * via a module-level promise, so opening the check-in modal twice
- * doesn't re-fetch ~6.7MB of weights), then exposes a function to
+ * doesn't re-fetch ~12MB of weights), then exposes a function to
  * compute a 128-number face descriptor from an image/canvas/video
  * element. FaceLandmark68Net is required by .withFaceLandmarks() in
  * detectDescriptor() below - detectSingleFace().withFaceDescriptor()
  * internally needs aligned landmarks before it can run the recognition
  * net, so all three models must be loaded together.
+ *
+ * SsdMobilenetv1 replaced TinyFaceDetector here after investigating a
+ * false-verified report: logged distances showed TinyFaceDetector's
+ * descriptors weren't separating different people's faces clearly
+ * enough (0.41-0.55 for a genuinely different face, indistinguishable
+ * from the same-person range) - SsdMobilenetv1 is slower but produces
+ * more discriminative descriptors. No fallback to TinyFaceDetector on
+ * load failure - see `available` handling below.
  *
  * Never throws on failure - callers get `status === 'unavailable'`
  * instead, so a browser that can't run face-api.js (unsupported,
@@ -32,7 +40,7 @@ export function useFaceDetection() {
 
     if (!modelsLoadingPromise) {
       modelsLoadingPromise = Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
       ])
@@ -69,7 +77,7 @@ export function useFaceDetection() {
 
     try {
       const detection = await faceapi
-        .detectSingleFace(imageElement, new faceapi.TinyFaceDetectorOptions())
+        .detectSingleFace(imageElement, new faceapi.SsdMobilenetv1Options())
         .withFaceLandmarks()
         .withFaceDescriptor()
 
