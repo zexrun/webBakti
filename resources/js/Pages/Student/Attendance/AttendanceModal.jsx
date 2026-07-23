@@ -106,15 +106,14 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
               <div className="space-y-3">
                 <Label>Foto Selfie</Label>
 
-                <video
-                  ref={camera.videoRef}
-                  className={cn('h-48 w-full rounded-lg border border-border bg-muted object-cover', camera.phase !== 'streaming' && 'hidden')}
-                  muted
-                  playsInline
-                />
+                <div className={cn('relative w-full overflow-hidden rounded-lg border border-border bg-muted', camera.phase !== 'streaming' && 'hidden')}>
+                  <div className="aspect-video">
+                    <video ref={camera.videoRef} className="h-full w-full object-cover" muted playsInline />
+                  </div>
+                </div>
                 <canvas ref={camera.canvasRef} className="hidden" />
                 {camera.previewUrl && (
-                  <img src={camera.previewUrl} alt="Preview" className="h-48 w-full rounded-lg border border-border object-cover" />
+                  <img src={camera.previewUrl} alt="Preview" className="aspect-video w-full rounded-lg border border-border object-cover" />
                 )}
                 {camera.error && <p className="text-sm text-destructive">{camera.error}</p>}
 
