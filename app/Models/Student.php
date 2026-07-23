@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Student extends Model
 {
@@ -19,6 +20,16 @@ class Student extends Model
         'direktorat',
         'periode_mulai',
         'periode_selesai',
+        'profile_photo',
+        'face_descriptor',
+    ];
+
+    protected $casts = [
+        'face_descriptor' => 'array',
+    ];
+
+    protected $appends = [
+        'profile_photo_url',
     ];
 
     public function user()
@@ -64,5 +75,10 @@ class Student extends Model
     public function attendances()
     {
         return $this->hasManyThrough(Attendance::class, User::class, 'id', 'user_id');
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo ? Storage::disk('public')->url($this->profile_photo) : null;
     }
 }
