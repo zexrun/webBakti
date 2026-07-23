@@ -38,6 +38,7 @@ class AttendanceController extends Controller
             'present' => Attendance::where('date', $date)->where('status', 'present')->count(),
             'late' => Attendance::where('date', $date)->where('status', 'late')->count(),
             'absent' => Attendance::where('date', $date)->where('status', 'absent')->count(),
+            'suspicious' => Attendance::where('date', $date)->where('requires_manual_review', true)->count(),
         ];
 
         return Inertia::render('Admin/Attendance/Index', compact('attendances', 'stats', 'date', 'status'));
