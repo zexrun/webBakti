@@ -11,9 +11,11 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import { cn } from '@/lib/utils'
+import { useConfirm } from '@/hooks/useConfirm'
 
 export default function Index({ students }) {
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
   const totalTasks = students.data.reduce((sum, s) => sum + s.tasks.length, 0)
   const activeTasks = students.data.reduce(
@@ -21,8 +23,13 @@ export default function Index({ students }) {
     0,
   )
 
-  function handleDelete(task) {
-    if (confirm('Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan.')) {
+  async function handleDelete(task) {
+    const confirmed = await confirm({
+      title: 'Hapus tugas ini?',
+      description: 'Tindakan ini tidak dapat dibatalkan.',
+      variant: 'destructive',
+    })
+    if (confirmed) {
       router.delete(r('supervisor.tasks.destroy', task.id))
     }
   }

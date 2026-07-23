@@ -8,9 +8,11 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Progress } from '@/Components/ui/progress'
 import GradingForm from './GradingForm'
+import { useConfirm } from '@/hooks/useConfirm'
 
 export default function Show({ task, assignedStudents, submissions }) {
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
   const totalStudents = assignedStudents.length
   const submittedCount = Object.keys(submissions).length
@@ -18,8 +20,13 @@ export default function Show({ task, assignedStudents, submissions }) {
   const pendingCount = submittedCount - gradedCount
   const progressPct = totalStudents > 0 ? Math.round((submittedCount / totalStudents) * 100) : 0
 
-  function handleDelete() {
-    if (confirm('Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan.')) {
+  async function handleDelete() {
+    const confirmed = await confirm({
+      title: 'Hapus tugas ini?',
+      description: 'Tindakan ini tidak dapat dibatalkan.',
+      variant: 'destructive',
+    })
+    if (confirmed) {
       router.delete(r('supervisor.tasks.destroy', task.id))
     }
   }
