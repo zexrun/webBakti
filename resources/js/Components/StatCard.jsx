@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { Card, CardContent } from '@/Components/ui/card'
 import { cn } from '@/lib/utils'
 
@@ -21,21 +22,32 @@ const tones = {
   indigo: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300',
 }
 
-export default function StatCard({ icon: Icon, label, value, hint, tone = 'neutral', className }) {
+/**
+ * `index` (default 0) drives a small per-card stagger delay so a row of
+ * StatCards fades in one after another instead of all at once - pass
+ * each card's position within its own grid (each grid restarts at 0).
+ */
+export default function StatCard({ icon: Icon, label, value, hint, tone = 'neutral', className, index = 0 }) {
   return (
-    <Card className={className}>
-      <CardContent className="flex items-center gap-4 p-5">
-        {Icon && (
-          <div className={cn('flex h-11 w-11 shrink-0 items-center justify-center rounded-lg', tones[tone] ?? tones.neutral)}>
-            <Icon className="h-5 w-5" />
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, delay: index * 0.05 }}
+    >
+      <Card className={className}>
+        <CardContent className="flex items-center gap-4 p-5">
+          {Icon && (
+            <div className={cn('flex h-11 w-11 shrink-0 items-center justify-center rounded-lg', tones[tone] ?? tones.neutral)}>
+              <Icon className="h-5 w-5" />
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="truncate text-sm text-muted-foreground">{label}</p>
+            <p className="text-2xl font-semibold tabular-nums text-foreground">{value}</p>
+            {hint && <p className="mt-0.5 truncate text-xs text-muted-foreground">{hint}</p>}
           </div>
-        )}
-        <div className="min-w-0">
-          <p className="truncate text-sm text-muted-foreground">{label}</p>
-          <p className="text-2xl font-semibold tabular-nums text-foreground">{value}</p>
-          {hint && <p className="mt-0.5 truncate text-xs text-muted-foreground">{hint}</p>}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
