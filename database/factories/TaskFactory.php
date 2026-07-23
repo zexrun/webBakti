@@ -21,10 +21,17 @@ class TaskFactory extends Factory
     {
         return [
             'supervisor_id' => Supervisor::inRandomOrder()->first()->id,
-            'title' => 'Tugas Magang',
+            'title' => fake()->randomElement([
+                'Laporan Mingguan Aktivitas',
+                'Dokumentasi Modul Sistem',
+                'Presentasi Progress Magang',
+                'Analisis Kebutuhan Sistem',
+                'Implementasi Fitur',
+                'Laporan Akhir Magang',
+            ]),
             'description' => fake()->paragraph(2),
             'file_path' => fake()->boolean() ? 'path/to/some/file.pdf' : null, // Contoh penambahan data file_path
-            'type' => fake()->randomElement(['harian']),
+            'type' => fake()->randomElement(['harian', 'akhir']),
             'due_date' => fake()->dateTimeBetween('+1 week', '+1 month'),
         ];
     }
