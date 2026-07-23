@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react'
-import { ArrowLeft, Clock, Smile, FileText, Image as ImageIcon, Pencil } from 'lucide-react'
+import { ArrowLeft, Clock, Smile, FileText, Image as ImageIcon, Pencil, MessageSquare } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
 import PageHeader from '@/Components/PageHeader'
 import { Card, CardContent } from '@/Components/ui/card'
@@ -101,6 +101,22 @@ export default function Show({ logbook }) {
                     className="w-full rounded-lg border border-border object-cover"
                   />
                 </a>
+              </div>
+            )}
+
+            {logbook.feedback && (
+              <div>
+                <p className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
+                  <MessageSquare className="h-4 w-4 text-muted-foreground" /> Feedback Pembimbing
+                </p>
+                <div className="whitespace-pre-wrap rounded-lg bg-muted p-4 text-sm text-foreground">
+                  {logbook.feedback}
+                </div>
+                {logbook.feedback_at && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Dikirim {new Date(logbook.feedback_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                )}
               </div>
             )}
           </CardContent>
