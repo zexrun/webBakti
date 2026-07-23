@@ -22,11 +22,6 @@ class Document extends Model
         'original_filename',
     ];
 
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
-    }
-
     public function student()
     {
         return $this->belongsTo(Student::class);
