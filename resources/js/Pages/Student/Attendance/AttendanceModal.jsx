@@ -53,10 +53,10 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
 
     if (requireFaceCheck) {
       setFaceCheckMessage('Memeriksa wajah...')
-      const descriptor = await face.detectDescriptor(camera.canvasRef.current)
+      const { available, descriptor } = await face.detectDescriptor(camera.canvasRef.current)
       setFaceCheckMessage('')
 
-      if (face.status === 'ready' && !descriptor) {
+      if (available && !descriptor) {
         alert('Wajah tidak terdeteksi pada foto. Silakan pastikan wajah Anda terlihat jelas dan coba lagi.')
         return
       }

@@ -45,13 +45,22 @@ export function useFaceDetection() {
   }, [status])
 
   /**
-   * Detects a single face in the given image-like element and returns
-   * its 128-number descriptor as a plain array, or null if no face was
-   * detected (or the models failed to load).
+   * Detects a single face in the given image-like element. Returns
+   * { available, descriptor }: `available` is false when the models
+   * couldn't be loaded (caller must not treat this as "no face found" -
+   * it means detection itself never ran); when `available` is true,
+   * `descriptor` is either the 128-number array or null if no face was
+   * detected in the frame.
+   *
+   * Returning `available` here (rather than making the caller re-read
+   * the hook's `status` after this promise resolves) avoids a stale-
+   * closure trap: an async caller that captured `status` before this
+   * call would still see the pre-await value even after the models
+   * finish loading during this call.
    */
   const detectDescriptor = useCallback(async (imageElement) => {
     const ready = await ensureModelsLoaded()
-    if (!ready) return null
+    if (!ready) return { available: false, descriptor: null }
 
     try {
       const detection = await faceapi
@@ -59,11 +68,9 @@ export function useFaceDetection() {
         .withFaceLandmarks()
         .withFaceDescriptor()
 
-      if (!detection) return null
-
-      return Array.from(detection.descriptor)
+      return { available: true, descriptor: detection ? Array.from(detection.descriptor) : null }
     } catch (err) {
-      return null
+      return { available: true, descriptor: null }
     }
   }, [ensureModelsLoaded])
 
