@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceException;
 use App\Models\AttendanceSetting;
 use App\Services\LocationVerificationService;
+use App\Services\FaceVerificationService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +50,7 @@ class AttendanceController extends Controller
                 'longitude' => 'required|numeric',
                 'photo' => 'required|image|max:2048',
                 'notes' => 'nullable|string|max:500',
+                'face_descriptor' => 'nullable|string',
             ]);
 
             $user = Auth::user();
@@ -119,6 +121,22 @@ class AttendanceController extends Controller
             $isLate = $now->gt($workStart->addMinutes($settings->late_tolerance_minutes));
             $status = $isLate ? 'late' : 'present';
 
+            $checkInDescriptor = null;
+            if ($request->filled('face_descriptor')) {
+                $decoded = json_decode($request->input('face_descriptor'), true);
+                if (is_array($decoded)) {
+                    $checkInDescriptor = $decoded;
+                }
+            }
+
+            $faceService = new FaceVerificationService();
+            $student = $user->student;
+            $faceResult = $faceService->verify($checkInDescriptor, $student?->face_descriptor, $user->id);
+
+            if ($faceResult['status'] === 'mismatch') {
+                $requiresManualReview = true;
+            }
+
             $attendance = Attendance::updateOrCreate(
                 [
                     'user_id' => $user->id,
@@ -135,6 +153,8 @@ class AttendanceController extends Controller
                     'location_spoofing_score' => $spoofingScore,
                     'location_verification_details' => $verificationResult,
                     'requires_manual_review' => $requiresManualReview,
+                    'face_verification_status' => $faceResult['status'],
+                    'face_match_distance' => $faceResult['distance'],
                 ]
             );
 
