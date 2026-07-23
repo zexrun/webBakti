@@ -7,8 +7,9 @@ use App\Models\Student;
 use App\Models\FinalAssessment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
 class FinalAssessmentController extends Controller
@@ -140,22 +141,72 @@ public function studentDownload()
 /**
  * Shared PDF-building logic for both generateCertificate() (supervisor)
  * and studentDownload() (student) - the certificate is always
- * regenerated from the view rather than read from storage, so both
- * callers need the same $data shape and filename convention.
+ * regenerated fresh rather than read from storage, so both callers
+ * need the same $data shape and filename convention. Rendering runs
+ * through a Node/React-PDF script rather than DomPDF, since DomPDF
+ * was found to truncate long Indonesian sentences mid-line
+ * regardless of container width - a bug React-PDF's Yoga-based
+ * layout engine does not exhibit.
  */
 private function streamCertificatePdf(Student $student, FinalAssessment $assessment, string $supervisorName, $generatedAt)
 {
-    $pdf = Pdf::loadView('supervisor.pdf.certificate-pdf', [
-        'student' => $student,
-        'assessment' => $assessment,
+    $certDate = $generatedAt ?? now();
+    $certNumber = str_pad(($student->id * 37 + $certDate->day) % 900 + 100, 3, '0', STR_PAD_LEFT);
+    $documentNumber = $certNumber . '/KOMDIG/BAKTI/SDA/' . $certDate->format('m/Y') . '/PKL.01.' . $certDate->format('d/m/Y');
+
+    $hasPeriode = isset($student->periode_mulai) && isset($student->periode_selesai);
+
+    $data = [
+        'documentNumber' => $documentNumber,
         'supervisorName' => $supervisorName,
-        'generatedAt' => $generatedAt,
-        'generatedDate' => $generatedAt->format('d F Y H:i:s'),
-    ]);
+        'signerName' => 'SUDARMANTO',
+        'signerNip' => '196907071959031002',
+        'signerPosition' => 'Kepala Divisi SDM dan Humas',
+        'studentName' => $student->user->name,
+        'studentNim' => $student->nim ?? '-',
+        'studentProgramStudi' => $student->program_studi ?? '-',
+        'studentUniversitas' => $student->universitas ?? '-',
+        'periodeMulaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->periode_mulai)) : null,
+        'periodeSelesaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->periode_selesai)) : null,
+        'hasPeriode' => $hasPeriode,
+        'signatureDateFormatted' => date('d F Y'),
+    ];
+
+    $tmpDir = storage_path('app/tmp');
+    if (!is_dir($tmpDir)) {
+        mkdir($tmpDir, 0755, true);
+    }
+
+    $id = (string) Str::uuid();
+    $inputPath = $tmpDir . '/cert-' . $id . '-input.json';
+    $outputPath = $tmpDir . '/cert-' . $id . '-output.pdf';
+
+    file_put_contents($inputPath, json_encode($data));
+
+    try {
+        $scriptPath = base_path('resources/pdf-renderers/render-certificate.cjs');
+        $result = Process::timeout(30)->run(['node', $scriptPath, $inputPath, $outputPath]);
+
+        if (!$result->successful()) {
+            throw new \RuntimeException('React-PDF certificate render failed: ' . $result->errorOutput());
+        }
+
+        $pdfContent = file_get_contents($outputPath);
+    } finally {
+        if (file_exists($inputPath)) {
+            unlink($inputPath);
+        }
+        if (file_exists($outputPath)) {
+            unlink($outputPath);
+        }
+    }
 
     $fileName = 'certificate_' . str_replace(' ', '_', strtolower($student->user->name)) . '.pdf';
 
-    return $pdf->stream($fileName);
+    return response($pdfContent, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+    ]);
 }
 
 
