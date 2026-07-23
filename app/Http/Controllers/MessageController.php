@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use App\Services\ChatAuthorizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -11,6 +12,10 @@ use Inertia\Response;
 
 class MessageController extends Controller
 {
+    public function __construct(private ChatAuthorizationService $chatAuth)
+    {
+    }
+
     public function inbox(): Response
     {
         $messages = Message::where('recipient_id', Auth::id())
@@ -60,9 +65,7 @@ class MessageController extends Controller
 
     public function create(): Response
     {
-        $recipients = User::whereIn('role', ['supervisor', 'student', 'admin'])
-            ->where('id', '!=', Auth::id())
-            ->get();
+        $recipients = $this->chatAuth->allowedRecipients(Auth::user());
 
         return Inertia::render('Messages/Create', compact('recipients'));
     }
@@ -76,6 +79,14 @@ class MessageController extends Controller
         ], [
             'recipient_id.different' => 'Tidak bisa mengirim pesan ke diri sendiri',
         ]);
+
+        $recipient = User::findOrFail($request->recipient_id);
+
+        if (!$this->chatAuth->canMessage(Auth::user(), $recipient)) {
+            return back()->withErrors([
+                'recipient_id' => 'Anda tidak dapat mengirim pesan ke pengguna ini.',
+            ])->withInput();
+        }
 
         Message::create([
             'sender_id' => Auth::id(),
@@ -100,6 +111,12 @@ class MessageController extends Controller
 
         $senderId = Auth::id();
         $recipientId = $senderId === $message->sender_id ? $message->recipient_id : $message->sender_id;
+
+        $recipient = User::findOrFail($recipientId);
+
+        if (!$this->chatAuth->canMessage(Auth::user(), $recipient)) {
+            return back()->with('error', 'Percakapan ini tidak lagi tersedia karena hubungan Anda dengan pengguna ini telah berubah.');
+        }
 
         Message::create([
             'sender_id' => $senderId,
