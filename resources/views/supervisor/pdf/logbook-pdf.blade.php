@@ -20,7 +20,6 @@
 
         .report-container {
             width: 210mm;
-            min-height: 297mm;
             margin: 0 auto;
             background: white;
             padding: 15mm 20mm;

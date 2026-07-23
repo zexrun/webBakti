@@ -20,7 +20,6 @@
 
         .report-container {
             width: 210mm;
-            min-height: 297mm;
             margin: 0 auto;
             background: white;
             padding: 15mm 20mm;
@@ -89,7 +88,8 @@
         }
 
         .recap-table {
-            width: 100%;
+            width: 170mm;
+            table-layout: fixed;
             border-collapse: collapse;
             border: 1.5px solid #000;
         }
@@ -100,6 +100,7 @@
             font-size: 9.5pt;
             font-weight: bold;
             text-align: center;
+            word-wrap: break-word;
         }
 
         .recap-table td {
@@ -107,6 +108,7 @@
             padding: 5px 4px;
             font-size: 9.5pt;
             vertical-align: top;
+            word-wrap: break-word;
         }
 
         .col-date { width: 14%; text-align: center; }
