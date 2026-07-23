@@ -5,6 +5,7 @@ import { LogOut, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import ThemeToggle from '@/Components/ThemeToggle'
 import NotificationBell from '@/Components/NotificationBell'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const roleLabels = {
   admin: 'Administrator',
@@ -55,8 +56,13 @@ export default function AppShell({ nav, homeRoute, children }) {
     return window.route().current(pattern)
   }
 
-  function handleLogout() {
-    router.post(r('logout'))
+  const confirm = useConfirm()
+
+  async function handleLogout() {
+    const confirmed = await confirm({ title: 'Keluar dari akun?', variant: 'destructive' })
+    if (confirmed) {
+      router.post(r('logout'))
+    }
   }
 
   const initial = auth?.user?.name?.charAt(0)?.toUpperCase() ?? '?'
