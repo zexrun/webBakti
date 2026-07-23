@@ -213,7 +213,6 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
 
     Route::get('/info', [StudentProfileController::class, 'edit'])->name('info.edit');
     Route::patch('/info', [StudentProfileController::class, 'update'])->name('info.update');
-    Route::post('/info/profile-photo', [StudentProfileController::class, 'updateProfilePhoto'])->name('info.profile-photo.update');
 
     Route::get('/certificate/download', [FinalAssessmentController::class, 'studentDownload'])->name('pdf.certificate.download');
 
@@ -232,6 +231,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/photo', [ProfileController::class, 'updateProfilePhoto'])->name('profile.photo.update');
 });
 
 Route::middleware('auth')->group(function () {
