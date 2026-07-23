@@ -6,6 +6,7 @@ import { Button } from '@/Components/ui/button'
 import { cn } from '@/lib/utils'
 import AttendancePhotoThumb from '@/Components/AttendancePhotoThumb'
 import PhotoLightbox from '@/Components/PhotoLightbox'
+import { toast } from '@/lib/toast'
 
 function DecisionOption({ value, current, onSelect, icon: Icon, label, toneClass }) {
   const selected = current === value
@@ -57,7 +58,7 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
   function handleSubmit(e) {
     e.preventDefault()
     if (!decision) {
-      alert('Pilih keputusan terlebih dahulu')
+      toast.error('Pilih keputusan terlebih dahulu')
       return
     }
     setData('action', decision)

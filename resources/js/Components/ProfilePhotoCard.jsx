@@ -8,6 +8,7 @@ import { useCamera } from '@/hooks/useCamera'
 import { useFaceDetection } from '@/hooks/useFaceDetection'
 import { getCroppedImg } from '@/lib/cropImage'
 import { cn } from '@/lib/utils'
+import { toast } from '@/lib/toast'
 
 /**
  * Profile photo card for any role. Supports two capture modes, both
@@ -92,7 +93,7 @@ export default function ProfilePhotoCard({ profilePhotoUrl }) {
       blob = await getCroppedImg(cropSource, croppedAreaPixels)
     } catch (err) {
       setStatusMessage('')
-      alert(err.message)
+      toast.error(err.message)
       return
     }
 
@@ -105,13 +106,13 @@ export default function ProfilePhotoCard({ profilePhotoUrl }) {
 
       if (!available) {
         setStatusMessage('')
-        alert('Deteksi wajah tidak tersedia di perangkat ini. Silakan coba lagi atau gunakan perangkat/browser lain.')
+        toast.error('Deteksi wajah tidak tersedia di perangkat ini. Silakan coba lagi atau gunakan perangkat/browser lain.')
         return
       }
 
       if (!descriptor) {
         setStatusMessage('')
-        alert('Wajah tidak terdeteksi pada foto. Pastikan wajah Anda terlihat jelas dan coba lagi.')
+        toast.error('Wajah tidak terdeteksi pada foto. Pastikan wajah Anda terlihat jelas dan coba lagi.')
         return
       }
 
