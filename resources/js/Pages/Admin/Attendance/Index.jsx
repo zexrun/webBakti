@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
-import { CheckCircle2, Clock, XCircle, Users, ClipboardCheck, BarChart3, Settings as SettingsIcon } from 'lucide-react'
+import { CheckCircle2, Clock, XCircle, Users, ClipboardCheck, BarChart3, Settings as SettingsIcon, AlertTriangle } from 'lucide-react'
 import AdminLayout from '@/Layouts/AdminLayout'
 import PageHeader from '@/Components/PageHeader'
 import StatCard from '@/Components/StatCard'
@@ -87,11 +87,12 @@ export default function Index({ attendances, stats, date, status }) {
           }
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard icon={Users} label="Total Hadir" value={stats.total} tone="green" />
           <StatCard icon={CheckCircle2} label="Tepat Waktu" value={stats.present} tone="blue" />
           <StatCard icon={Clock} label="Terlambat" value={stats.late} tone="orange" />
           <StatCard icon={XCircle} label="Tidak Hadir" value={stats.absent} tone="red" />
+          <StatCard icon={AlertTriangle} label="Mencurigakan" value={stats.suspicious} tone="amber" />
         </div>
 
         <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">
@@ -155,9 +156,14 @@ export default function Index({ attendances, stats, date, status }) {
                         {attendance.working_hours ? `${Number(attendance.working_hours).toFixed(1)} jam` : '-'}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={statusVariant[attendance.status] ?? 'secondary'}>
-                          {statusLabel[attendance.status] ?? attendance.status}
-                        </Badge>
+                        <div className="flex flex-wrap items-center gap-1">
+                          <Badge variant={statusVariant[attendance.status] ?? 'secondary'}>
+                            {statusLabel[attendance.status] ?? attendance.status}
+                          </Badge>
+                          {attendance.requires_manual_review && (
+                            <Badge variant="warning">Mencurigakan</Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="hidden sm:table-cell">
                         <Badge variant={approvalVariant[attendance.supervisor_approval] ?? 'warning'}>
