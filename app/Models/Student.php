@@ -32,6 +32,15 @@ class Student extends Model
         'profile_photo_url',
     ];
 
+    // face_descriptor is a 128-float array read only by the backend
+    // (AttendanceController::checkIn(), FaceVerificationService) - no
+    // frontend page reads it, so it's excluded from serialization to
+    // avoid bloating every Student payload (list/search/plotting pages
+    // that never asked for it) with data they never render.
+    protected $hidden = [
+        'face_descriptor',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
