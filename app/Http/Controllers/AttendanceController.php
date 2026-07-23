@@ -130,8 +130,7 @@ class AttendanceController extends Controller
             }
 
             $faceService = new FaceVerificationService();
-            $student = $user->student;
-            $faceResult = $faceService->verify($checkInDescriptor, $student?->face_descriptor, $user->id);
+            $faceResult = $faceService->verify($checkInDescriptor, $user->face_descriptor, $user->id);
 
             if ($faceResult['status'] === 'mismatch') {
                 $requiresManualReview = true;
