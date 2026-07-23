@@ -44,10 +44,10 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Users} label="Total Mahasiswa" value={stats.totalStudents} tone="blue" />
-          <StatCard icon={ClipboardList} label="Total Tugas" value={stats.totalTasks} tone="green" />
-          <StatCard icon={Clock} label="Menunggu Penilaian Akhir" value={stats.pendingAssessments} tone="orange" />
-          <StatCard icon={GraduationCap} label="Magang Selesai" value={stats.completedInternships} tone="purple" />
+          <StatCard icon={Users} label="Total Mahasiswa" value={stats.totalStudents} tone="blue" index={0} />
+          <StatCard icon={ClipboardList} label="Total Tugas" value={stats.totalTasks} tone="green" index={1} />
+          <StatCard icon={Clock} label="Menunggu Penilaian Akhir" value={stats.pendingAssessments} tone="orange" index={2} />
+          <StatCard icon={GraduationCap} label="Magang Selesai" value={stats.completedInternships} tone="purple" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

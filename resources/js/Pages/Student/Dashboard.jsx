@@ -51,10 +51,10 @@ export default function Dashboard({
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={ClipboardList} label="Total Tugas" value={taskStats?.total ?? 0} tone="blue" />
-          <StatCard icon={CheckCircle2} label="Tugas Selesai" value={taskStats?.completed ?? 0} tone="green" />
-          <StatCard icon={Clock} label="Tugas Pending" value={taskStats?.pending ?? 0} tone="amber" />
-          <StatCard icon={GraduationCap} label="Sudah Dinilai" value={taskStats?.graded ?? 0} tone="purple" />
+          <StatCard icon={ClipboardList} label="Total Tugas" value={taskStats?.total ?? 0} tone="blue" index={0} />
+          <StatCard icon={CheckCircle2} label="Tugas Selesai" value={taskStats?.completed ?? 0} tone="green" index={1} />
+          <StatCard icon={Clock} label="Tugas Pending" value={taskStats?.pending ?? 0} tone="amber" index={2} />
+          <StatCard icon={GraduationCap} label="Sudah Dinilai" value={taskStats?.graded ?? 0} tone="purple" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

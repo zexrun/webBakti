@@ -66,10 +66,10 @@ export default function Dashboard({
         <PageHeader title="Analitik & Performa" description="Analisis performa mahasiswa dan tugas secara menyeluruh" />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Users} label="Total Mahasiswa" value={totalStudents} tone="blue" />
-          <StatCard icon={ClipboardList} label="Total Tugas" value={totalTasks} tone="purple" />
-          <StatCard icon={FileText} label="Total Submission" value={totalSubmissions} tone="green" />
-          <StatCard icon={CheckCircle2} label="Sudah Dinilai" value={gradedSubmissions} hint={`${completePercent}% selesai`} tone="orange" />
+          <StatCard icon={Users} label="Total Mahasiswa" value={totalStudents} tone="blue" index={0} />
+          <StatCard icon={ClipboardList} label="Total Tugas" value={totalTasks} tone="purple" index={1} />
+          <StatCard icon={FileText} label="Total Submission" value={totalSubmissions} tone="green" index={2} />
+          <StatCard icon={CheckCircle2} label="Sudah Dinilai" value={gradedSubmissions} hint={`${completePercent}% selesai`} tone="orange" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

@@ -86,17 +86,17 @@ export default function Dashboard({
         )}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Users} label="Total Users" value={userCount} tone="blue" />
-          <StatCard icon={GraduationCap} label="Mahasiswa" value={studentCount} tone="green" />
-          <StatCard icon={UserCog} label="Pembimbing" value={supervisorCount} tone="purple" />
-          <StatCard icon={Building2} label="Direktorat" value={directorateCount} tone="orange" />
+          <StatCard icon={Users} label="Total Users" value={userCount} tone="blue" index={0} />
+          <StatCard icon={GraduationCap} label="Mahasiswa" value={studentCount} tone="green" index={1} />
+          <StatCard icon={UserCog} label="Pembimbing" value={supervisorCount} tone="purple" index={2} />
+          <StatCard icon={Building2} label="Direktorat" value={directorateCount} tone="orange" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={ClipboardList} label="Total Tugas" value={taskCount} tone="indigo" />
-          <StatCard icon={CheckCircle2} label="Submission Dinilai" value={submissionsWithGrades} tone="emerald" />
-          <StatCard icon={CalendarCheck} label="Total Presensi" value={totalAttendance} tone="cyan" />
-          <StatCard icon={UserCog} label="Admin" value={adminCount} tone="neutral" />
+          <StatCard icon={ClipboardList} label="Total Tugas" value={taskCount} tone="indigo" index={0} />
+          <StatCard icon={CheckCircle2} label="Submission Dinilai" value={submissionsWithGrades} tone="emerald" index={1} />
+          <StatCard icon={CalendarCheck} label="Total Presensi" value={totalAttendance} tone="cyan" index={2} />
+          <StatCard icon={UserCog} label="Admin" value={adminCount} tone="neutral" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
