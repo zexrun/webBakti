@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class FinalAssessmentController extends Controller
@@ -160,25 +158,6 @@ public function studentDownload()
 }
 
 
-
-
-/*     public function downloadCertificate()
-    {
-        $student = Auth::user()->student;
-        $assessment = FinalAssessment::where('student_id', $student->id)->first();
-
-        if (!$assessment || !$assessment->certificate_generated_at) {
-            return abort(403, 'Sertifikat belum tersedia. Silakan hubungi pembimbing Anda.');
-        }
-
-        $fileName = 'certificates/certificate_' . str_replace(' ', '_', strtolower($student->user->name)) . '.pdf';
-
-        if (!Storage::exists($fileName)) {
-            return abort(404, 'Sertifikat tidak ditemukan.');
-        }
-
-        return Storage::download($fileName);
-    } */
 
 
     public function store(Request $request, Student $student)

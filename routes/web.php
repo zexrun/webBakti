@@ -185,7 +185,6 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     });
 
     Route::get('certificate/{student}/generate', [FinalAssessmentController::class, 'generateCertificate'])->name('pdf.certificate.generate');
-    Route::get('certificate/{student}/download', [FinalAssessmentController::class, 'downloadCertificate'])->name('pdf.certificate.download');
 
     Route::prefix('attendance')->name('attendance.')->group(function () {
         Route::get('/', [SupervisorAttendanceController::class, 'index'])->name('index');
