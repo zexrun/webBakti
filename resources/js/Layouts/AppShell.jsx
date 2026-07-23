@@ -59,6 +59,7 @@ export default function AppShell({ nav, homeRoute, children }) {
   }
 
   const initial = auth?.user?.name?.charAt(0)?.toUpperCase() ?? '?'
+  const profilePhotoUrl = auth?.user?.profile_photo_url
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,9 +98,13 @@ export default function AppShell({ nav, homeRoute, children }) {
           <div className="flex items-center gap-3 rounded-md p-2">
             <Link
               href={r('profile.show')}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground"
+              className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground"
             >
-              {initial}
+              {profilePhotoUrl ? (
+                <img src={profilePhotoUrl} alt={auth?.user?.name} className="h-full w-full object-cover" />
+              ) : (
+                initial
+              )}
             </Link>
             <Link href={r('profile.show')} className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-sidebar-foreground">{auth?.user?.name}</p>
@@ -146,9 +151,13 @@ export default function AppShell({ nav, homeRoute, children }) {
           </span>
           <Link
             href={r('profile.show')}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-sm font-medium text-secondary-foreground"
+            className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm font-medium text-secondary-foreground"
           >
-            {initial}
+            {profilePhotoUrl ? (
+              <img src={profilePhotoUrl} alt={auth?.user?.name} className="h-full w-full object-cover" />
+            ) : (
+              initial
+            )}
           </Link>
         </header>
 
