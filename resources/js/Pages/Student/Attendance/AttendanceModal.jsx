@@ -5,6 +5,7 @@ import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { useCamera } from '@/hooks/useCamera'
 import { useGeolocation } from '@/hooks/useGeolocation'
+import { useFaceDetection } from '@/hooks/useFaceDetection'
 import { cn } from '@/lib/utils'
 
 // Built-in Tailwind palette here (safe with opacity, unlike custom vars).
@@ -15,17 +16,21 @@ const locationStyles = {
   idle: 'border-border bg-muted text-muted-foreground',
 }
 
-export default function AttendanceModal({ open, onClose, title, subtitle, destructive, notesPlaceholder, onSubmit, submitting }) {
+export default function AttendanceModal({ open, onClose, title, subtitle, destructive, notesPlaceholder, onSubmit, submitting, requireFaceCheck = false }) {
   const camera = useCamera()
   const geo = useGeolocation()
+  const face = useFaceDetection()
   const [notes, setNotes] = useState('')
+  const [faceCheckMessage, setFaceCheckMessage] = useState('')
 
   useEffect(() => {
     if (open) {
       geo.request()
+      if (requireFaceCheck) face.ensureModelsLoaded()
     } else {
       camera.reset()
       setNotes('')
+      setFaceCheckMessage('')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
@@ -44,8 +49,29 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
       return
     }
 
+    let faceDescriptor = null
+
+    if (requireFaceCheck) {
+      setFaceCheckMessage('Memeriksa wajah...')
+      const descriptor = await face.detectDescriptor(camera.canvasRef.current)
+      setFaceCheckMessage('')
+
+      if (face.status === 'ready' && !descriptor) {
+        alert('Wajah tidak terdeteksi pada foto. Silakan pastikan wajah Anda terlihat jelas dan coba lagi.')
+        return
+      }
+
+      faceDescriptor = descriptor
+    }
+
     camera.canvasRef.current.toBlob(
-      (blob) => onSubmit({ latitude: geo.position.latitude, longitude: geo.position.longitude, photo: blob, notes }),
+      (blob) => onSubmit({
+        latitude: geo.position.latitude,
+        longitude: geo.position.longitude,
+        photo: blob,
+        notes,
+        faceDescriptor,
+      }),
       'image/jpeg',
       0.8,
     )
@@ -115,6 +141,8 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
                 <Label htmlFor="notes">Catatan {notesPlaceholder.optional && '(Opsional)'}</Label>
                 <Textarea id="notes" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={notesPlaceholder.text} />
               </div>
+
+              {faceCheckMessage && <p className="text-sm text-muted-foreground">{faceCheckMessage}</p>}
 
               <Button
                 type="submit"

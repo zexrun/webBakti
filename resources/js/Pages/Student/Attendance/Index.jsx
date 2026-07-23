@@ -75,13 +75,16 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
     return () => clearInterval(timer)
   }, [])
 
-  async function submitAttendance(endpoint, { latitude, longitude, photo, notes }) {
+  async function submitAttendance(endpoint, { latitude, longitude, photo, notes, faceDescriptor }) {
     setSubmitting(true)
     const formData = new FormData()
     formData.append('latitude', latitude)
     formData.append('longitude', longitude)
     formData.append('photo', photo, 'photo.jpg')
     formData.append('notes', notes)
+    if (faceDescriptor) {
+      formData.append('face_descriptor', JSON.stringify(faceDescriptor))
+    }
 
     try {
       const response = await fetch(endpoint, {
@@ -266,6 +269,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         notesPlaceholder={{ optional: true, text: 'Tulis aktivitas atau catatan hari ini...' }}
         submitting={submitting}
         onSubmit={(payload) => submitAttendance(r('student.attendance.check-in'), payload)}
+        requireFaceCheck
       />
 
       <AttendanceModal
