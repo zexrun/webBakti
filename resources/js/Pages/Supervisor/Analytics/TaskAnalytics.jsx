@@ -86,10 +86,10 @@ export default function TaskAnalytics({
         </Card>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Users} label="Total Assigned" value={submissionStats.total_assigned} tone="blue" />
-          <StatCard icon={FileCheck} label="Submitted" value={submissionStats.submitted} tone="green" />
-          <StatCard icon={UserX} label="Not Submitted" value={submissionStats.not_submitted} tone="red" />
-          <StatCard icon={TrendingUp} label="Submission Rate" value={`${submissionStats.submission_rate}%`} tone="orange" />
+          <StatCard icon={Users} label="Total Assigned" value={submissionStats.total_assigned} tone="blue" index={0} />
+          <StatCard icon={FileCheck} label="Submitted" value={submissionStats.submitted} tone="green" index={1} />
+          <StatCard icon={UserX} label="Not Submitted" value={submissionStats.not_submitted} tone="red" index={2} />
+          <StatCard icon={TrendingUp} label="Submission Rate" value={`${submissionStats.submission_rate}%`} tone="orange" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

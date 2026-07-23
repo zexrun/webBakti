@@ -66,10 +66,10 @@ export default function StudentReport({
         </Card>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={ClipboardList} label="Tugas Diberikan" value={taskStats.assigned} tone="blue" />
-          <StatCard icon={FileCheck} label="Dikumpulkan" value={taskStats.submitted} tone="green" />
-          <StatCard icon={Award} label="Dinilai" value={taskStats.graded} tone="purple" />
-          <StatCard icon={TrendingUp} label="Completion Rate" value={`${taskStats.completion_rate}%`} tone="orange" />
+          <StatCard icon={ClipboardList} label="Tugas Diberikan" value={taskStats.assigned} tone="blue" index={0} />
+          <StatCard icon={FileCheck} label="Dikumpulkan" value={taskStats.submitted} tone="green" index={1} />
+          <StatCard icon={Award} label="Dinilai" value={taskStats.graded} tone="purple" index={2} />
+          <StatCard icon={TrendingUp} label="Completion Rate" value={`${taskStats.completion_rate}%`} tone="orange" index={3} />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
