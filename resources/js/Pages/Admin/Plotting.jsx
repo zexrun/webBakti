@@ -74,9 +74,9 @@ export default function Plotting({ students, supervisors }) {
         {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard icon={Users} label="Total Mahasiswa" value={students.length} tone="blue" />
-          <StatCard icon={CheckCircle2} label="Sudah Ditugaskan" value={assignedCount} tone="green" />
-          <StatCard icon={Clock} label="Belum Ditugaskan" value={unassignedCount} tone="orange" />
+          <StatCard icon={Users} label="Total Mahasiswa" value={students.length} tone="blue" index={0} />
+          <StatCard icon={CheckCircle2} label="Sudah Ditugaskan" value={assignedCount} tone="green" index={1} />
+          <StatCard icon={Clock} label="Belum Ditugaskan" value={unassignedCount} tone="orange" index={2} />
         </div>
 
         <Card>

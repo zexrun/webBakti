@@ -98,8 +98,8 @@ export default function Index({ students }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <StatCard icon={Users} label="Total Mahasiswa" value={students.total} tone="blue" />
-          <StatCard icon={FileCheck} label="Dokumen Lengkap" value={completedDocs} tone="green" />
+          <StatCard icon={Users} label="Total Mahasiswa" value={students.total} tone="blue" index={0} />
+          <StatCard icon={FileCheck} label="Dokumen Lengkap" value={completedDocs} tone="green" index={1} />
         </div>
 
         <div className="space-y-4">

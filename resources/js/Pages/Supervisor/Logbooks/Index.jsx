@@ -26,10 +26,10 @@ export default function Index({ logbooks }) {
         <PageHeader title="Logbook Mahasiswa" description="Pantau aktivitas harian mahasiswa bimbingan" />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={NotebookPen} label="Total Logbook" value={logbooks.total} tone="blue" />
-          <StatCard icon={CheckCircle2} label="Telah Dilihat" value={verifiedCount} hint="halaman ini" tone="green" />
-          <StatCard icon={Clock} label="Belum Dilihat" value={unverifiedCount} hint="halaman ini" tone="amber" />
-          <StatCard icon={CalendarDays} label="Hari Ini" value={todayCount} hint="halaman ini" tone="purple" />
+          <StatCard icon={NotebookPen} label="Total Logbook" value={logbooks.total} tone="blue" index={0} />
+          <StatCard icon={CheckCircle2} label="Telah Dilihat" value={verifiedCount} hint="halaman ini" tone="green" index={1} />
+          <StatCard icon={Clock} label="Belum Dilihat" value={unverifiedCount} hint="halaman ini" tone="amber" index={2} />
+          <StatCard icon={CalendarDays} label="Hari Ini" value={todayCount} hint="halaman ini" tone="purple" index={3} />
         </div>
 
         <Card>

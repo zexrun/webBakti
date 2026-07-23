@@ -43,9 +43,9 @@ export default function Index({ submissions, tasks, students, totalSubmissions, 
         {flash?.success && <FlashBanner type="success">{flash.success}</FlashBanner>}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard icon={FileText} label="Total Submission" value={totalSubmissions} tone="blue" />
-          <StatCard icon={CheckCircle2} label="Sudah Dinilai" value={gradedCount} tone="green" />
-          <StatCard icon={Clock} label="Menunggu Nilai" value={pendingCount} tone="amber" />
+          <StatCard icon={FileText} label="Total Submission" value={totalSubmissions} tone="blue" index={0} />
+          <StatCard icon={CheckCircle2} label="Sudah Dinilai" value={gradedCount} tone="green" index={1} />
+          <StatCard icon={Clock} label="Menunggu Nilai" value={pendingCount} tone="amber" index={2} />
         </div>
 
         <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">

@@ -46,10 +46,10 @@ export default function Index({ supervisors, directorates, positions, search, di
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={UserCog} label="Supervisor" value={stats.total_supervisors} tone="blue" />
-          <StatCard icon={GraduationCap} label="Mahasiswa" value={stats.total_students} tone="green" />
-          <StatCard icon={Users} label="Rata-rata/Supervisor" value={stats.avg_students_per_supervisor} tone="orange" />
-          <StatCard icon={ClipboardList} label="Submission Pending" value={stats.active_submissions} tone="purple" />
+          <StatCard icon={UserCog} label="Supervisor" value={stats.total_supervisors} tone="blue" index={0} />
+          <StatCard icon={GraduationCap} label="Mahasiswa" value={stats.total_students} tone="green" index={1} />
+          <StatCard icon={Users} label="Rata-rata/Supervisor" value={stats.avg_students_per_supervisor} tone="orange" index={2} />
+          <StatCard icon={ClipboardList} label="Submission Pending" value={stats.active_submissions} tone="purple" index={3} />
         </div>
 
         <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">

@@ -50,9 +50,9 @@ export default function Index({ students }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard icon={Users} label="Total Mahasiswa" value={students.total} tone="blue" />
-          <StatCard icon={ClipboardList} label="Total Tugas (halaman ini)" value={totalTasks} tone="green" />
-          <StatCard icon={Clock} label="Tugas Aktif (halaman ini)" value={activeTasks} tone="amber" />
+          <StatCard icon={Users} label="Total Mahasiswa" value={students.total} tone="blue" index={0} />
+          <StatCard icon={ClipboardList} label="Total Tugas (halaman ini)" value={totalTasks} tone="green" index={1} />
+          <StatCard icon={Clock} label="Tugas Aktif (halaman ini)" value={activeTasks} tone="amber" index={2} />
         </div>
 
         <div className="space-y-6">
