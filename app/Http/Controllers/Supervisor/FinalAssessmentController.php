@@ -110,19 +110,9 @@ public function generateCertificate(Student $student)
     }
 
     // Generate PDF dan kirim ke browser (langsung tanpa simpan ke storage)
-    $generatedDate = now()->format('d F Y H:i:s');;
     $supervisorName = $supervisor->name ?? 'Pembimbing';
 
-    $pdf = Pdf::loadView('supervisor.pdf.certificate-pdf', [
-        'student' => $student,
-        'assessment' => $assessment,
-        'supervisorName' => $supervisorName,
-        'generatedDate' => $generatedDate
-    ]);
-
-    $fileName = 'certificate_' . str_replace(' ', '_', strtolower($student->user->name)) . '.pdf';
-
-    return $pdf->stream($fileName);
+    return $this->streamCertificatePdf($student, $assessment, $supervisorName, now());
 }
 
 public function studentDownload()
@@ -142,14 +132,24 @@ public function studentDownload()
     }
 
     // Generate ulang PDF untuk dikirim ke browser (bukan dari storage)
-    $generatedDate = $assessment->certificate_generated_at->format('d F Y H:i:s');
     $supervisorName = $student->supervisor->user->name ?? 'Pembimbing';
 
+    return $this->streamCertificatePdf($student, $assessment, $supervisorName, $assessment->certificate_generated_at);
+}
+
+/**
+ * Shared PDF-building logic for both generateCertificate() (supervisor)
+ * and studentDownload() (student) - the certificate is always
+ * regenerated from the view rather than read from storage, so both
+ * callers need the same $data shape and filename convention.
+ */
+private function streamCertificatePdf(Student $student, FinalAssessment $assessment, string $supervisorName, $generatedAt)
+{
     $pdf = Pdf::loadView('supervisor.pdf.certificate-pdf', [
         'student' => $student,
         'assessment' => $assessment,
         'supervisorName' => $supervisorName,
-        'generatedDate' => $generatedDate
+        'generatedDate' => $generatedAt->format('d F Y H:i:s'),
     ]);
 
     $fileName = 'certificate_' . str_replace(' ', '_', strtolower($student->user->name)) . '.pdf';
