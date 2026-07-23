@@ -1,20 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Link, router } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import { LogIn, LogOut, FileText, History, CheckCircle2, Circle, AlertTriangle, Clock } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
 import PageHeader from '@/Components/PageHeader'
 import StatCard from '@/Components/StatCard'
 import EmptyState from '@/Components/EmptyState'
+import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import AttendanceModal from './AttendanceModal'
 import ExceptionModal from './ExceptionModal'
-
-function getCsrfToken() {
-  return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
-}
 
 const statusVariant = {
   present: 'success',
@@ -70,6 +67,9 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
 
   const r = (name) => (window.route ? window.route(name) : '#')
 
+  const { auth } = usePage().props
+  const hasProfilePhoto = Boolean(auth?.user?.profile_photo_url)
+
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(timer)
@@ -87,12 +87,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
     }
 
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-CSRF-TOKEN': getCsrfToken() },
-      })
-      const data = await response.json()
+      const { data } = await window.axios.post(endpoint, formData)
 
       if (data.success) {
         setCheckInOpen(false)
@@ -102,7 +97,11 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         alert('Error: ' + data.message)
       }
     } catch (err) {
-      alert('Terjadi kesalahan saat memproses absensi.')
+      // Non-2xx responses (e.g. 403 suspicious location, 500 server error)
+      // land here with axios, unlike the previous fetch()-based version -
+      // surface the server's own message when it sent one, so this stays
+      // as informative as before rather than regressing to a generic alert.
+      alert('Error: ' + (err.response?.data?.message ?? 'Terjadi kesalahan saat memproses absensi.'))
     } finally {
       setSubmitting(false)
     }
@@ -125,6 +124,13 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
           }
         />
 
+        {!hasProfilePhoto && (
+          <FlashBanner type="warning">
+            Anda belum mengupload foto profil. Foto profil diperlukan untuk verifikasi wajah saat presensi.{' '}
+            <Link href={r('profile.edit')} className="underline">Upload foto profil sekarang</Link>.
+          </FlashBanner>
+        )}
+
         <Card>
           <CardContent className="p-6">
             <h3 className="mb-4 text-base font-semibold text-foreground">Status Hari Ini</h3>
@@ -140,9 +146,13 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
                     isLate={todayAttendance.is_late}
                     subtitle={todayAttendance.check_in && new Date(todayAttendance.check_in).toLocaleDateString('id-ID')}
                     cta={
-                      <Button onClick={() => setCheckInOpen(true)} className="w-full">
-                        <LogIn /> Check In Sekarang
-                      </Button>
+                      hasProfilePhoto ? (
+                        <Button onClick={() => setCheckInOpen(true)} className="w-full">
+                          <LogIn /> Check In Sekarang
+                        </Button>
+                      ) : (
+                        <p className="text-center text-sm text-muted-foreground">Upload foto profil untuk dapat check-in</p>
+                      )
                     }
                   />
 
@@ -153,7 +163,9 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
                     done={Boolean(todayAttendance.check_out)}
                     subtitle={todayAttendance.check_out && `Durasi: ${todayAttendance.working_hours ? Number(todayAttendance.working_hours).toFixed(1) : '0'} jam`}
                     cta={
-                      todayAttendance.check_in ? (
+                      !hasProfilePhoto ? (
+                        <p className="text-center text-sm text-muted-foreground">Upload foto profil untuk dapat check-out</p>
+                      ) : todayAttendance.check_in ? (
                         <Button onClick={() => setCheckOutOpen(true)} variant="destructive" className="w-full">
                           <LogOut /> Check Out Sekarang
                         </Button>
@@ -177,9 +189,15 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
                 title="Belum Absen Hari Ini"
                 description="Silakan lakukan check-in untuk memulai absensi."
                 action={
-                  <Button onClick={() => setCheckInOpen(true)}>
-                    <LogIn /> Check In Sekarang
-                  </Button>
+                  hasProfilePhoto ? (
+                    <Button onClick={() => setCheckInOpen(true)}>
+                      <LogIn /> Check In Sekarang
+                    </Button>
+                  ) : (
+                    <Button asChild variant="outline">
+                      <Link href={r('profile.edit')}>Upload Foto Profil</Link>
+                    </Button>
+                  )
                 }
               />
             )}
@@ -281,6 +299,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         notesPlaceholder={{ optional: false, text: 'Ringkasan kegiatan yang telah dikerjakan hari ini...' }}
         submitting={submitting}
         onSubmit={(payload) => submitAttendance(r('student.attendance.check-out'), payload)}
+        requireFaceCheck
       />
 
       <ExceptionModal open={exceptionOpen} onClose={() => setExceptionOpen(false)} />
