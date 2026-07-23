@@ -50,6 +50,7 @@ class AttendanceController extends Controller
             'present' => $baseStatsQuery()->where('status', 'present')->count(),
             'late' => $baseStatsQuery()->where('status', 'late')->count(),
             'absent' => $baseStatsQuery()->where('status', 'absent')->count(),
+            'suspicious' => $baseStatsQuery()->where('requires_manual_review', true)->count(),
         ];
 
         return Inertia::render('Supervisor/Attendance/Index', compact('attendances', 'stats', 'date', 'status'));
