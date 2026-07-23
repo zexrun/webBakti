@@ -12,10 +12,10 @@ let modelsLoadingPromise = null
  * then exposes a function to compute a 128-number face descriptor from
  * an image/canvas/video element.
  *
- * Never throws on failure - callers get `available: false` instead, so
- * a browser that can't run face-api.js (unsupported, blocked, offline)
- * degrades to skipping face verification rather than blocking the
- * student from checking in at all.
+ * Never throws on failure - callers get `status === 'unavailable'`
+ * instead, so a browser that can't run face-api.js (unsupported,
+ * blocked, offline) degrades to skipping face verification rather
+ * than blocking the student from checking in at all.
  */
 export function useFaceDetection() {
   const [status, setStatus] = useState('idle') // idle | loading | ready | unavailable
