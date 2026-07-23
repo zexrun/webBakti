@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const typeConfig = {
   proposal: { label: 'Proposal', variant: 'default' },
@@ -31,6 +32,7 @@ export default function Index({ documents }) {
   })
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
   function handleFileChange(e) {
     const file = e.target.files[0]
@@ -50,8 +52,12 @@ export default function Index({ documents }) {
     })
   }
 
-  function handleDelete(document) {
-    if (confirm(`Yakin ingin menghapus dokumen ${document.document_name}?`)) {
+  async function handleDelete(document) {
+    const confirmed = await confirm({
+      title: `Hapus dokumen ${document.document_name}?`,
+      variant: 'destructive',
+    })
+    if (confirmed) {
       router.delete(r('student.documents.destroy', document.id))
     }
   }

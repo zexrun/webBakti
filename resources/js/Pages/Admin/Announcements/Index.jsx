@@ -8,6 +8,7 @@ import Pagination from '@/Components/Pagination'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const priorityVariant = {
   urgent: 'destructive',
@@ -26,13 +27,15 @@ const priorityLabel = {
 export default function Index({ announcements }) {
   const { flash } = usePage().props
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
   function handlePublish(announcement) {
     router.post(r('admin.announcements.publish', announcement.id))
   }
 
-  function handleDelete(announcement) {
-    if (confirm('Hapus pengumuman ini?')) {
+  async function handleDelete(announcement) {
+    const confirmed = await confirm({ title: 'Hapus pengumuman ini?', variant: 'destructive' })
+    if (confirmed) {
       router.delete(r('admin.announcements.destroy', announcement.id))
     }
   }

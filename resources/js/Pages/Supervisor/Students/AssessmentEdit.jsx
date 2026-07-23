@@ -9,6 +9,7 @@ import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
 import { cn } from '@/lib/utils'
 import { GradeSelector, InfoRow, GradingGuide, gradeBadgeClass } from './assessment-shared'
+import { useConfirm } from '@/hooks/useConfirm'
 
 export default function AssessmentEdit({ student, assessment }) {
   const { data, setData, patch, processing, errors } = useForm({
@@ -17,10 +18,12 @@ export default function AssessmentEdit({ student, assessment }) {
   })
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
+  const confirm = useConfirm()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    if (!confirm('Apakah Anda yakin ingin menyimpan perubahan penilaian ini?')) return
+    const confirmed = await confirm({ title: 'Simpan perubahan penilaian ini?' })
+    if (!confirmed) return
     patch(r('supervisor.students.assessment.update', student.id))
   }
 
