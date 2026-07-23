@@ -189,6 +189,7 @@ class AttendanceController extends Controller
                 'longitude' => 'required|numeric',
                 'photo' => 'required|image|max:2048',
                 'notes' => 'nullable|string|max:500',
+                'face_descriptor' => 'nullable|string',
             ]);
 
             $user = Auth::user();
@@ -220,6 +221,19 @@ class AttendanceController extends Controller
                 ]);
             }
 
+            $checkOutDescriptor = null;
+            if ($request->filled('face_descriptor')) {
+                $decoded = json_decode($request->input('face_descriptor'), true);
+                if (is_array($decoded)) {
+                    $checkOutDescriptor = $decoded;
+                }
+            }
+
+            $faceService = new FaceVerificationService();
+            $faceResult = $faceService->verify($checkOutDescriptor, $user->face_descriptor, $user->id);
+
+            $requiresManualReview = $attendance->requires_manual_review || $faceResult['status'] === 'mismatch';
+
             $photoPath = null;
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('attendance/check-out', 'public');
@@ -230,6 +244,9 @@ class AttendanceController extends Controller
                 'check_out_latitude' => $request->latitude,
                 'check_out_longitude' => $request->longitude,
                 'check_out_photo' => $photoPath,
+                'requires_manual_review' => $requiresManualReview,
+                'check_out_face_verification_status' => $faceResult['status'],
+                'check_out_face_match_distance' => $faceResult['distance'],
             ];
 
             if ($request->notes) {
