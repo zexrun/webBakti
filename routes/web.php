@@ -145,7 +145,10 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
 
     // Rute untuk laporan harian (hanya melihat)
     Route::get('/logbooks', [SupervisorLogbookController::class, 'index'])->name('logbooks.index');
+    Route::get('/logbooks/export-recap-pdf', [SupervisorLogbookController::class, 'exportRecapPdf'])->name('logbooks.export-recap-pdf');
     Route::get('/logbooks/{logbook}', [SupervisorLogbookController::class, 'show'])->name('logbooks.show');
+    Route::get('/logbooks/{logbook}/export-pdf', [SupervisorLogbookController::class, 'exportPdf'])->name('logbooks.export-pdf');
+    Route::post('/logbooks/{logbook}/feedback', [SupervisorLogbookController::class, 'sendFeedback'])->name('logbooks.feedback');
 
     // Rute untuk penilaian akhir
     Route::get('/students/{student}/assessment', [FinalAssessmentController::class, 'create'])->name('students.assessment.create');
