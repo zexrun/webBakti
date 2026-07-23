@@ -12,6 +12,7 @@ import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 import AttendanceModal from './AttendanceModal'
 import ExceptionModal from './ExceptionModal'
+import { toast } from '@/lib/toast'
 
 const statusVariant = {
   present: 'success',
@@ -94,14 +95,14 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         setCheckOutOpen(false)
         router.reload()
       } else {
-        alert('Error: ' + data.message)
+        toast.error(data.message)
       }
     } catch (err) {
       // Non-2xx responses (e.g. 403 suspicious location, 500 server error)
       // land here with axios, unlike the previous fetch()-based version -
       // surface the server's own message when it sent one, so this stays
       // as informative as before rather than regressing to a generic alert.
-      alert('Error: ' + (err.response?.data?.message ?? 'Terjadi kesalahan saat memproses absensi.'))
+      toast.error(err.response?.data?.message ?? 'Terjadi kesalahan saat memproses absensi.')
     } finally {
       setSubmitting(false)
     }

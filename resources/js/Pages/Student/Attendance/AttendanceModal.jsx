@@ -7,6 +7,7 @@ import { useCamera } from '@/hooks/useCamera'
 import { useGeolocation } from '@/hooks/useGeolocation'
 import { useFaceDetection } from '@/hooks/useFaceDetection'
 import { cn } from '@/lib/utils'
+import { toast } from '@/lib/toast'
 
 // Built-in Tailwind palette here (safe with opacity, unlike custom vars).
 const locationStyles = {
@@ -40,12 +41,12 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
   async function handleSubmit(e) {
     e.preventDefault()
     if (!geo.position) {
-      alert('Lokasi belum didapatkan, silakan tunggu...')
+      toast.error('Lokasi belum didapatkan, silakan tunggu...')
       geo.request()
       return
     }
     if (camera.phase !== 'captured' || !camera.canvasRef.current) {
-      alert('Silakan ambil foto terlebih dahulu')
+      toast.error('Silakan ambil foto terlebih dahulu')
       return
     }
 
@@ -57,7 +58,7 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
       setFaceCheckMessage('')
 
       if (available && !descriptor) {
-        alert('Wajah tidak terdeteksi pada foto. Silakan pastikan wajah Anda terlihat jelas dan coba lagi.')
+        toast.error('Wajah tidak terdeteksi pada foto. Silakan pastikan wajah Anda terlihat jelas dan coba lagi.')
         return
       }
 
