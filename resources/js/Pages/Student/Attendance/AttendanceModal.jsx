@@ -110,6 +110,21 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
                   <div className="aspect-video">
                     <video ref={camera.videoRef} className="h-full w-full object-cover" muted playsInline />
                   </div>
+                  <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                      <defs>
+                        <mask id="face-guide-mask">
+                          <rect x="0" y="0" width="100" height="100" fill="white" />
+                          <ellipse cx="50" cy="50" rx="22" ry="32" fill="black" />
+                        </mask>
+                      </defs>
+                      <rect x="0" y="0" width="100" height="100" fill="rgba(0,0,0,0.45)" mask="url(#face-guide-mask)" />
+                      <ellipse cx="50" cy="50" rx="22" ry="32" fill="none" stroke="white" strokeWidth="0.6" strokeOpacity="0.85" />
+                    </svg>
+                    <p className="absolute bottom-3 rounded-full bg-black/50 px-3 py-1 text-xs text-white">
+                      Posisikan wajah Anda di dalam oval
+                    </p>
+                  </div>
                 </div>
                 <canvas ref={camera.canvasRef} className="hidden" />
                 {camera.previewUrl && (
