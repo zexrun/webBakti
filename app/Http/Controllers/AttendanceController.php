@@ -54,6 +54,14 @@ class AttendanceController extends Controller
             ]);
 
             $user = Auth::user();
+
+            if (!$user->face_descriptor) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda harus mengupload foto profil terlebih dahulu sebelum melakukan presensi.'
+                ], 422);
+            }
+
             $today = Carbon::today();
             $settings = AttendanceSetting::getSettings();
 
@@ -184,6 +192,14 @@ class AttendanceController extends Controller
             ]);
 
             $user = Auth::user();
+
+            if (!$user->face_descriptor) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda harus mengupload foto profil terlebih dahulu sebelum melakukan presensi.'
+                ], 422);
+            }
+
             $today = Carbon::today();
 
             $attendance = Attendance::where('user_id', $user->id)
