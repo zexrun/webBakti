@@ -109,6 +109,12 @@ export default function Suspicious({ suspiciousAttendances }) {
                             Wajah tidak cocok (jarak: {Number(attendance.face_match_distance).toFixed(2)})
                           </p>
                         )}
+                        {attendance.check_out_face_verification_status === 'mismatch' && (
+                          <p className="flex items-start gap-1.5 text-sm text-red-700 dark:text-red-400">
+                            <UserRound className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            Wajah check-out tidak cocok (jarak: {Number(attendance.check_out_face_match_distance).toFixed(2)})
+                          </p>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
