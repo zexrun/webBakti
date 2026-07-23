@@ -185,7 +185,19 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
 
     try {
         $scriptPath = base_path('resources/pdf-renderers/render-certificate.cjs');
-        $result = Process::timeout(30)->run(['node', $scriptPath, $inputPath, $outputPath]);
+
+        // Node's CSPRNG on Windows relies on SystemRoot/windir being
+        // present in the child process's environment (via Windows'
+        // BCryptGenRandom). php artisan serve's process doesn't
+        // always forward these, which crashes Node before our
+        // script even runs - so pass them through explicitly.
+        $env = array_filter([
+            'SystemRoot' => getenv('SystemRoot') ?: 'C:\\Windows',
+            'windir' => getenv('windir') ?: 'C:\\Windows',
+            'PATH' => getenv('PATH'),
+        ]);
+
+        $result = Process::timeout(30)->env($env)->run(['node', $scriptPath, $inputPath, $outputPath]);
 
         if (!$result->successful()) {
             throw new \RuntimeException('React-PDF certificate render failed: ' . $result->errorOutput());
