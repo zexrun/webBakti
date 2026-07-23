@@ -206,9 +206,9 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         </Card>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard icon={CheckCircle2} label="Hadir (7 hari)" value={presentCount} tone="green" />
-          <StatCard icon={AlertTriangle} label="Terlambat (7 hari)" value={lateCount} tone="orange" />
-          <StatCard icon={FileText} label="Pengajuan Pending" value={pendingExceptions ?? 0} tone="blue" />
+          <StatCard icon={CheckCircle2} label="Hadir (7 hari)" value={presentCount} tone="green" index={0} />
+          <StatCard icon={AlertTriangle} label="Terlambat (7 hari)" value={lateCount} tone="orange" index={1} />
+          <StatCard icon={FileText} label="Pengajuan Pending" value={pendingExceptions ?? 0} tone="blue" index={2} />
         </div>
 
         <Card>

@@ -116,8 +116,8 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <StatCard icon={Clock} label="Pending Absensi" value={pendingAttendances.total} tone="amber" />
-          <StatCard icon={FileText} label="Pending Izin" value={pendingExceptions.total} tone="blue" />
+          <StatCard icon={Clock} label="Pending Absensi" value={pendingAttendances.total} tone="amber" index={0} />
+          <StatCard icon={FileText} label="Pending Izin" value={pendingExceptions.total} tone="blue" index={1} />
         </div>
 
         <Card>

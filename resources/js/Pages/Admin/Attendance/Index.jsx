@@ -91,11 +91,11 @@ export default function Index({ attendances, stats, date, status }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <StatCard icon={Users} label="Total Hadir" value={stats.total} tone="green" />
-          <StatCard icon={CheckCircle2} label="Tepat Waktu" value={stats.present} tone="blue" />
-          <StatCard icon={Clock} label="Terlambat" value={stats.late} tone="orange" />
-          <StatCard icon={XCircle} label="Tidak Hadir" value={stats.absent} tone="red" />
-          <StatCard icon={AlertTriangle} label="Mencurigakan" value={stats.suspicious} tone="amber" />
+          <StatCard icon={Users} label="Total Hadir" value={stats.total} tone="green" index={0} />
+          <StatCard icon={CheckCircle2} label="Tepat Waktu" value={stats.present} tone="blue" index={1} />
+          <StatCard icon={Clock} label="Terlambat" value={stats.late} tone="orange" index={2} />
+          <StatCard icon={XCircle} label="Tidak Hadir" value={stats.absent} tone="red" index={3} />
+          <StatCard icon={AlertTriangle} label="Mencurigakan" value={stats.suspicious} tone="amber" index={4} />
         </div>
 
         <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">

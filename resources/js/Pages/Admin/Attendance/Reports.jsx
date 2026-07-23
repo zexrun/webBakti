@@ -131,10 +131,10 @@ export default function Reports({ summary, users, month, year, userId }) {
         {summary.length > 0 ? (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="Total Mahasiswa" value={summary.length} tone="neutral" />
-              <StatCard label="Rata-rata Hadir" value={average(summary, 'present')} tone="green" />
-              <StatCard label="Rata-rata Terlambat" value={average(summary, 'late')} tone="amber" />
-              <StatCard label="Rata-rata Tidak Hadir" value={average(summary, 'absent')} tone="red" />
+              <StatCard label="Total Mahasiswa" value={summary.length} tone="neutral" index={0} />
+              <StatCard label="Rata-rata Hadir" value={average(summary, 'present')} tone="green" index={1} />
+              <StatCard label="Rata-rata Terlambat" value={average(summary, 'late')} tone="amber" index={2} />
+              <StatCard label="Rata-rata Tidak Hadir" value={average(summary, 'absent')} tone="red" index={3} />
             </div>
 
             <Card>

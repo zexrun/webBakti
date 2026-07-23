@@ -62,10 +62,10 @@ export default function History({ attendances, exceptions, month, year }) {
 
         {attendances.data.length > 0 && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard icon={CheckCircle2} label="Total Hadir" value={presentCount} tone="green" />
-            <StatCard icon={AlertTriangle} label="Terlambat" value={lateCount} tone="orange" />
-            <StatCard icon={XCircle} label="Tidak Hadir" value={absentCount} tone="red" />
-            <StatCard icon={FileText} label="Pengajuan Izin" value={exceptions.length} tone="blue" />
+            <StatCard icon={CheckCircle2} label="Total Hadir" value={presentCount} tone="green" index={0} />
+            <StatCard icon={AlertTriangle} label="Terlambat" value={lateCount} tone="orange" index={1} />
+            <StatCard icon={XCircle} label="Tidak Hadir" value={absentCount} tone="red" index={2} />
+            <StatCard icon={FileText} label="Pengajuan Izin" value={exceptions.length} tone="blue" index={3} />
           </div>
         )}
 
