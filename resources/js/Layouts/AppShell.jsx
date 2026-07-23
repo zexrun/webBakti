@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, usePage, router } from '@inertiajs/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { LogOut, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import ThemeToggle from '@/Components/ThemeToggle'
@@ -44,7 +45,7 @@ function NavItem({ href, icon: Icon, label, active }) {
  *   [{ label?: 'SECTION', items: [{ label, icon, route, match, params? }] }]
  */
 export default function AppShell({ nav, homeRoute, children }) {
-  const { auth } = usePage().props
+  const { props: { auth }, url } = usePage()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
@@ -161,7 +162,19 @@ export default function AppShell({ nav, homeRoute, children }) {
           </Link>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={url}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15 }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </main>
       </div>
     </div>
   )
