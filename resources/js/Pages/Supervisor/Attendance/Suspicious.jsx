@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@inertiajs/react'
-import { ArrowLeft, AlertTriangle, CheckCircle2, MapPin } from 'lucide-react'
+import { ArrowLeft, AlertTriangle, CheckCircle2, MapPin, UserRound } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
 import PageHeader from '@/Components/PageHeader'
 import EmptyState from '@/Components/EmptyState'
@@ -101,6 +101,12 @@ export default function Suspicious({ suspiciousAttendances }) {
                         {attendance.check_in_latitude && attendance.check_in_longitude && (
                           <p className="text-xs tabular-nums text-muted-foreground">
                             Koordinat: {Number(attendance.check_in_latitude).toFixed(4)}, {Number(attendance.check_in_longitude).toFixed(4)}
+                          </p>
+                        )}
+                        {attendance.face_verification_status === 'mismatch' && (
+                          <p className="flex items-start gap-1.5 text-sm text-red-700 dark:text-red-400">
+                            <UserRound className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            Wajah tidak cocok (jarak: {Number(attendance.face_match_distance).toFixed(2)})
                           </p>
                         )}
                       </div>
