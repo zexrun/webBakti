@@ -42,8 +42,15 @@ class Attendance extends Model
         'supervisor_notes',
         'approved_by',
         'approved_at',
+        'requires_manual_review',
+        'location_verification_status',
+        'location_spoofing_score',
+        'location_verification_details',
+        'location_notes',
         'face_verification_status',
         'face_match_distance',
+        'check_out_face_verification_status',
+        'check_out_face_match_distance',
     ];
 
     protected $casts = [
