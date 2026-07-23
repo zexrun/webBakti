@@ -7,10 +7,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
+import { useConfirm } from '@/hooks/useConfirm'
 
 export default function Show({ message, conversation }) {
   const { auth } = usePage().props
   const { data, setData, post, processing, errors, reset } = useForm({ body: '' })
+  const confirm = useConfirm()
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
@@ -19,8 +21,9 @@ export default function Show({ message, conversation }) {
     post(r('messages.reply', message.id), { onSuccess: () => reset() })
   }
 
-  function handleDelete() {
-    if (confirm('Hapus pesan ini?')) {
+  async function handleDelete() {
+    const confirmed = await confirm({ title: 'Hapus pesan ini?', variant: 'destructive' })
+    if (confirmed) {
       router.delete(r('messages.delete', message.id))
     }
   }

@@ -10,12 +10,14 @@ import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { cn } from '@/lib/utils'
+import { useConfirm } from '@/hooks/useConfirm'
 
 const priorityVariant = { urgent: 'destructive', high: 'warning', medium: 'warning' }
 const priorityLabel = { urgent: 'Urgent', high: 'Penting', medium: 'Normal' }
 
 export default function Index({ notifications }) {
   const [items, setItems] = useState(notifications.data)
+  const confirm = useConfirm()
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   function markAsRead(id) {
@@ -31,8 +33,9 @@ export default function Index({ notifications }) {
     })
   }
 
-  function deleteAll() {
-    if (!confirm('Hapus semua notifikasi?')) return
+  async function deleteAll() {
+    const confirmed = await confirm({ title: 'Hapus semua notifikasi?', variant: 'destructive' })
+    if (!confirmed) return
     router.delete(r('notifications.delete-all'), { preserveScroll: true })
   }
 
