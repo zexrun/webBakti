@@ -213,6 +213,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
 
     Route::get('/info', [StudentProfileController::class, 'edit'])->name('info.edit');
     Route::patch('/info', [StudentProfileController::class, 'update'])->name('info.update');
+    Route::post('/info/profile-photo', [StudentProfileController::class, 'updateProfilePhoto'])->name('info.profile-photo.update');
 
     Route::get('/certificate/download', [FinalAssessmentController::class, 'studentDownload'])->name('pdf.certificate.download');
 
