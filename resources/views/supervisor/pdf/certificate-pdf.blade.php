@@ -326,13 +326,18 @@
             </div>
 
             <!-- Document Title -->
+            @php
+                // Deterministic per student+date so the same certificate
+                // always shows the same number, even though it's streamed
+                // fresh on every download rather than saved to storage.
+                $certDate = $generatedAt ?? now();
+                $certNumber = str_pad(($student->id * 37 + $certDate->day) % 900 + 100, 3, '0', STR_PAD_LEFT);
+            @endphp
             <div class="document-title">
                 <div class="title-main">Surat Keterangan</div>
                 <div class="document-number">
                     Nomor:
-                    {{ sprintf("%03d", rand(100, 999)) }}/KOMDIG/BAKTI/SDA/{{
-                        date("m/Y")
-                    }}/PKL.01.{{ date("d/m/Y") }}
+                    {{ $certNumber }}/KOMDIG/BAKTI/SDA/{{ $certDate->format('m/Y') }}/PKL.01.{{ $certDate->format('d/m/Y') }}
                 </div>
             </div>
 
@@ -411,7 +416,7 @@
                     {{ date('d F Y', strtotime($student->periode_mulai)) }}
                     sampai dengan
                     {{ date('d F Y', strtotime($student->periode_selesai)) }}.
-                    @else 00 Februari 2025 sampai dengan 00 Mei 2025. @endif
+                    @else periode yang belum ditentukan. @endif
                 </div>
 
                 <div class="closing-statement">

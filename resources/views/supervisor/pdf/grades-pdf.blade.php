@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Rekap Nilai Magang - {{ $student->user->name }}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&family=Arial:wght@400;600&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
@@ -376,8 +374,13 @@
         </div>
         
         <!-- Document Number -->
+        @php
+            // Deterministic per student+day so re-printing the same
+            // report doesn't yield a different document number.
+            $reportNumber = str_pad(($student->id * 37 + now()->day) % 900 + 100, 3, '0', STR_PAD_LEFT);
+        @endphp
         <div class="document-number">
-            Nomor: {{ sprintf('%03d', rand(100, 999)) }}/BAKTI/{{ date('m/Y') }}
+            Nomor: {{ $reportNumber }}/BAKTI/{{ date('m/Y') }}
         </div>
         
         <!-- Student Information -->

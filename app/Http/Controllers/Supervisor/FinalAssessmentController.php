@@ -149,6 +149,7 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
         'student' => $student,
         'assessment' => $assessment,
         'supervisorName' => $supervisorName,
+        'generatedAt' => $generatedAt,
         'generatedDate' => $generatedAt->format('d F Y H:i:s'),
     ]);
 
