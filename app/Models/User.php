@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -27,16 +28,32 @@ class User extends Authenticatable
         'role',
         'activation_token',
         'email_verified_at',
+        'profile_photo',
+        'face_descriptor',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
+     *
+     * face_descriptor is a 128-float array read only by the backend
+     * (AttendanceController::checkIn(), FaceVerificationService) - no
+     * frontend page reads it directly, so it's excluded from
+     * serialization to avoid bloating every User payload with data
+     * nothing renders. profile_photo is superseded by the computed
+     * profile_photo_url accessor below, same pattern as
+     * Attendance::check_in_photo_url.
      *
      * @var list<string>
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'profile_photo',
+        'face_descriptor',
+    ];
+
+    protected $appends = [
+        'profile_photo_url',
     ];
 
     /**
@@ -49,6 +66,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'face_descriptor' => 'array',
         ];
     }
 
@@ -70,6 +88,11 @@ class User extends Authenticatable
     public function getStudentOrNull()
     {
         return $this->student()->first();
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo ? Storage::disk('public')->url($this->profile_photo) : null;
     }
 }
 
