@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from '@inertiajs/react'
 import { CheckCircle2, ChevronDown, FileText, Award, Download, Users, FileCheck } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
@@ -14,13 +15,33 @@ import { cn } from '@/lib/utils'
 
 function ActionsMenu({ student, documentsComplete, hasFinalAssessment, certificateGenerated }) {
   const [open, setOpen] = useState(false)
+  const [menuPos, setMenuPos] = useState(null)
+  const buttonRef = useRef(null)
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
   const itemClass = 'flex items-center gap-3 px-4 py-2 text-sm text-foreground transition-colors duration-150 hover:bg-muted'
 
+  useEffect(() => {
+    if (!open || !buttonRef.current) return
+
+    const updatePosition = () => {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setMenuPos({ top: rect.bottom + window.scrollY + 8, right: window.innerWidth - rect.right - window.scrollX })
+    }
+
+    updatePosition()
+    window.addEventListener('scroll', updatePosition, true)
+    window.addEventListener('resize', updatePosition)
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true)
+      window.removeEventListener('resize', updatePosition)
+    }
+  }, [open])
+
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors duration-150 hover:bg-muted"
@@ -29,10 +50,13 @@ function ActionsMenu({ student, documentsComplete, hasFinalAssessment, certifica
         <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
       </button>
 
-      {open && (
+      {open && menuPos && createPortal(
         <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-popover py-1 shadow-md">
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div
+            className="fixed z-50 w-64 overflow-hidden rounded-lg border border-border bg-popover py-1 shadow-md"
+            style={{ top: menuPos.top, right: menuPos.right }}
+          >
             <Link href={r('supervisor.students.documents', student.id)} className={itemClass}>
               <FileText className="h-4 w-4 text-blue-500" /> Lihat Dokumen
             </Link>
@@ -67,7 +91,8 @@ function ActionsMenu({ student, documentsComplete, hasFinalAssessment, certifica
               </div>
             )}
           </div>
-        </>
+        </>,
+        document.body,
       )}
     </div>
   )
