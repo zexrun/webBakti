@@ -93,8 +93,8 @@ class AnalyticsController extends Controller
         $studentInfo = [
             'name' => $student->user->name,
             'nim' => $student->nim,
-            'universitas' => $student->universitas,
-            'program_studi' => $student->program_studi,
+            'universitas' => $student->university,
+            'program_studi' => $student->study_program,
             'supervisor' => $supervisor->user->name,
         ];
 

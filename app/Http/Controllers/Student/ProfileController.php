@@ -60,22 +60,22 @@ class ProfileController extends Controller
     {
         $request->validate([
             'nim' => 'required|string|max:25',
-            'universitas' => 'required|string|max:100',
-            'program_studi' => 'required|string|max:100',
+            'university' => 'required|string|max:100',
+            'study_program' => 'required|string|max:100',
             'semester' => 'required|integer|min:1|max:14',
-            'periode_mulai' => 'required|date',
-            'periode_selesai' => 'required|date|after_or_equal:periode_mulai',
+            'period_start' => 'required|date',
+            'period_end' => 'required|date|after_or_equal:period_start',
         ]);
 
         $student = Auth::user()->student;
 
         $student->update([
             'nim' => $request->nim,
-            'universitas' => $request->universitas,
-            'program_studi' => $request->program_studi,
+            'university' => $request->university,
+            'study_program' => $request->study_program,
             'semester' => $request->semester,
-            'periode_mulai' => $request->periode_mulai,
-            'periode_selesai' => $request->periode_selesai,
+            'period_start' => $request->period_start,
+            'period_end' => $request->period_end,
         ]);
 
         return redirect()->route('student.info.edit')->with('success', "Data status mahasiswa berhasil diperbarui");

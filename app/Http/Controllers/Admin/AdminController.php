@@ -165,10 +165,10 @@ class AdminController extends Controller
         if ($request->filled('supervisor_id')) {
             $supervisor = Supervisor::find($request->supervisor_id);
             $student->supervisor_id = $supervisor->id;
-            $student->direktorat = $supervisor->direktorat;
+            $student->directorate = $supervisor->directorate;
         } else {
             $student->supervisor_id = null;
-            $student->direktorat = null;
+            $student->directorate = null;
         }
 
         $student->save();

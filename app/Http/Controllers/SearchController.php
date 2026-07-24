@@ -50,7 +50,7 @@ class SearchController extends Controller
                     'id' => $s->id,
                     'type' => 'supervisor',
                     'title' => $s->user->name,
-                    'subtitle' => $s->direktorat ?? 'No department',
+                    'subtitle' => $s->directorate ?? 'No department',
                     'icon' => '👨‍💼',
                     'url' => '#',
                 ]);
@@ -128,8 +128,8 @@ class SearchController extends Controller
         }
 
         // Filter by directorate
-        if ($request->filled('direktorat')) {
-            $query->where('direktorat', $request->get('direktorat'));
+        if ($request->filled('directorate')) {
+            $query->where('directorate', $request->get('directorate'));
         }
 
         // Filter by supervisor
@@ -138,8 +138,8 @@ class SearchController extends Controller
         }
 
         // Filter by university
-        if ($request->filled('universitas')) {
-            $query->where('universitas', $request->get('universitas'));
+        if ($request->filled('university')) {
+            $query->where('university', $request->get('university'));
         }
 
         // Sort
@@ -165,9 +165,9 @@ class SearchController extends Controller
             'universities' => \App\Models\University::all(),
             'filters' => [
                 'search' => $request->get('search'),
-                'direktorat' => $request->get('direktorat'),
+                'directorate' => $request->get('directorate'),
                 'supervisor_id' => $request->get('supervisor_id'),
-                'universitas' => $request->get('universitas'),
+                'university' => $request->get('university'),
                 'sort_by' => $sortBy,
                 'sort_dir' => $sortDir,
             ],

@@ -108,7 +108,7 @@ trait HandlesAttendanceActions
                 $attendance->user->name,
                 $attendance->user->student->nim ?? '-',
                 $attendance->user->student?->supervisor?->user->name ?? '-',
-                $attendance->user->student?->supervisor?->direktorat ?? '-',
+                $attendance->user->student?->supervisor?->directorate ?? '-',
                 $checkInTime,
                 $checkOutTime,
                 $attendance->working_hours ?? '-',

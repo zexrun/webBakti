@@ -26,16 +26,16 @@ class MonitoringController extends Controller
             });
         }
 
-        // Filter by directorat
-        $directorat = $request->get('directorat');
+        // Filter by directorate
+        $directorat = $request->get('directorate');
         if ($directorat) {
-            $query->where('direktorat', $directorat);
+            $query->where('directorate', $directorat);
         }
 
         // Filter by position
         $position = $request->get('position');
         if ($position) {
-            $query->where('jabatan', $position);
+            $query->where('position', $position);
         }
 
         // Sort
@@ -69,13 +69,13 @@ class MonitoringController extends Controller
         }
 
         // Get unique directorates and positions
-        $directorates = Supervisor::whereNotNull('direktorat')
+        $directorates = Supervisor::whereNotNull('directorate')
             ->distinct()
-            ->pluck('direktorat');
+            ->pluck('directorate');
 
-        $positions = Supervisor::whereNotNull('jabatan')
+        $positions = Supervisor::whereNotNull('position')
             ->distinct()
-            ->pluck('jabatan');
+            ->pluck('position');
 
         // Calculate statistics
         $stats = [
@@ -131,14 +131,14 @@ class MonitoringController extends Controller
             });
         }
 
-        $directorat = $request->get('directorat');
+        $directorat = $request->get('directorate');
         if ($directorat) {
-            $query->where('direktorat', $directorat);
+            $query->where('directorate', $directorat);
         }
 
         $position = $request->get('position');
         if ($position) {
-            $query->where('jabatan', $position);
+            $query->where('position', $position);
         }
 
         $supervisors = $query->orderBy('created_at', 'desc')->get();
@@ -167,8 +167,8 @@ class MonitoringController extends Controller
 
                 fputcsv($file, [
                     $supervisor->user->name,
-                    $supervisor->direktorat ?? '-',
-                    $supervisor->jabatan ?? '-',
+                    $supervisor->directorate ?? '-',
+                    $supervisor->position ?? '-',
                     $supervisor->user->email,
                     $supervisor->students->count(),
                     $pendingSubmissions

@@ -78,7 +78,7 @@ class ProfileController extends Controller
 
         // Validasi tambahan berdasarkan role
         if ($request->user()->role === 'supervisor') {
-            $rules['nip'] = ['nullable', 'string', 'max:255'];
+            $rules['employee_id'] = ['nullable', 'string', 'max:255'];
         }
 
         $validated = $request->validate($rules);
@@ -107,35 +107,35 @@ class ProfileController extends Controller
             if ($request->has('nim')) {
                 $user->student->nim = $request->input('nim');
             }
-            if ($request->has('universitas')) {
-                $user->student->universitas = $request->input('universitas');
+            if ($request->has('university')) {
+                $user->student->university = $request->input('university');
             }
-            if ($request->has('direktorat')) {
-                $directorate = Directorate::find($request->input('direktorat'));
+            if ($request->has('directorate')) {
+                $directorate = Directorate::find($request->input('directorate'));
                 if ($directorate) {
-                    $user->student->direktorat = $directorate->name;
+                    $user->student->directorate = $directorate->name;
                 }
             }
             $user->student->save();
         } elseif ($user->role === 'supervisor' && $user->supervisor) {
             // Update data supervisor
-            if (!empty($validated['nip'])) {
-                $user->supervisor->nip = $validated['nip'];
+            if (!empty($validated['employee_id'])) {
+                $user->supervisor->employee_id = $validated['employee_id'];
             }
 
             // Uncomment jika diperlukan
             /*
-            if ($request->has('jabatan')) {
-                $position = Position::find($request->input('jabatan'));
+            if ($request->has('position')) {
+                $position = Position::find($request->input('position'));
                 if ($position) {
-                    $user->supervisor->jabatan = $position->name;
+                    $user->supervisor->position = $position->name;
                 }
             }
-            
-            if ($request->has('direktorat')) {
-                $directorate = Directorate::find($request->input('direktorat'));
+
+            if ($request->has('directorate')) {
+                $directorate = Directorate::find($request->input('directorate'));
                 if ($directorate) {
-                    $user->supervisor->direktorat = $directorate->name;
+                    $user->supervisor->directorate = $directorate->name;
                 }
             }
             */

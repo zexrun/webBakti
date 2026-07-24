@@ -72,8 +72,8 @@ class UserController extends Controller
         } elseif ($request->role === 'supervisor') {
             Supervisor::create([
                 'user_id' => $user->id,
-                'nip' => null,
-                'jabatan' => null,
+                'employee_id' => null,
+                'position' => null,
             ]);
         }
 
@@ -105,18 +105,18 @@ class UserController extends Controller
 
         // Validasi tambahan berdasarkan role
         if (in_array($request->role, ['supervisor', 'student'])) {
-            $rules['direktorat'] = ['required', 'exists:directorates,id'];
+            $rules['directorate'] = ['required', 'exists:directorates,id'];
         }
 
         if ($request->role === 'supervisor') {
-            $rules['jabatan'] = ['nullable', 'exists:positions,id'];
-            $rules['nip'] = ['nullable', 'string', 'max:255'];
+            $rules['position'] = ['nullable', 'exists:positions,id'];
+            $rules['employee_id'] = ['nullable', 'string', 'max:255'];
         }
 
         if ($request->role === 'student') {
             $rules['nim'] = ['nullable', 'string', 'max:255'];
-            $rules['universitas'] = ['nullable', 'string', 'max:255'];
-            $rules['program_studi'] = ['nullable', 'string', 'max:255'];
+            $rules['university'] = ['nullable', 'string', 'max:255'];
+            $rules['study_program'] = ['nullable', 'string', 'max:255'];
             $rules['semester'] = ['nullable', 'integer', 'min:1', 'max:14'];
         }
 
@@ -174,19 +174,19 @@ class UserController extends Controller
     {
         // Buat atau update student record
         $student = $user->student ?: new Student(['user_id' => $user->id]);
-        
+
         $student->fill($request->only([
             'nim',
-            'universitas',
-            'program_studi',
+            'university',
+            'study_program',
             'semester'
         ]));
 
-        // Update direktorat
-        if ($request->filled('direktorat')) {
-            $directorate = Directorate::find($request->input('direktorat'));
+        // Update directorate
+        if ($request->filled('directorate')) {
+            $directorate = Directorate::find($request->input('directorate'));
             if ($directorate) {
-                $student->direktorat = $directorate->name;
+                $student->directorate = $directorate->name;
             }
         }
 
@@ -202,22 +202,22 @@ class UserController extends Controller
     {
         // Buat atau update supervisor record
         $supervisor = $user->supervisor ?: new Supervisor(['user_id' => $user->id]);
-        
-        $supervisor->fill($request->only(['nip']));
 
-        // Update direktorat
-        if ($request->filled('direktorat')) {
-            $directorate = Directorate::find($request->input('direktorat'));
+        $supervisor->fill($request->only(['employee_id']));
+
+        // Update directorate
+        if ($request->filled('directorate')) {
+            $directorate = Directorate::find($request->input('directorate'));
             if ($directorate) {
-                $supervisor->direktorat = $directorate->name;
+                $supervisor->directorate = $directorate->name;
             }
         }
 
-        // Update jabatan
-        if ($request->filled('jabatan')) {
-            $position = Position::find($request->input('jabatan'));
+        // Update position
+        if ($request->filled('position')) {
+            $position = Position::find($request->input('position'));
             if ($position) {
-                $supervisor->jabatan = $position->name;
+                $supervisor->position = $position->name;
             }
         }
 

@@ -154,7 +154,7 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
     $certNumber = str_pad(($student->id * 37 + $certDate->day) % 900 + 100, 3, '0', STR_PAD_LEFT);
     $documentNumber = $certNumber . '/KOMDIG/BAKTI/SDA/' . $certDate->format('m/Y') . '/PKL.01.' . $certDate->format('d/m/Y');
 
-    $hasPeriode = isset($student->periode_mulai) && isset($student->periode_selesai);
+    $hasPeriode = isset($student->period_start) && isset($student->period_end);
 
     $data = [
         'documentNumber' => $documentNumber,
@@ -164,10 +164,10 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
         'signerPosition' => 'Kepala Divisi SDM dan Humas',
         'studentName' => $student->user->name,
         'studentNim' => $student->nim ?? '-',
-        'studentProgramStudi' => $student->program_studi ?? '-',
-        'studentUniversitas' => $student->universitas ?? '-',
-        'periodeMulaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->periode_mulai)) : null,
-        'periodeSelesaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->periode_selesai)) : null,
+        'studentProgramStudi' => $student->study_program ?? '-',
+        'studentUniversitas' => $student->university ?? '-',
+        'periodeMulaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->period_start)) : null,
+        'periodeSelesaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->period_end)) : null,
         'hasPeriode' => $hasPeriode,
         'signatureDateFormatted' => date('d F Y'),
     ];
