@@ -77,10 +77,12 @@ export default function Index({ students }) {
                       <span className="font-medium text-foreground">{student.tasks.length}</span> tugas ·{' '}
                       <span className="font-medium text-foreground">{student.tasks.filter((t) => t.is_submitted).length}</span> selesai
                     </p>
-                    <Button asChild size="xs" variant="outline">
-                      <a href={r('supervisor.pdf.grade', student.id)} target="_blank" rel="noreferrer">
-                        <Printer /> Cetak Nilai
-                      </a>
+                    <Button
+                      size="xs"
+                      variant="outline"
+                      onClick={() => window.open(r('supervisor.pdf.grade', student.id), '_blank')}
+                    >
+                      <Printer /> Cetak Nilai
                     </Button>
                   </div>
                 </div>
