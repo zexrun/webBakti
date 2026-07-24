@@ -71,7 +71,7 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
                 tone="green"
               />
               <QuickAction
-                href={r('supervisor.students.list.index')}
+                href={r('supervisor.students.index')}
                 icon={Users}
                 title="Daftar Mahasiswa"
                 description="Lihat semua mahasiswa bimbingan"
@@ -109,7 +109,7 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
 
               {recentStudents?.length > 0 && (
                 <Link
-                  href={r('supervisor.students.list.index')}
+                  href={r('supervisor.students.index')}
                   className="inline-block pt-2 text-sm font-medium text-primary hover:underline"
                 >
                   Lihat semua mahasiswa →

@@ -54,7 +54,7 @@ function UserSection({ title, dotColor, users, onDelete }) {
                           type="button"
                           size="xs"
                           variant="outline"
-                          onClick={() => router.post(r('admin.users.resend_activation', user.id), {}, { preserveScroll: true })}
+                          onClick={() => router.post(r('admin.users.resend-activation', user.id), {}, { preserveScroll: true })}
                         >
                           <Send className="h-3.5 w-3.5" /> Kirim Ulang
                         </Button>

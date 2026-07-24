@@ -90,7 +90,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard-new', [AdminController::class, 'dashboardInertia'])->name('dashboard.new');
     Route::get('/plotting', [AdminController::class, 'plotting'])->name('plotting');
     Route::post('/plotting/assign', [AdminController::class, 'assign'])->name('plotting.assign');
-    Route::post('/users/{user}/resend-activation', [UserController::class, 'resendActivation'])->name('users.resend_activation');
+    Route::post('/users/{user}/resend-activation', [UserController::class, 'resendActivation'])->name('users.resend-activation');
 
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
@@ -138,7 +138,7 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
     Route::get('/dashboard-new', [SupervisorController::class, 'dashboardInertia'])->name('dashboard.new');
 
     // Rute untuk menampilkan daftar mahasiswa bimbingan
-    Route::get('/students/list', [SupervisorController::class, 'index'])->name('students.list.index');
+    Route::get('/students/list', [SupervisorController::class, 'index'])->name('students.index');
 
     // Rute untuk tugas (CRUD)
     Route::resource('tasks', SupervisorTaskController::class);

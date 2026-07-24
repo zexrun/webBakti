@@ -84,7 +84,7 @@ export default function Documents({ student, documents }) {
               </span>
               <ViewToggle view={view} onChange={setView} />
               <Button asChild variant="outline" size="sm">
-                <Link href={r('supervisor.students.list.index')}>
+                <Link href={r('supervisor.students.index')}>
                   <ArrowLeft /> Kembali
                 </Link>
               </Button>
@@ -100,7 +100,7 @@ export default function Documents({ student, documents }) {
               description={`${student.user.name} belum mengupload dokumen apapun.`}
               action={
                 <Button asChild variant="outline">
-                  <Link href={r('supervisor.students.list.index')}>Kembali ke Daftar Mahasiswa</Link>
+                  <Link href={r('supervisor.students.index')}>Kembali ke Daftar Mahasiswa</Link>
                 </Button>
               }
             />

@@ -18,25 +18,14 @@
                 font-size: 11pt;
                 margin: 0;
                 padding: 0;
-                /* Centering the entire document */
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                min-height: 100vh;
             }
 
             .document-container {
                 width: 210mm;
-                height: 297mm;
-                margin: 0 auto; /* Horizontal centering */
+                margin: 0 auto;
                 background: white;
                 padding: 15mm 20mm;
                 position: relative;
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                /* Shadow for better visual separation */
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
 
             /* Header Section - Kompak */
@@ -45,7 +34,6 @@
                 margin-bottom: 12px;
                 border-bottom: 2px solid #000;
                 padding-bottom: 8px;
-                flex-shrink: 0;
             }
 
             .header-content {
@@ -94,7 +82,6 @@
             .document-title {
                 text-align: center;
                 margin: 10px 0;
-                flex-shrink: 0;
             }
 
             .title-main {
@@ -117,14 +104,6 @@
             .document-content {
                 text-align: justify;
                 line-height: 1.5;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-
-            .content-main {
-                flex: 1;
             }
 
             .opening-statement {
@@ -184,7 +163,6 @@
             .signature-section {
                 margin-top: 15px;
                 width: 100%;
-                flex-shrink: 0;
             }
 
             .signature-table {
@@ -234,7 +212,6 @@
                 margin-top: 10px;
                 border-top: 1px solid #ccc;
                 padding-top: 8px;
-                flex-shrink: 0;
             }
 
             .tembusan-title {
@@ -252,50 +229,10 @@
                 font-size: 10pt;
             }
 
-            /* Print Styles - Penting untuk PDF */
-            @media print {
-                body {
-                    margin: 0;
-                    padding: 0;
-                    display: block; /* Remove flexbox for print */
-                }
-
-                .document-container {
-                    width: 210mm !important;
-                    height: 297mm !important;
-                    margin: 0 auto !important; /* Center for print */
-                    padding: 15mm 20mm !important;
-                    box-shadow: none;
-                    page-break-after: avoid;
-                    page-break-inside: avoid;
-                }
-
-                /* Hindari page break di tengah elemen */
-                .employee-details,
-                .signature-section,
-                .tembusan-section {
-                    page-break-inside: avoid;
-                }
-            }
-
             /* CSS untuk DomPDF - Kunci untuk 1 halaman */
             @page {
                 size: A4 portrait;
                 margin: 0;
-            }
-
-            /* Responsive untuk layar kecil */
-            @media screen and (max-width: 220mm) {
-                body {
-                    padding: 10px;
-                }
-
-                .document-container {
-                    width: 100%;
-                    max-width: 210mm;
-                    height: auto;
-                    min-height: 297mm;
-                }
             }
         </style>
     </head>

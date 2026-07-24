@@ -69,7 +69,7 @@ class FinalAssessmentController extends Controller
             'overall_comments' => $request->overall_comments,
         ]);
 
-        return redirect()->route('supervisor.students.list.index')->with('success', 'Penilaian akhir berhasil diperbarui!');
+        return redirect()->route('supervisor.students.index')->with('success', 'Penilaian akhir berhasil diperbarui!');
     }
 
 public function generateCertificate(Student $student)
@@ -246,6 +246,6 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
             ]
         );
 
-        return redirect()->route('supervisor.students.list.index')->with('success', 'Penilaian akhir berhasil disimpan!');
+        return redirect()->route('supervisor.students.index')->with('success', 'Penilaian akhir berhasil disimpan!');
     }
 }

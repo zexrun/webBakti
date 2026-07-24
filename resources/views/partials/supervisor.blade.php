@@ -225,8 +225,8 @@
                     </li>
                     <li>
                         <a
-                            href="{{ route('supervisor.students.list.index') }}"
-                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.students.list.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
+                            href="{{ route('supervisor.students.index') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.students.*') ? 'bg-blue-50 text-blue-700 font-medium' : '' }}"
                         >
                             Daftar Mahasiswa
                         </a>

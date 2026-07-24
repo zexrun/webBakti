@@ -37,7 +37,7 @@ class SearchController extends Controller
                     'title' => $s->user->name,
                     'subtitle' => $s->nim,
                     'icon' => '👤',
-                    'url' => route('supervisor.students.list.index'),
+                    'url' => route('supervisor.students.index'),
                 ]);
         }
 

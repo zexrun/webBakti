@@ -33,7 +33,7 @@ export default function AssessmentCreate({ student }) {
           description={`${student.user.name} · ${student.nim ?? 'NIM belum diisi'}`}
           actions={
             <Button asChild variant="outline" size="sm">
-              <Link href={r('supervisor.students.list.index')}>
+              <Link href={r('supervisor.students.index')}>
                 <ArrowLeft /> Kembali
               </Link>
             </Button>
@@ -69,7 +69,7 @@ export default function AssessmentCreate({ student }) {
 
                 <div className="flex flex-col justify-end gap-2 border-t border-border pt-5 sm:flex-row">
                   <Button asChild type="button" variant="outline" className="w-full sm:w-auto">
-                    <Link href={r('supervisor.students.list.index')}>Batal</Link>
+                    <Link href={r('supervisor.students.index')}>Batal</Link>
                   </Button>
                   <Button type="submit" disabled={processing} className="w-full sm:w-auto">
                     <Save /> Simpan Penilaian

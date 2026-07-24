@@ -256,7 +256,7 @@
                         </a>
 
                         <!-- View Students -->
-                        <a href="{{ route('supervisor.students.list.index') }}" 
+                        <a href="{{ route('supervisor.students.index') }}" 
                            class="group p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-md transition-all duration-200">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center transition-colors duration-200">
@@ -333,7 +333,7 @@
                     
                     @if($recentStudents->count() > 0)
                         <div class="mt-4 pt-4 border-t border-gray-200">
-                            <a href="{{ route('supervisor.students.list.index') }}" 
+                            <a href="{{ route('supervisor.students.index') }}" 
                                class="text-sm text-blue-600 hover:text-blue-700 font-medium">
                                 Lihat semua mahasiswa →
                             </a>
@@ -366,7 +366,7 @@
                         
                         @if($pendingAssessments > 0)
                             <div class="pt-4 border-t border-gray-200">
-                                <a href="{{ route('supervisor.students.list.index') }}" 
+                                <a href="{{ route('supervisor.students.index') }}" 
                                    class="inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-medium">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>

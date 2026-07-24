@@ -29,7 +29,7 @@ const nav = [
     label: 'Bimbingan',
     items: [
       { label: 'Tugas Mahasiswa', icon: ClipboardList, route: 'supervisor.tasks.index', match: 'supervisor.tasks.index' },
-      { label: 'Daftar Mahasiswa', icon: Users, route: 'supervisor.students.list.index', match: 'supervisor.students.list.*' },
+      { label: 'Daftar Mahasiswa', icon: Users, route: 'supervisor.students.index', match: 'supervisor.students.*' },
       { label: 'Logbook Mahasiswa', icon: NotebookPen, route: 'supervisor.logbooks.index', match: 'supervisor.logbooks.*' },
     ],
   },
