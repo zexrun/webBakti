@@ -30,8 +30,8 @@ export default function Plotting({ students, supervisors }) {
     if (!term) return supervisors
     return supervisors.filter((s) =>
       s.user.name.toLowerCase().includes(term) ||
-      (s.jabatan ?? '').toLowerCase().includes(term) ||
-      (s.direktorat ?? '').toLowerCase().includes(term)
+      (s.position ?? '').toLowerCase().includes(term) ||
+      (s.directorate ?? '').toLowerCase().includes(term)
     )
   }, [search, supervisors])
 
@@ -106,12 +106,12 @@ export default function Plotting({ students, supervisors }) {
                         </div>
                         <div>
                           <div className="font-medium text-foreground">{student.user.name}</div>
-                          <div className="text-xs text-muted-foreground md:hidden">{student.universitas}</div>
+                          <div className="text-xs text-muted-foreground md:hidden">{student.university}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell className="tabular-nums text-muted-foreground">{student.nim}</TableCell>
-                    <TableCell className="hidden text-muted-foreground md:table-cell">{student.universitas}</TableCell>
+                    <TableCell className="hidden text-muted-foreground md:table-cell">{student.university}</TableCell>
                     <TableCell>
                       {student.supervisor ? (
                         <Badge variant="success">
@@ -213,7 +213,7 @@ export default function Plotting({ students, supervisors }) {
                           <div className="min-w-0 flex-1">
                             <div className="truncate text-sm font-medium text-foreground">{supervisor.user.name}</div>
                             <div className="truncate text-xs text-muted-foreground">
-                              {[supervisor.jabatan, supervisor.direktorat].filter(Boolean).join(' · ')}
+                              {[supervisor.position, supervisor.directorate].filter(Boolean).join(' · ')}
                             </div>
                           </div>
                           <div

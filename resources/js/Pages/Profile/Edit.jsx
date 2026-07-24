@@ -42,7 +42,7 @@ export default function Edit({ user }) {
     email: user.email,
     password: '',
     password_confirmation: '',
-    nip: user.supervisor?.nip ?? '',
+    employee_id: user.supervisor?.employee_id ?? '',
   })
 
   const r = (name) => (window.route ? window.route(name) : '#')
@@ -176,9 +176,9 @@ export default function Edit({ user }) {
                   <CardContent className="pt-6">
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="nip">NIP</Label>
-                        <Input id="nip" value={data.nip} onChange={(e) => setData('nip', e.target.value)} />
-                        {errors.nip && <p className="text-sm text-destructive">{errors.nip}</p>}
+                        <Label htmlFor="employee_id">NIP</Label>
+                        <Input id="employee_id" value={data.employee_id} onChange={(e) => setData('employee_id', e.target.value)} />
+                        {errors.employee_id && <p className="text-sm text-destructive">{errors.employee_id}</p>}
                       </div>
                     </div>
                   </CardContent>

@@ -27,9 +27,9 @@ function FilterSelect({ label, value, onChange, children }) {
 }
 
 export default function AdvancedAdmin({ students, supervisors, directorates, universities, filters }) {
-  const [direktoratFilter, setDirektoratFilter] = useState(filters.direktorat ?? 'all')
+  const [directorateFilter, setDirectorateFilter] = useState(filters.directorate ?? 'all')
   const [supervisorIdFilter, setSupervisorIdFilter] = useState(filters.supervisor_id ? String(filters.supervisor_id) : 'all')
-  const [universitasFilter, setUniversitasFilter] = useState(filters.universitas ?? 'all')
+  const [universityFilter, setUniversityFilter] = useState(filters.university ?? 'all')
   const [sortByFilter, setSortByFilter] = useState(filters.sort_by ?? 'created_at')
   const [sortDirFilter, setSortDirFilter] = useState(filters.sort_dir ?? 'desc')
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
@@ -39,9 +39,9 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
     const form = e.target
     router.get(r('search.advanced'), {
       search: form.search.value,
-      ...(direktoratFilter !== 'all' ? { direktorat: direktoratFilter } : {}),
+      ...(directorateFilter !== 'all' ? { directorate: directorateFilter } : {}),
       ...(supervisorIdFilter !== 'all' ? { supervisor_id: supervisorIdFilter } : {}),
-      ...(universitasFilter !== 'all' ? { universitas: universitasFilter } : {}),
+      ...(universityFilter !== 'all' ? { university: universityFilter } : {}),
       sort_by: sortByFilter,
       sort_dir: sortDirFilter,
     })
@@ -60,7 +60,7 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
                   <label className="block text-sm font-medium text-foreground">Nama / NIM</label>
                   <Input name="search" defaultValue={filters.search ?? ''} placeholder="Cari..." />
                 </div>
-                <FilterSelect label="Direktorat" value={direktoratFilter} onChange={setDirektoratFilter}>
+                <FilterSelect label="Direktorat" value={directorateFilter} onChange={setDirectorateFilter}>
                   <SelectItem value="all">Semua</SelectItem>
                   {directorates.map((dir) => (
                     <SelectItem key={dir.id} value={dir.name}>{dir.name}</SelectItem>
@@ -72,7 +72,7 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
                     <SelectItem key={sup.id} value={String(sup.id)}>{sup.user.name}</SelectItem>
                   ))}
                 </FilterSelect>
-                <FilterSelect label="Universitas" value={universitasFilter} onChange={setUniversitasFilter}>
+                <FilterSelect label="Universitas" value={universityFilter} onChange={setUniversityFilter}>
                   <SelectItem value="all">Semua</SelectItem>
                   {universities.map((uni) => (
                     <SelectItem key={uni.id} value={uni.name}>{uni.name}</SelectItem>
@@ -126,9 +126,9 @@ export default function AdvancedAdmin({ students, supervisors, directorates, uni
                   <TableRow key={student.id}>
                     <TableCell className="font-medium text-foreground">{student.user.name}</TableCell>
                     <TableCell className="tabular-nums text-muted-foreground">{student.nim}</TableCell>
-                    <TableCell className="text-muted-foreground">{student.universitas ?? '-'}</TableCell>
+                    <TableCell className="text-muted-foreground">{student.university ?? '-'}</TableCell>
                     <TableCell className="text-muted-foreground">{student.supervisor?.user?.name ?? '-'}</TableCell>
-                    <TableCell className="text-muted-foreground">{student.direktorat ?? '-'}</TableCell>
+                    <TableCell className="text-muted-foreground">{student.directorate ?? '-'}</TableCell>
                     <TableCell>
                       <Button asChild size="xs" variant="outline">
                         <Link href={r('admin.monitoring.student.show', student.id)}>Lihat</Link>

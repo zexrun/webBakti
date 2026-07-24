@@ -115,7 +115,7 @@ export default function Index({ supervisors, directorates, positions, search, di
                 <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <UserCell
                     name={supervisor.user.name}
-                    subtitle={[supervisor.direktorat ?? 'Belum ditentukan', supervisor.jabatan].filter(Boolean).join(' · ')}
+                    subtitle={[supervisor.directorate ?? 'Belum ditentukan', supervisor.position].filter(Boolean).join(' · ')}
                   />
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">{supervisor.students.length} Mahasiswa</Badge>
@@ -133,7 +133,7 @@ export default function Index({ supervisors, directorates, positions, search, di
                       <div key={student.id} className="flex items-center justify-between gap-3 px-4 py-3 transition-colors duration-150 hover:bg-muted">
                         <UserCell
                           name={student.user.name}
-                          subtitle={[student.nim, student.universitas].filter(Boolean).join(' · ')}
+                          subtitle={[student.nim, student.university].filter(Boolean).join(' · ')}
                           tone="green"
                         />
                         <Button asChild size="xs" variant="ghost">

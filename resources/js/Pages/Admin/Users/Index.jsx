@@ -45,8 +45,8 @@ function UserSection({ title, dotColor, users, onDelete }) {
                   <TableCell className="font-medium text-foreground">{user.name}</TableCell>
                   <TableCell className="text-muted-foreground">{user.username}</TableCell>
                   <TableCell className="text-muted-foreground">{user.email}</TableCell>
-                  <TableCell className="text-muted-foreground">{user.supervisor?.direktorat ?? user.student?.direktorat ?? '-'}</TableCell>
-                  <TableCell className="text-muted-foreground">{user.supervisor?.jabatan ?? '-'}</TableCell>
+                  <TableCell className="text-muted-foreground">{user.supervisor?.directorate ?? user.student?.directorate ?? '-'}</TableCell>
+                  <TableCell className="text-muted-foreground">{user.supervisor?.position ?? '-'}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
                       {user.email_verified_at === null ? (

@@ -99,7 +99,7 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
                   <div key={student.id} className="rounded-lg bg-muted p-3">
                     <UserCell
                       name={student.user?.name}
-                      subtitle={student.universitas ?? 'Universitas belum diisi'}
+                      subtitle={student.university ?? 'Universitas belum diisi'}
                     />
                   </div>
                 ))

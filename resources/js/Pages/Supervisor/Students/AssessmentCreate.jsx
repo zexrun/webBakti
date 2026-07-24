@@ -87,7 +87,7 @@ export default function AssessmentCreate({ student }) {
               <CardContent className="space-y-4 pt-6">
                 <InfoRow label="Nama Lengkap" value={student.user.name} />
                 <InfoRow label="NIM" value={student.nim} />
-                <InfoRow label="Universitas" value={student.universitas} />
+                <InfoRow label="Universitas" value={student.university} />
                 <InfoRow label="Email" value={student.user.email} />
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Status Dokumen</p>

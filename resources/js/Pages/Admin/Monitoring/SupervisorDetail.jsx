@@ -51,9 +51,9 @@ export default function SupervisorDetail({ supervisor }) {
               <CardContent className="space-y-4 pt-6">
                 <InfoRow label="Nama Lengkap" value={supervisor.user.name} />
                 <InfoRow label="Email" value={supervisor.user.email} />
-                <InfoRow label="NIP" value={supervisor.nip} />
-                <InfoRow label="Direktorat" value={supervisor.direktorat} />
-                <InfoRow label="Jabatan" value={supervisor.jabatan} />
+                <InfoRow label="NIP" value={supervisor.employee_id} />
+                <InfoRow label="Direktorat" value={supervisor.directorate} />
+                <InfoRow label="Jabatan" value={supervisor.position} />
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Status</p>
                   <Badge variant="success" className="mt-1">
@@ -88,7 +88,7 @@ export default function SupervisorDetail({ supervisor }) {
                   <div key={student.id} className="flex flex-col gap-3 px-4 py-3.5 transition-colors duration-150 hover:bg-muted sm:flex-row sm:items-center sm:justify-between">
                     <UserCell
                       name={student.user.name}
-                      subtitle={[student.user.email, student.nim && `NIM: ${student.nim}`, student.program_studi].filter(Boolean).join(' · ')}
+                      subtitle={[student.user.email, student.nim && `NIM: ${student.nim}`, student.study_program].filter(Boolean).join(' · ')}
                       tone="green"
                     />
                     <div className="flex items-center gap-1.5">

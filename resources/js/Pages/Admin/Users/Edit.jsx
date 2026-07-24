@@ -9,18 +9,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/Components/ui/button'
 
 export default function Edit({ user, directorates, positions }) {
-  const currentDirectorateName = user.supervisor?.direktorat ?? user.student?.direktorat ?? ''
+  const currentDirectorateName = user.supervisor?.directorate ?? user.student?.directorate ?? ''
   const { data, setData, put, processing, errors } = useForm({
     name: user.name,
     email: user.email,
     role: user.role,
     nim: user.student?.nim ?? '',
-    universitas: user.student?.universitas ?? '',
-    program_studi: user.student?.program_studi ?? '',
+    university: user.student?.university ?? '',
+    study_program: user.student?.study_program ?? '',
     semester: user.student?.semester ?? '',
-    nip: user.supervisor?.nip ?? '',
-    direktorat: directorates.find((d) => d.name === currentDirectorateName)?.id ?? '',
-    jabatan: positions.find((p) => p.name === user.supervisor?.jabatan)?.id ?? '',
+    employee_id: user.supervisor?.employee_id ?? '',
+    directorate: directorates.find((d) => d.name === currentDirectorateName)?.id ?? '',
+    position: positions.find((p) => p.name === user.supervisor?.position)?.id ?? '',
     password: '',
     password_confirmation: '',
   })
@@ -87,12 +87,12 @@ export default function Edit({ user, directorates, positions }) {
                       <Input id="nim" value={data.nim} onChange={(e) => setData('nim', e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="universitas">Universitas</Label>
-                      <Input id="universitas" value={data.universitas} onChange={(e) => setData('universitas', e.target.value)} />
+                      <Label htmlFor="university">Universitas</Label>
+                      <Input id="university" value={data.university} onChange={(e) => setData('university', e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="program_studi">Program Studi</Label>
-                      <Input id="program_studi" value={data.program_studi} onChange={(e) => setData('program_studi', e.target.value)} />
+                      <Label htmlFor="study_program">Program Studi</Label>
+                      <Input id="study_program" value={data.study_program} onChange={(e) => setData('study_program', e.target.value)} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="semester">Semester</Label>
@@ -109,8 +109,8 @@ export default function Edit({ user, directorates, positions }) {
                   </CardHeader>
                   <CardContent className="pt-6">
                     <div className="space-y-2 sm:w-64">
-                      <Label htmlFor="nip">NIP</Label>
-                      <Input id="nip" value={data.nip} onChange={(e) => setData('nip', e.target.value)} />
+                      <Label htmlFor="employee_id">NIP</Label>
+                      <Input id="employee_id" value={data.employee_id} onChange={(e) => setData('employee_id', e.target.value)} />
                     </div>
                   </CardContent>
                 </Card>
@@ -123,12 +123,12 @@ export default function Edit({ user, directorates, positions }) {
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="direktorat">Direktorat</Label>
+                      <Label htmlFor="directorate">Direktorat</Label>
                       <Select
-                        value={data.direktorat === '' ? 'none' : String(data.direktorat)}
-                        onValueChange={(v) => setData('direktorat', v === 'none' ? '' : v)}
+                        value={data.directorate === '' ? 'none' : String(data.directorate)}
+                        onValueChange={(v) => setData('directorate', v === 'none' ? '' : v)}
                       >
-                        <SelectTrigger id="direktorat" className="w-full">
+                        <SelectTrigger id="directorate" className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -142,12 +142,12 @@ export default function Edit({ user, directorates, positions }) {
 
                     {data.role === 'supervisor' && (
                       <div className="space-y-2">
-                        <Label htmlFor="jabatan">Jabatan</Label>
+                        <Label htmlFor="position">Jabatan</Label>
                         <Select
-                          value={data.jabatan === '' ? 'none' : String(data.jabatan)}
-                          onValueChange={(v) => setData('jabatan', v === 'none' ? '' : v)}
+                          value={data.position === '' ? 'none' : String(data.position)}
+                          onValueChange={(v) => setData('position', v === 'none' ? '' : v)}
                         >
-                          <SelectTrigger id="jabatan" className="w-full">
+                          <SelectTrigger id="position" className="w-full">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>

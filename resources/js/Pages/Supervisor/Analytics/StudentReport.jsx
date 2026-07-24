@@ -59,8 +59,8 @@ export default function StudentReport({
           <CardContent className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-3">
             <InfoRow label="Nama" value={studentInfo.name} />
             <InfoRow label="NIM" value={studentInfo.nim} />
-            <InfoRow label="Universitas" value={studentInfo.universitas} />
-            <InfoRow label="Program Studi" value={studentInfo.program_studi} />
+            <InfoRow label="Universitas" value={studentInfo.university} />
+            <InfoRow label="Program Studi" value={studentInfo.study_program} />
             <InfoRow label="Pembimbing" value={studentInfo.supervisor} />
           </CardContent>
         </Card>

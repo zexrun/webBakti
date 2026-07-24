@@ -150,7 +150,7 @@ export default function Index({ students }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <UserCell
                             name={student.user.name}
-                            subtitle={[student.nim ?? 'NIM belum diisi', student.universitas].filter(Boolean).join(' · ')}
+                            subtitle={[student.nim ?? 'NIM belum diisi', student.university].filter(Boolean).join(' · ')}
                           />
                           {certificateGenerated && (
                             <Badge variant="success">

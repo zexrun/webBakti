@@ -58,10 +58,10 @@ export default function StudentDetail({ student }) {
               <InfoRow label="Nama Lengkap" value={student.user.name} />
               <InfoRow label="Email" value={student.user.email} />
               <InfoRow label="NIM" value={student.nim} />
-              <InfoRow label="Universitas" value={student.universitas} />
-              <InfoRow label="Program Studi" value={student.program_studi} />
+              <InfoRow label="Universitas" value={student.university} />
+              <InfoRow label="Program Studi" value={student.study_program} />
               <InfoRow label="Semester" value={student.semester} />
-              <InfoRow label="Direktorat" value={student.direktorat} />
+              <InfoRow label="Direktorat" value={student.directorate} />
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Status</p>
                 <Badge variant="success" className="mt-1">
@@ -82,8 +82,8 @@ export default function StudentDetail({ student }) {
                     name={student.supervisor.user.name}
                     subtitle={[
                       student.supervisor.user.email,
-                      student.supervisor.nip && `NIP: ${student.supervisor.nip}`,
-                      student.supervisor.jabatan,
+                      student.supervisor.employee_id && `NIP: ${student.supervisor.employee_id}`,
+                      student.supervisor.position,
                     ].filter(Boolean).join(' · ')}
                   />
                   <Button asChild size="xs" variant="outline">

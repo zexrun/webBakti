@@ -92,11 +92,11 @@ export default function Edit({ student, universities, certificateProgress }) {
   const { flash } = usePage().props
   const { data, setData, patch, processing, errors } = useForm({
     nim: student.nim ?? '',
-    universitas: student.universitas ?? '',
-    program_studi: student.program_studi ?? '',
+    university: student.university ?? '',
+    study_program: student.study_program ?? '',
     semester: student.semester ?? '',
-    periode_mulai: student.periode_mulai ?? '',
-    periode_selesai: student.periode_selesai ?? '',
+    period_start: student.period_start ?? '',
+    period_end: student.period_end ?? '',
   })
 
   const r = (name) => (window.route ? window.route(name) : '#')
@@ -149,15 +149,15 @@ export default function Edit({ student, universities, certificateProgress }) {
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="universitas">Universitas</Label>
-                    <UniversityCombobox universities={universities} value={data.universitas} onChange={(v) => setData('universitas', v)} />
-                    {errors.universitas && <p className="text-sm text-destructive">{errors.universitas}</p>}
+                    <Label htmlFor="university">Universitas</Label>
+                    <UniversityCombobox universities={universities} value={data.university} onChange={(v) => setData('university', v)} />
+                    {errors.university && <p className="text-sm text-destructive">{errors.university}</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="program_studi">Program Studi</Label>
-                    <Input id="program_studi" value={data.program_studi} onChange={(e) => setData('program_studi', e.target.value)} placeholder="Contoh: Teknik Informatika" required />
-                    {errors.program_studi && <p className="text-sm text-destructive">{errors.program_studi}</p>}
+                    <Label htmlFor="study_program">Program Studi</Label>
+                    <Input id="study_program" value={data.study_program} onChange={(e) => setData('study_program', e.target.value)} placeholder="Contoh: Teknik Informatika" required />
+                    {errors.study_program && <p className="text-sm text-destructive">{errors.study_program}</p>}
                   </div>
                 </div>
 
@@ -167,14 +167,14 @@ export default function Edit({ student, universities, certificateProgress }) {
                   </p>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="periode_mulai">Tanggal Mulai</Label>
-                      <Input id="periode_mulai" type="date" value={data.periode_mulai} onChange={(e) => setData('periode_mulai', e.target.value)} required />
-                      {errors.periode_mulai && <p className="text-sm text-destructive">{errors.periode_mulai}</p>}
+                      <Label htmlFor="period_start">Tanggal Mulai</Label>
+                      <Input id="period_start" type="date" value={data.period_start} onChange={(e) => setData('period_start', e.target.value)} required />
+                      {errors.period_start && <p className="text-sm text-destructive">{errors.period_start}</p>}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="periode_selesai">Tanggal Selesai</Label>
-                      <Input id="periode_selesai" type="date" value={data.periode_selesai} onChange={(e) => setData('periode_selesai', e.target.value)} required />
-                      {errors.periode_selesai && <p className="text-sm text-destructive">{errors.periode_selesai}</p>}
+                      <Label htmlFor="period_end">Tanggal Selesai</Label>
+                      <Input id="period_end" type="date" value={data.period_end} onChange={(e) => setData('period_end', e.target.value)} required />
+                      {errors.period_end && <p className="text-sm text-destructive">{errors.period_end}</p>}
                     </div>
                   </div>
                 </div>

@@ -109,19 +109,19 @@ export default function Show({ user }) {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Field label="NIM" value={user.student.nim ?? 'Belum diisi'} muted={!user.student.nim} />
                     <Field label="Semester" value={user.student.semester ? `Semester ${user.student.semester}` : 'Belum diisi'} muted={!user.student.semester} />
-                    <Field label="Universitas" value={user.student.universitas ?? 'Belum diisi'} muted={!user.student.universitas} />
-                    <Field label="Program Studi" value={user.student.program_studi ?? 'Belum diisi'} muted={!user.student.program_studi} />
-                    <Field label="Direktorat" value={user.student.direktorat ?? 'Belum ditentukan'} muted={!user.student.direktorat} />
+                    <Field label="Universitas" value={user.student.university ?? 'Belum diisi'} muted={!user.student.university} />
+                    <Field label="Program Studi" value={user.student.study_program ?? 'Belum diisi'} muted={!user.student.study_program} />
+                    <Field label="Direktorat" value={user.student.directorate ?? 'Belum ditentukan'} muted={!user.student.directorate} />
                     <Field label="Pembimbing" value={user.student.supervisor?.user?.name ?? 'Belum ditugaskan'} muted={!user.student.supervisor?.user?.name} />
                   </div>
                   <Field
                     label="Periode Magang"
                     value={
-                      user.student.periode_mulai && user.student.periode_selesai
-                        ? `${new Date(user.student.periode_mulai).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })} – ${new Date(user.student.periode_selesai).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}`
+                      user.student.period_start && user.student.period_end
+                        ? `${new Date(user.student.period_start).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })} – ${new Date(user.student.period_end).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}`
                         : 'Periode belum ditentukan'
                     }
-                    muted={!(user.student.periode_mulai && user.student.periode_selesai)}
+                    muted={!(user.student.period_start && user.student.period_end)}
                   />
                 </div>
               )}
@@ -130,9 +130,9 @@ export default function Show({ user }) {
                 <div className="space-y-4 border-t border-border pt-6">
                   <h4 className="text-sm font-medium text-foreground">Informasi Pembimbing</h4>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Field label="NIP" value={user.supervisor.nip ?? 'Belum diisi'} muted={!user.supervisor.nip} />
-                    <Field label="Jabatan" value={user.supervisor.jabatan ?? 'Belum diisi'} muted={!user.supervisor.jabatan} />
-                    <Field label="Direktorat" value={user.supervisor.direktorat ?? '-'} className="md:col-span-2" />
+                    <Field label="NIP" value={user.supervisor.employee_id ?? 'Belum diisi'} muted={!user.supervisor.employee_id} />
+                    <Field label="Jabatan" value={user.supervisor.position ?? 'Belum diisi'} muted={!user.supervisor.position} />
+                    <Field label="Direktorat" value={user.supervisor.directorate ?? '-'} className="md:col-span-2" />
                   </div>
                 </div>
               )}

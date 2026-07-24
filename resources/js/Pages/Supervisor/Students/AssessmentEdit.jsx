@@ -118,7 +118,7 @@ export default function AssessmentEdit({ student, assessment }) {
               <CardContent className="space-y-4 pt-6">
                 <InfoRow label="Nama Lengkap" value={student.user.name} />
                 <InfoRow label="NIM" value={student.nim} />
-                <InfoRow label="Universitas" value={student.universitas} />
+                <InfoRow label="Universitas" value={student.university} />
               </CardContent>
             </Card>
 
