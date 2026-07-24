@@ -12,14 +12,14 @@ class Supervisor extends Model
 
     protected $fillable = [
         'user_id',
-        'nip',
-        'jabatan',
-        'direktorat'
+        'employee_id',
+        'position',
+        'directorate'
     ];
 
     protected $casts = [
-        'nip',
-        'jabatan'
+        'employee_id' => 'string',
+        'position' => 'string'
     ];
 
     public function user()
@@ -47,8 +47,8 @@ class Supervisor extends Model
         return $this->belongsTo(Directorate::class);
     }
     
-    public function position()
+    public function positionRelation()
     {
-        return $this->belongsTo(Position::class, 'jabatan', 'name');
+        return $this->belongsTo(Position::class, 'position', 'name');
     }
 }
