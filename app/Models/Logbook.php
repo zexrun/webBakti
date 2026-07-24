@@ -27,6 +27,7 @@ class Logbook extends Model
     protected function casts(): array
     {
         return [
+            'activity_date' => 'date',
             'feedback_at' => 'datetime',
         ];
     }
