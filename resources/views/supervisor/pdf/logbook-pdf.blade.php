@@ -254,7 +254,7 @@
                     <td class="signature-right">
                         <div class="signature-title">Mengetahui,<br>Pembimbing Lapangan</div>
                         <div class="signature-name">{{ $logbook->student->supervisor->user->name ?? '' }}</div>
-                        <div class="signature-nip">NIP. {{ $logbook->student->supervisor->nip ?? '________________' }}</div>
+                        <div class="signature-nip">NIP. {{ $logbook->student->supervisor->employee_id ?? '________________' }}</div>
                     </td>
                 </tr>
             </table>

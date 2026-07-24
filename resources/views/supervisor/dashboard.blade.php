@@ -314,7 +314,7 @@
                                         {{ $student->user->name }}
                                     </p>
                                     <p class="text-xs text-gray-500">
-                                        {{ $student->universitas ?? 'Universitas belum diisi' }}
+                                        {{ $student->university ?? 'Universitas belum diisi' }}
                                     </p>
                                 </div>
                                 <div class="text-xs text-gray-400">

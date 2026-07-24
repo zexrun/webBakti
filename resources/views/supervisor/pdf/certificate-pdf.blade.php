@@ -328,14 +328,14 @@
                             <td class="detail-label">Program Studi</td>
                             <td class="detail-separator">:</td>
                             <td class="detail-value">
-                                {{ $student->program_studi ?? '-' }}
+                                {{ $student->study_program ?? '-' }}
                             </td>
                         </tr>
                         <tr>
                             <td class="detail-label">Universitas</td>
                             <td class="detail-separator">:</td>
                             <td class="detail-value">
-                                {{ $student->universitas ?? '-' }}
+                                {{ $student->university ?? '-' }}
                             </td>
                         </tr>
                     </table>
@@ -348,11 +348,11 @@
                     Kementerian Komunikasi dan Digital dengan pembimbing Sdr.
                     {{ $supervisorName ?? "Dede Sukartoyo" }}
                     selaku Staf Direktorat Sumber Daya dan Administrasi
-                    terhitung sejak tanggal @if(isset($student->periode_mulai)
-                    && isset($student->periode_selesai))
-                    {{ date('d F Y', strtotime($student->periode_mulai)) }}
+                    terhitung sejak tanggal @if(isset($student->period_start)
+                    && isset($student->period_end))
+                    {{ date('d F Y', strtotime($student->period_start)) }}
                     sampai dengan
-                    {{ date('d F Y', strtotime($student->periode_selesai)) }}.
+                    {{ date('d F Y', strtotime($student->period_end)) }}.
                     @else periode yang belum ditentukan. @endif
                 </div>
 
@@ -379,7 +379,7 @@
                             <div class="signature-name">SUDARMANTO</div>
                             <div class="signature-nip">
                                 NIP
-                                {{ $supervisor->nip ?? '196907071959031002' }}
+                                {{ $supervisor->employee_id ?? '196907071959031002' }}
                             </div>
                         </td>
                     </tr>

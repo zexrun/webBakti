@@ -277,12 +277,12 @@
             <tr>
                 <td class="detail-label">Perguruan Tinggi</td>
                 <td class="detail-separator">:</td>
-                <td>{{ $student->universitas }}</td>
+                <td>{{ $student->university }}</td>
             </tr>
             <tr>
                 <td class="detail-label">Program Studi</td>
                 <td class="detail-separator">:</td>
-                <td>{{ $student->program_studi ?? 'Tidak tercantum' }}</td>
+                <td>{{ $student->study_program ?? 'Tidak tercantum' }}</td>
             </tr>
             <tr>
                 <td class="detail-label">Pembimbing Lapangan</td>
@@ -293,8 +293,8 @@
                 <td class="detail-label">Periode Magang</td>
                 <td class="detail-separator">:</td>
                 <td>
-                    @if(isset($student->periode_mulai) && isset($student->periode_selesai))
-                        {{ date('d F Y', strtotime($student->periode_mulai)) }} s.d. {{ date('d F Y', strtotime($student->periode_selesai)) }}
+                    @if(isset($student->period_start) && isset($student->period_end))
+                        {{ date('d F Y', strtotime($student->period_start)) }} s.d. {{ date('d F Y', strtotime($student->period_end)) }}
                     @else
                         Tidak tercantum
                     @endif
@@ -407,7 +407,7 @@
                     <td class="signature-right">
                         <div class="signature-title">Mengetahui,<br>Pembimbing Lapangan</div>
                         <div class="signature-name">{{ $supervisor->name }}</div>
-                        <div class="signature-nip">NIP. {{ $supervisor->nip ?? '________________' }}</div>
+                        <div class="signature-nip">NIP. {{ $supervisor->employee_id ?? '________________' }}</div>
                     </td>
                 </tr>
             </table>
