@@ -10,6 +10,6 @@ class Directorate extends Model
 
     public function supervisors()
     {
-        return $this->hasMany(Supervisor::class, 'direktorat', 'name');
+        return $this->hasMany(Supervisor::class, 'directorate', 'name');
     }
 }
