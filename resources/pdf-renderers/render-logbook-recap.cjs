@@ -269,17 +269,19 @@ function buildDocument(data) {
         React.createElement(Text, { style: styles.titleMain }, 'Rekap Logbook Kegiatan'),
         React.createElement(Text, { style: styles.documentNumber }, `Nomor: ${data.logNumber}/BAKTI/SDA/${data.reportMonth}`),
       ),
-      // Student Data
-      React.createElement(Text, { style: styles.sectionTitle }, 'Data Mahasiswa'),
-      React.createElement(
-        View,
-        null,
-        DetailRow({ label: 'Nama Lengkap', value: data.studentName }),
-        DetailRow({ label: 'NIM', value: data.studentNim }),
-        DetailRow({ label: 'Perguruan Tinggi', value: data.studentUniversitas }),
-        DetailRow({ label: 'Program Studi', value: data.studentProgramStudi }),
-        DetailRow({ label: 'Periode Magang', value: data.period }),
-      ),
+      // Student Data (hidden when multiple students)
+      ...(data.multipleStudents ? [] : [
+        React.createElement(Text, { style: styles.sectionTitle }, 'Data Mahasiswa'),
+        React.createElement(
+          View,
+          null,
+          DetailRow({ label: 'Nama Lengkap', value: data.studentName }),
+          DetailRow({ label: 'NIM', value: data.studentNim }),
+          DetailRow({ label: 'Perguruan Tinggi', value: data.studentUniversitas }),
+          DetailRow({ label: 'Program Studi', value: data.studentProgramStudi }),
+          DetailRow({ label: 'Periode Magang', value: data.period }),
+        ),
+      ]),
       // Supervisor Data
       React.createElement(Text, { style: styles.sectionTitle }, 'Pembimbing'),
       React.createElement(
