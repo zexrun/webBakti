@@ -256,6 +256,7 @@ function buildDocument(data) {
         DetailRow({ label: 'NIM', value: data.studentNim }),
         DetailRow({ label: 'Perguruan Tinggi', value: data.studentUniversitas }),
         DetailRow({ label: 'Program Studi', value: data.studentProgramStudi }),
+        DetailRow({ label: 'Periode Magang', value: data.period }),
       ),
       // Supervisor Data
       React.createElement(Text, { style: styles.sectionTitle }, 'Pembimbing'),
