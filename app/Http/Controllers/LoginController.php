@@ -5,11 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller {
-    public function login() {
+    public function show() {
         if (Auth::check()) { return redirect()->route('home'); }
         return view('auth.login');
     }
-    public function actionlogin(Request $request) {
+    public function login(Request $request) {
         $credentials = $request->validate(['email' => ['required', 'email'],'password' => ['required'],]);
 
         if (Auth::attempt($credentials)) {
@@ -31,7 +31,7 @@ class LoginController extends Controller {
         }
         return back()->withErrors(['email' => 'Email atau Password salah.'])->onlyInput('email');
     }
-    public function actionlogout(Request $request) {
+    public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
