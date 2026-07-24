@@ -294,7 +294,7 @@
                 <td class="detail-separator">:</td>
                 <td>
                     @if(isset($student->period_start) && isset($student->period_end))
-                        {{ formatDateIndonesian($student->period_start) }} s.d. {{ formatDateIndonesian($student->period_end) }}
+                        {{ \App\Helpers\DateHelper::formatDateIndonesian($student->period_start) }} s.d. {{ \App\Helpers\DateHelper::formatDateIndonesian($student->period_end) }}
                     @else
                         Tidak tercantum
                     @endif

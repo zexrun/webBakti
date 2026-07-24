@@ -350,9 +350,9 @@
                     selaku Staf Direktorat Sumber Daya dan Administrasi
                     terhitung sejak tanggal @if(isset($student->period_start)
                     && isset($student->period_end))
-                    {{ formatDateIndonesian($student->period_start) }}
+                    {{ \App\Helpers\DateHelper::formatDateIndonesian($student->period_start) }}
                     sampai dengan
-                    {{ formatDateIndonesian($student->period_end) }}.
+                    {{ \App\Helpers\DateHelper::formatDateIndonesian($student->period_end) }}.
                     @else periode yang belum ditentukan. @endif
                 </div>
 
@@ -371,7 +371,7 @@
                         </td>
                         <td class="signature-right">
                             <div class="signature-date-location">
-                                Jakarta, {{ formatDateIndonesian(now()) }}
+                                Jakarta, {{ \App\Helpers\DateHelper::formatDateIndonesian(now()) }}
                             </div>
                             <div class="signature-title">
                                 Kepala Divisi SDM dan Humas
