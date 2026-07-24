@@ -236,7 +236,7 @@ function GradesTable({ submissions }) {
 function buildDocument(data) {
   return React.createElement(
     Document,
-    null,
+    { title: `NilaiMagang_${data.studentName}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },

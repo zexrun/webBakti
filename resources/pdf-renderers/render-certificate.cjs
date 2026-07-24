@@ -150,7 +150,7 @@ function buildDocument(data) {
 
   return React.createElement(
     Document,
-    null,
+    { title: `Sertifikat_${data.studentName}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },

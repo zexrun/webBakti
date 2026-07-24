@@ -221,7 +221,7 @@ function LogsTable({ logs }) {
 function buildDocument(data) {
   return React.createElement(
     Document,
-    null,
+    { title: `RekapLogbook_${data.studentName}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },
