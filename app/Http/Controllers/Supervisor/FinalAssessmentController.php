@@ -166,10 +166,10 @@ private function streamCertificatePdf(Student $student, FinalAssessment $assessm
         'studentNim' => $student->nim ?? '-',
         'studentProgramStudi' => $student->study_program ?? '-',
         'studentUniversitas' => $student->university ?? '-',
-        'periodeMulaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->period_start)) : null,
-        'periodeSelesaiFormatted' => $hasPeriode ? date('d F Y', strtotime($student->period_end)) : null,
+        'periodeMulaiFormatted' => $hasPeriode ? \App\Helpers\DateHelper::formatDateIndonesian($student->period_start) : null,
+        'periodeSelesaiFormatted' => $hasPeriode ? \App\Helpers\DateHelper::formatDateIndonesian($student->period_end) : null,
         'hasPeriode' => $hasPeriode,
-        'signatureDateFormatted' => date('d F Y'),
+        'signatureDateFormatted' => \App\Helpers\DateHelper::formatDateIndonesian(now()),
     ];
 
     $tmpDir = storage_path('app/tmp');
