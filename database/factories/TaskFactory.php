@@ -31,7 +31,7 @@ class TaskFactory extends Factory
             ]),
             'description' => fake()->paragraph(2),
             'file_path' => fake()->boolean() ? 'path/to/some/file.pdf' : null, // Contoh penambahan data file_path
-            'type' => fake()->randomElement(['harian', 'akhir']),
+            'type' => fake()->randomElement(['daily', 'final']),
             'due_date' => fake()->dateTimeBetween('+1 week', '+1 month'),
         ];
     }

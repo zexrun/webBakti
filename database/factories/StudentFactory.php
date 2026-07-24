@@ -15,8 +15,8 @@ class StudentFactory extends Factory
     {
         return [
             'nim' => fake()->unique()->numerify('##########'),
-            'universitas' => 'Telkom University',
-            'program_studi' => 'S1 Informatika',
+            'university' => 'Telkom University',
+            'study_program' => 'S1 Informatika',
             'semester' => '6',
         ];
     }

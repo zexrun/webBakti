@@ -17,9 +17,9 @@ class SupervisorFactory extends Factory
     public function definition(): array
     {
         return [
-            'nip' => fake()->unique()->numerify('198##########'),
-            'direktorat' => 'SDA',
-            'jabatan' => 'STAFF',
+            'employee_id' => fake()->unique()->numerify('198##########'),
+            'directorate' => 'SDA',
+            'position' => 'STAFF',
         ];
     }
 }
