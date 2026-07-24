@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   detailLabel: {
-    width: 120,
+    width: 140,
     fontSize: 11,
   },
   detailSeparator: {
@@ -150,7 +150,7 @@ function buildDocument(data) {
       React.createElement(
         View,
         null,
-        DetailRow({ label: 'Nama', value: data.studentName }),
+        DetailRow({ label: 'Nama Lengkap', value: data.studentName }),
         DetailRow({ label: 'NIM', value: data.studentNim }),
         DetailRow({ label: 'Perguruan Tinggi', value: data.studentUniversitas }),
       ),
