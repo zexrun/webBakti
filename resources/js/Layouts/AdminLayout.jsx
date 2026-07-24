@@ -12,6 +12,7 @@ import {
   UserPlus,
   Megaphone,
   SquarePen,
+  MessageSquare,
 } from 'lucide-react'
 import AppShell from '@/Layouts/AppShell'
 
@@ -44,6 +45,7 @@ const nav = [
   {
     label: 'Komunikasi',
     items: [
+      { label: 'Chat', icon: MessageSquare, route: 'messages.inbox', match: 'messages.*' },
       { label: 'Daftar Pengumuman', icon: Megaphone, route: 'admin.announcements.index', match: 'admin.announcements.index' },
       { label: 'Buat Pengumuman', icon: SquarePen, route: 'admin.announcements.create', match: 'admin.announcements.create' },
     ],
