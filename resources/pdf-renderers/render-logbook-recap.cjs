@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontFamily: 'Times-Bold',
-    fontSize: 10,
+    fontSize: 11,
     textDecoration: 'underline',
-    marginVertical: 5,
+    marginVertical: 6,
   },
   detailRow: {
     flexDirection: 'row',
@@ -63,15 +63,15 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     width: 140,
-    fontSize: 9,
+    fontSize: 11,
   },
   detailSeparator: {
     width: 15,
     textAlign: 'center',
-    fontSize: 9,
+    fontSize: 11,
   },
   detailValue: {
-    fontSize: 9,
+    fontSize: 11,
     flex: 1,
   },
   logsTable: {
