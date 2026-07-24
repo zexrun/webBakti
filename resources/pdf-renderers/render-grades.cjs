@@ -39,17 +39,17 @@ const styles = StyleSheet.create({
   },
   titleBlock: {
     textAlign: 'center',
-    marginVertical: 14,
+    marginVertical: 10,
   },
   titleMain: {
     fontFamily: 'Times-Bold',
     fontSize: 14,
     textTransform: 'uppercase',
     textDecoration: 'underline',
+    marginBottom: 5,
   },
   documentNumber: {
-    fontSize: 10,
-    marginTop: 4,
+    fontSize: 9,
   },
   sectionTitle: {
     fontFamily: 'Times-Bold',

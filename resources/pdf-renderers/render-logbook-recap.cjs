@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
   },
   titleMain: {
     fontFamily: 'Times-Bold',
-    fontSize: 13,
+    fontSize: 14,
     textTransform: 'uppercase',
     textDecoration: 'underline',
+    marginBottom: 5,
   },
   documentNumber: {
     fontSize: 9,
-    marginTop: 3,
   },
   sectionTitle: {
     fontFamily: 'Times-Bold',
