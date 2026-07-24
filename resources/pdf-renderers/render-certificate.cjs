@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   ministryName: {
     fontFamily: 'Times-Bold',
-    fontSize: 9,
+    fontSize: 10,
     textTransform: 'uppercase',
     marginBottom: 2,
   },
