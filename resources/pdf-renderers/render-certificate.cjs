@@ -150,7 +150,7 @@ function buildDocument(data) {
 
   return React.createElement(
     Document,
-    { title: `Sertifikat_${data.studentName}` },
+    { title: `Sertifikat_${data.studentName}_${new Date().toISOString().split('T')[0]}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },

@@ -119,7 +119,7 @@ function DetailRow({ label, value }) {
 function buildDocument(data) {
   return React.createElement(
     Document,
-    { title: `LaporanHarian_${data.activityDate}_${data.studentName}` },
+    { title: `LaporanHarian_${data.activityDate}_${data.studentName}_${new Date().toISOString().split('T')[0]}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },
