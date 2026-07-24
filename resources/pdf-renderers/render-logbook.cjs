@@ -59,19 +59,19 @@ const styles = StyleSheet.create({
   },
   detailRow: {
     flexDirection: 'row',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   detailLabel: {
     width: 120,
-    fontSize: 10,
+    fontSize: 11,
   },
   detailSeparator: {
     width: 15,
     textAlign: 'center',
-    fontSize: 10,
+    fontSize: 11,
   },
   detailValue: {
-    fontSize: 10,
+    fontSize: 11,
     flex: 1,
   },
   contentBlock: {
