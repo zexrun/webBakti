@@ -234,9 +234,10 @@ function GradesTable({ submissions }) {
 }
 
 function buildDocument(data) {
+  const today = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })
   return React.createElement(
     Document,
-    { title: `NilaiMagang_${data.studentName}_${new Date().toISOString().split('T')[0]}` },
+    { title: `NilaiMagang_${data.studentName}_${today}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },

@@ -148,9 +148,10 @@ function buildDocument(data) {
     ? `${data.periodeMulaiFormatted} sampai dengan ${data.periodeSelesaiFormatted}.`
     : 'periode yang belum ditentukan.'
 
+  const today = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })
   return React.createElement(
     Document,
-    { title: `Sertifikat_${data.studentName}_${new Date().toISOString().split('T')[0]}` },
+    { title: `Sertifikat_${data.studentName}_${today}` },
     React.createElement(
       Page,
       { size: 'A4', style: styles.page },
