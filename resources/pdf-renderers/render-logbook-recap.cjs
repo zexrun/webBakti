@@ -93,12 +93,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Times-Bold',
   },
   colDate: {
-    width: '20%',
+    width: '12%',
     padding: 3,
     fontSize: 7,
   },
   colTime: {
-    width: '8%',
+    width: '20%',
     padding: 3,
     textAlign: 'center',
     fontSize: 7,
