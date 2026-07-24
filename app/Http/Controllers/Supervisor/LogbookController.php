@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Supervisor;
 use App\Http\Controllers\Controller;
 use App\Models\Logbook;
 use App\Notifications\LogbookFeedbackGiven;
+use App\Helpers\DateHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -93,34 +96,146 @@ class LogbookController extends Controller
         }
 
         $logbook->load('student.user', 'student.supervisor.user');
+        $student = $logbook->student;
+        $supervisor = $student->supervisor;
 
-        $pdf = Pdf::loadView('supervisor.pdf.logbook-pdf', compact('logbook'));
+        $data = [
+            'studentName' => $student->user->name,
+            'studentNim' => $student->nim ?? '-',
+            'studentUniversitas' => $student->university ?? '-',
+            'supervisorName' => $supervisor->user->name ?? '-',
+            'logNumber' => str_pad(($student->id * 37 + $logbook->activity_date->day) % 900 + 100, 3, '0', STR_PAD_LEFT),
+            'reportMonth' => $logbook->activity_date->format('m/Y'),
+            'activityDate' => DateHelper::formatDateIndonesian($logbook->activity_date),
+            'activityTime' => $logbook->start_time . ' - ' . $logbook->end_time,
+            'feeling' => $logbook->feeling ?? '-',
+            'description' => $logbook->description ?? '-',
+            'feedback' => $logbook->feedback ?? null,
+        ];
 
-        return $pdf->stream('logbook-' . $logbook->student->user->name . '-' . $logbook->activity_date . '.pdf');
+        $tmpDir = storage_path('app/tmp');
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0755, true);
+        }
+
+        $id = (string) Str::uuid();
+        $inputPath = $tmpDir . '/logbook-' . $id . '-input.json';
+        $outputPath = $tmpDir . '/logbook-' . $id . '-output.pdf';
+
+        file_put_contents($inputPath, json_encode($data));
+
+        try {
+            $scriptPath = base_path('resources/pdf-renderers/render-logbook.cjs');
+
+            $env = array_filter([
+                'SystemRoot' => getenv('SystemRoot') ?: 'C:\\Windows',
+                'windir' => getenv('windir') ?: 'C:\\Windows',
+                'PATH' => getenv('PATH'),
+            ]);
+
+            $result = Process::timeout(30)->env($env)->run(['node', $scriptPath, $inputPath, $outputPath]);
+
+            if (!$result->successful()) {
+                throw new \RuntimeException('React-PDF logbook render failed: ' . $result->errorOutput());
+            }
+
+            $pdfContent = file_get_contents($outputPath);
+        } finally {
+            if (file_exists($inputPath)) {
+                unlink($inputPath);
+            }
+            if (file_exists($outputPath)) {
+                unlink($outputPath);
+            }
+        }
+
+        $fileName = 'logbook-' . Str::slug($student->user->name) . '-' . $logbook->activity_date->format('Y-m-d') . '.pdf';
+
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+        ]);
     }
 
     public function exportRecapPdf(Request $request)
     {
         $logbooks = $this->filteredQuery($request)
-            ->with('student.user')
-            ->orderBy('student_id')
+            ->with('student.user', 'student.supervisor.user')
             ->orderBy('activity_date')
             ->get();
 
-        $logbooksByStudent = (function () use ($logbooks) {
-            foreach ($logbooks->groupBy('student_id') as $studentGroup) {
-                yield $studentGroup->first()->student => $studentGroup;
+        $supervisor = Auth::user()->supervisor;
+        $logNumber = str_pad(($supervisor->id * 37 + now()->day) % 900 + 100, 3, '0', STR_PAD_LEFT);
+
+        $logs = $logbooks->map(fn($log) => [
+            'date' => DateHelper::formatDateIndonesian($log->activity_date),
+            'time' => $log->start_time . '-' . $log->end_time,
+            'title' => $log->title ?? '-',
+            'feeling' => $log->feeling ?? '-',
+            'status' => $log->is_verified ? 'Telah Dilihat' : 'Belum Dilihat',
+        ])->toArray();
+
+        $student = $logbooks->first()?->student;
+
+        $data = [
+            'studentName' => $student?->user->name ?? '-',
+            'studentNim' => $student?->nim ?? '-',
+            'studentUniversitas' => $student?->university ?? '-',
+            'studentProgramStudi' => $student?->study_program ?? '-',
+            'supervisorName' => $supervisor->user->name ?? '-',
+            'supervisorPosition' => $supervisor->position ?? '-',
+            'logNumber' => $logNumber,
+            'reportMonth' => now()->format('m/Y'),
+            'logs' => $logs,
+            'totalLogs' => count($logs),
+            'period' => ($request->get('date_from') && $request->get('date_to'))
+                ? DateHelper::formatDateIndonesian($request->get('date_from')) . ' s.d. ' . DateHelper::formatDateIndonesian($request->get('date_to'))
+                : 'Semua periode',
+            'signatureDateFormatted' => DateHelper::formatDateIndonesian(now()),
+        ];
+
+        $tmpDir = storage_path('app/tmp');
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0755, true);
+        }
+
+        $id = (string) Str::uuid();
+        $inputPath = $tmpDir . '/logbook-recap-' . $id . '-input.json';
+        $outputPath = $tmpDir . '/logbook-recap-' . $id . '-output.pdf';
+
+        file_put_contents($inputPath, json_encode($data));
+
+        try {
+            $scriptPath = base_path('resources/pdf-renderers/render-logbook-recap.cjs');
+
+            $env = array_filter([
+                'SystemRoot' => getenv('SystemRoot') ?: 'C:\\Windows',
+                'windir' => getenv('windir') ?: 'C:\\Windows',
+                'PATH' => getenv('PATH'),
+            ]);
+
+            $result = Process::timeout(30)->env($env)->run(['node', $scriptPath, $inputPath, $outputPath]);
+
+            if (!$result->successful()) {
+                throw new \RuntimeException('React-PDF logbook recap render failed: ' . $result->errorOutput());
             }
-        })();
 
-        $pdf = Pdf::loadView('supervisor.pdf.logbook-recap-pdf', [
-            'logbooksByStudent' => $logbooksByStudent,
-            'dateFrom' => $request->get('date_from'),
-            'dateTo' => $request->get('date_to'),
-            'generatedAt' => now(),
+            $pdfContent = file_get_contents($outputPath);
+        } finally {
+            if (file_exists($inputPath)) {
+                unlink($inputPath);
+            }
+            if (file_exists($outputPath)) {
+                unlink($outputPath);
+            }
+        }
+
+        $fileName = 'rekap-logbook-' . now()->format('Y-m-d') . '.pdf';
+
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
         ]);
-
-        return $pdf->stream('rekap-logbook-' . now()->format('Y-m-d') . '.pdf');
     }
 
     private function filteredQuery(Request $request)
