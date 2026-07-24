@@ -173,12 +173,13 @@ class LogbookController extends Controller
             'title' => $log->title ?? '-',
             'feeling' => $log->feeling ?? '-',
             'status' => $log->is_verified ? 'Telah Dilihat' : 'Belum Dilihat',
+            'studentName' => $log->student->user->name ?? '-',
         ])->toArray();
 
         $student = $logbooks->first()?->student;
 
         $data = [
-            'studentName' => $student?->user->name ?? '-',
+            'studentName' => $student?->user->name ?? 'Semua Mahasiswa',
             'studentNim' => $student?->nim ?? '-',
             'studentUniversitas' => $student?->university ?? '-',
             'studentProgramStudi' => $student?->study_program ?? '-',
@@ -188,6 +189,7 @@ class LogbookController extends Controller
             'reportMonth' => now()->format('m/Y'),
             'logs' => $logs,
             'totalLogs' => count($logs),
+            'multipleStudents' => $logbooks->groupBy('student_id')->count() > 1,
             'period' => ($request->get('date_from') && $request->get('date_to'))
                 ? DateHelper::formatDateIndonesian($request->get('date_from')) . ' s.d. ' . DateHelper::formatDateIndonesian($request->get('date_to'))
                 : 'Semua periode',

@@ -120,9 +120,14 @@ const styles = StyleSheet.create({
     fontSize: 7,
   },
   colStatus: {
-    width: '22%',
+    width: '15%',
     padding: 3,
     textAlign: 'center',
+    fontSize: 7,
+  },
+  colStudent: {
+    width: '12%',
+    padding: 3,
     fontSize: 7,
   },
   emptyState: {
@@ -178,7 +183,7 @@ function DetailRow({ label, value }) {
   )
 }
 
-function LogsTable({ logs }) {
+function LogsTable({ logs, multipleStudents }) {
   if (!logs || logs.length === 0) {
     return React.createElement(
       View,
@@ -187,30 +192,46 @@ function LogsTable({ logs }) {
     )
   }
 
+  const headerCells = [
+    React.createElement(Text, { style: styles.colNo }, 'No'),
+    React.createElement(Text, { style: styles.colDate }, 'Tanggal'),
+    React.createElement(Text, { style: styles.colTime }, 'Waktu'),
+    React.createElement(Text, { style: styles.colActivity }, 'Kegiatan'),
+    React.createElement(Text, { style: styles.colFeeling }, 'Perasaan'),
+    React.createElement(Text, { style: styles.colStatus }, 'Status'),
+  ]
+
+  if (multipleStudents) {
+    headerCells.push(React.createElement(Text, { style: styles.colStudent }, 'Mahasiswa'))
+  }
+
   const rows = [
     React.createElement(
       View,
       { style: styles.tableHeader, key: 'header' },
-      React.createElement(Text, { style: styles.colNo }, 'No'),
-      React.createElement(Text, { style: styles.colDate }, 'Tanggal'),
-      React.createElement(Text, { style: styles.colTime }, 'Waktu'),
-      React.createElement(Text, { style: styles.colActivity }, 'Kegiatan'),
-      React.createElement(Text, { style: styles.colFeeling }, 'Perasaan'),
-      React.createElement(Text, { style: styles.colStatus }, 'Status'),
+      ...headerCells
     ),
   ]
 
   logs.forEach((log, index) => {
+    const rowCells = [
+      React.createElement(Text, { style: styles.colNo }, String(index + 1)),
+      React.createElement(Text, { style: styles.colDate }, log.date || '-'),
+      React.createElement(Text, { style: styles.colTime }, log.time || '-'),
+      React.createElement(Text, { style: styles.colActivity }, log.title || '-'),
+      React.createElement(Text, { style: styles.colFeeling }, log.feeling || '-'),
+      React.createElement(Text, { style: styles.colStatus }, log.status || '-'),
+    ]
+
+    if (multipleStudents) {
+      rowCells.push(React.createElement(Text, { style: styles.colStudent }, log.studentName || '-'))
+    }
+
     rows.push(
       React.createElement(
         View,
         { style: styles.tableRow, key: `row-${index}` },
-        React.createElement(Text, { style: styles.colNo }, String(index + 1)),
-        React.createElement(Text, { style: styles.colDate }, log.date || '-'),
-        React.createElement(Text, { style: styles.colTime }, log.time || '-'),
-        React.createElement(Text, { style: styles.colActivity }, log.title || '-'),
-        React.createElement(Text, { style: styles.colFeeling }, log.feeling || '-'),
-        React.createElement(Text, { style: styles.colStatus }, log.status || '-'),
+        ...rowCells
       )
     )
   })
@@ -269,7 +290,7 @@ function buildDocument(data) {
       ),
       // Logs Table
       React.createElement(Text, { style: styles.sectionTitle }, 'Daftar Logbook'),
-      LogsTable({ logs: data.logs }),
+      LogsTable({ logs: data.logs, multipleStudents: data.multipleStudents }),
       // Summary
       React.createElement(Text, { style: styles.sectionTitle }, 'Ringkasan'),
       React.createElement(
