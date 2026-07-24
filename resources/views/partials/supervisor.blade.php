@@ -176,12 +176,12 @@
             <div>
                 <button
                     type="button"
-                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.list.*') || request()->routeIs('supervisor.logbooks.*') ? 'bg-blue-50 text-blue-700' : '' }}"
+                    class="flex items-center w-full p-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.*') || request()->routeIs('supervisor.logbooks.*') ? 'bg-blue-50 text-blue-700' : '' }}"
                     data-collapse-toggle="dropdown-example"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.list.*') || request()->routeIs('supervisor.logbooks.*') ? 'text-blue-600' : '' }}"
+                        class="w-5 h-5 text-gray-500 transition-colors duration-200 flex-shrink-0 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.*') || request()->routeIs('supervisor.logbooks.*') ? 'text-blue-600' : '' }}"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -213,7 +213,7 @@
 
                 <ul
                     id="dropdown-example"
-                    class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.list.*') || request()->routeIs('supervisor.logbooks.*') ? '' : 'hidden' }}"
+                    class="py-2 space-y-1 ml-6 border-l border-gray-200 {{ request()->routeIs('supervisor.tasks.index') || request()->routeIs('supervisor.students.*') || request()->routeIs('supervisor.logbooks.*') ? '' : 'hidden' }}"
                 >
                     <li>
                         <a
