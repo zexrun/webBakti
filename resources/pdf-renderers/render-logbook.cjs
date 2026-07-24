@@ -26,11 +26,16 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     marginBottom: 2,
   },
-  agencyAddress: {
-    fontSize: 8,
+  agencySubtitle: {
+    fontSize: 9,
+    fontStyle: 'italic',
+    color: '#4a90e2',
+    marginBottom: 5,
+  },
+  contactInfo: {
+    fontSize: 7,
     color: '#333333',
     lineHeight: 1.3,
-    marginTop: 4,
   },
   titleBlock: {
     textAlign: 'center',
@@ -122,12 +127,15 @@ function buildDocument(data) {
       React.createElement(
         View,
         { style: styles.header },
-        React.createElement(Text, { style: styles.ministryName }, 'Kementerian Komunikasi dan Digital Republik Indonesia'),
+        React.createElement(Text, { style: styles.ministryName }, 'Kementerian Komunikasi dan Digital RI'),
         React.createElement(Text, { style: styles.agencyName }, 'Badan Aksesibilitas Telekomunikasi dan Informasi'),
+        React.createElement(Text, { style: styles.agencySubtitle }, 'Indonesia Terkoneksi - Makin Digital, Makin Maju'),
         React.createElement(
           Text,
-          { style: styles.agencyAddress },
-          'Centennial Tower Lt. 42-45, Jl. Gatot Subroto Kav. 24-25, Jakarta 12930\nTelp. 021-31936590 (Hunting) · www.baktikominfo.id',
+          { style: styles.contactInfo },
+          'Centennial Tower Lt. 42-45, Jl. Gatot Subroto Kav. 24-25, Jakarta 12930\n' +
+          'Telp. : 021-31936590 (Hunting) Fax. : 021-31936516, 31927516\n' +
+          'www.baktikominfo.id | humas@baktikominfo.id | mail@baktikominfo.id',
         ),
       ),
       // Title

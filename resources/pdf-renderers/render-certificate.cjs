@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   ministryName: {
     fontFamily: 'Times-Bold',
-    fontSize: 10,
+    fontSize: 9,
     textTransform: 'uppercase',
     marginBottom: 2,
   },
@@ -157,7 +157,7 @@ function buildDocument(data) {
       React.createElement(
         View,
         { style: styles.header },
-        React.createElement(Text, { style: styles.ministryName }, 'Kementerian Komunikasi dan Informatika Republik Indonesia'),
+        React.createElement(Text, { style: styles.ministryName }, 'Kementerian Komunikasi dan Digital RI'),
         React.createElement(Text, { style: styles.agencyName }, 'Badan Aksesibilitas Telekomunikasi dan Informasi'),
         React.createElement(Text, { style: styles.agencySubtitle }, 'Indonesia Terkoneksi - Makin Digital, Makin Maju'),
         React.createElement(
