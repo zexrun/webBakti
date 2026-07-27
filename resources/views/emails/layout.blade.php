@@ -43,7 +43,7 @@
 
         /* Header */
         .email-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E5FDB 0%, #1E3FA0 100%);
             padding: 50px 40px;
             text-align: center;
             color: white;
@@ -103,7 +103,7 @@
 
         .email-button {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2E5FDB 0%, #1E3FA0 100%);
             color: white;
             padding: 14px 40px;
             border-radius: 6px;
@@ -111,7 +111,7 @@
             font-weight: 600;
             font-size: 14px;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 12px rgba(46, 95, 219, 0.3);
             margin: 0 8px;
             display: inline-block;
             border: none;
@@ -120,7 +120,7 @@
 
         .email-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 16px rgba(46, 95, 219, 0.4);
         }
 
         .email-button-secondary {
@@ -139,7 +139,7 @@
             padding: 24px;
             background: #f7fafc;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #2E5FDB;
         }
 
         .email-section-title {
@@ -257,7 +257,7 @@
         }
 
         .email-footer-links a {
-            color: #667eea;
+            color: #2E5FDB;
             text-decoration: none;
             margin: 0 12px;
             font-size: 13px;
@@ -286,7 +286,7 @@
         }
 
         .email-footer-social a:hover {
-            background: #667eea;
+            background: #2E5FDB;
             color: white;
         }
 
