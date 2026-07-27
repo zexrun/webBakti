@@ -1,43 +1,34 @@
-@component('mail::message')
-# 📧 Email Sandbox Test
+WebBakti Email Sandbox Test
 
-**{{ $appName }}** - Email Test Email
+Hello,
 
----
-
-## Test Details
-
-**Timestamp:** {{ $timestamp }}
-**App URL:** {{ $appUrl }}
-**Message:** {{ $message }}
+{{ $message }}
 
 ---
 
-## ✅ Success!
-
-This email was successfully sent through Mailtrap sandbox.
-
-**Next Steps:**
-1. Check your [Mailtrap Dashboard](https://mailtrap.io) inbox
-2. Review email headers, body, and attachments
-3. Test other email features (notifications, password reset, etc.)
+Test Details:
+- Sent at: {{ now()->format('Y-m-d H:i:s') }}
+- Environment: {{ config('app.env') }}
+- Application: {{ config('app.name') }}
+- URL: {{ config('app.url') }}
 
 ---
 
-## Testing Features
+Success! This email was successfully sent through your mail driver.
+
+Next Steps:
+1. Check your Mailtrap inbox at https://mailtrap.io/dashboard
+2. Review the email content, headers, and formatting
+3. Test other email features (password reset, notifications, etc.)
 
 You can now test:
-- ✅ Email delivery
-- ✅ Email formatting
-- ✅ Attachments
-- ✅ HTML rendering
-- ✅ Plain text fallback
-- ✅ Email headers
+- Email delivery
+- Email formatting
+- Attachments
+- HTML rendering
+- Email headers & metadata
 
 ---
 
-@component('mail::footer')
-WebBakti System - Email Sandbox Testing
-Environment: {{ config('app.env') }}
-@endcomponent
-@endcomponent
+WebBakti System
+Email Sandbox Testing
