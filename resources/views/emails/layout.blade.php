@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }}</title>
+    <title>{{ $title ?? config('app.name') }}</title>
     <style>
         * {
             margin: 0;
@@ -11,172 +11,368 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: #f5f7fa;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            font-size: 15px;
             line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
+            color: #2d3748;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .email-wrapper {
+            background-color: #f5f7fa;
+            padding: 40px 20px;
         }
 
         .email-container {
             max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 8px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
         }
 
+        /* Header */
         .email-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 20px;
+            padding: 50px 40px;
             text-align: center;
+            color: white;
         }
 
-        .email-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+        .email-header-logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
-        .email-header p {
+        .email-header-subtitle {
             font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .email-body {
-            padding: 30px 20px;
-        }
-
-        .email-footer {
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .email-footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #667eea;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            text-decoration: none;
+            opacity: 0.95;
             font-weight: 500;
-            margin: 20px 0;
+            letter-spacing: 0.3px;
         }
 
-        .button:hover {
-            background-color: #764ba2;
+        /* Content */
+        .email-body {
+            padding: 40px;
         }
 
-        .section {
+        .email-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .email-greeting {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
             margin-bottom: 20px;
         }
 
-        .section-title {
-            font-size: 16px;
+        .email-paragraph {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+
+        .email-paragraph strong {
+            color: #2d3748;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 8px;
         }
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
+        /* Buttons */
+        .email-button-group {
+            margin: 32px 0;
+            text-align: center;
         }
 
-        .info-label {
-            font-weight: 500;
-            color: #555;
+        .email-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 40px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            margin: 0 8px;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
         }
 
-        .info-value {
-            color: #333;
+        .email-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
         }
 
-        .alert {
-            padding: 15px;
-            border-radius: 4px;
-            margin: 15px 0;
+        .email-button-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+            box-shadow: none;
         }
 
-        .alert-info {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            color: #1565c0;
+        .email-button-secondary:hover {
+            background: #cbd5e0;
         }
 
-        .alert-warning {
-            background-color: #fff3e0;
-            border-left: 4px solid #ff9800;
-            color: #e65100;
+        /* Sections */
+        .email-section {
+            margin: 32px 0;
+            padding: 24px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
         }
 
-        .alert-success {
-            background-color: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            color: #2e7d32;
+        .email-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
         }
 
-        .alert-danger {
-            background-color: #ffebee;
-            border-left: 4px solid #f44336;
-            color: #c62828;
+        /* Alert boxes */
+        .email-alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            border-left: 4px solid;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
+        .email-alert-info {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+            color: #1e40af;
         }
 
-        li {
-            margin-bottom: 5px;
+        .email-alert-success {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+            color: #166534;
         }
 
-        .divider {
-            border-top: 1px solid #eee;
+        .email-alert-warning {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .email-alert-danger {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* Info boxes */
+        .email-info-box {
             margin: 20px 0;
+            padding: 0;
         }
 
-        strong {
-            color: #333;
+        .email-info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        em {
-            color: #666;
+        .email-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .email-info-label {
+            font-weight: 600;
+            color: #4a5568;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .email-info-value {
+            color: #2d3748;
+            word-break: break-word;
+        }
+
+        /* Lists */
+        .email-list {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .email-list li {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .email-list strong {
+            color: #2d3748;
+        }
+
+        /* Divider */
+        .email-divider {
+            border: 0;
+            height: 1px;
+            background: #e2e8f0;
+            margin: 32px 0;
+        }
+
+        /* Footer */
+        .email-footer {
+            background: #f7fafc;
+            padding: 32px 40px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .email-footer-content {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.8;
+        }
+
+        .email-footer-content strong {
+            color: #4a5568;
+        }
+
+        .email-footer-links {
+            margin-top: 16px;
+        }
+
+        .email-footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .email-footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .email-footer-social {
+            margin-top: 16px;
+        }
+
+        .email-footer-social a {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            background: #cbd5e0;
+            color: #2d3748;
+            border-radius: 50%;
+            margin: 0 6px;
+            transition: all 0.2s;
+        }
+
+        .email-footer-social a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .email-footer-copyright {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-header {
+                padding: 30px 20px;
+            }
+
+            .email-body {
+                padding: 20px;
+            }
+
+            .email-footer {
+                padding: 20px;
+            }
+
+            .email-title {
+                font-size: 18px;
+            }
+
+            .email-button-group {
+                text-align: center;
+            }
+
+            .email-button {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .email-info-row {
+                flex-direction: column;
+            }
+
+            .email-info-label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="email-container">
-        <div class="email-header">
-            <h1>{{ config('app.name') }}</h1>
-            <p>Sistem Monitoring Magang Online</p>
-        </div>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <!-- Header -->
+            <div class="email-header">
+                <div class="email-header-logo">🎓 WebBakti</div>
+                <div class="email-header-subtitle">Sistem Manajemen Magang Online</div>
+            </div>
 
-        <div class="email-body">
-            @yield('content')
-        </div>
+            <!-- Content -->
+            <div class="email-body">
+                @if(isset($slot))
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endif
+            </div>
 
-        <div class="email-footer">
-            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Semua hak dilindungi.</p>
-            <p>
-                Email ini dikirim ke <strong>{{ $notifiable->email }}</strong><br>
-                <a href="{{ url('/') }}">Kunjungi Aplikasi</a> |
-                <a href="{{ url('/notifications') }}">Notifikasi Saya</a>
-            </p>
+            <!-- Footer -->
+            <div class="email-footer">
+                <div class="email-footer-content">
+                    <strong>WebBakti System</strong><br>
+                    Badan Aksesibilitas Telekomunikasi dan Informasi (BAKTI)<br>
+                    Kementerian Komunikasi dan Digital Republik Indonesia
+                </div>
+                <div class="email-footer-links">
+                    <a href="{{ url('/') }}">Kunjungi Aplikasi</a>
+                    <a href="{{ url('/help') }}">Bantuan</a>
+                    @if(isset($notifiable) && $notifiable)
+                        <a href="{{ url('/notifications') }}">Preferensi</a>
+                    @endif
+                </div>
+                <div class="email-footer-copyright">
+                    &copy; {{ date('Y') }} BAKTI. Semua hak dilindungi.
+                </div>
+            </div>
         </div>
     </div>
 </body>

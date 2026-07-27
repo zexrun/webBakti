@@ -1,96 +1,100 @@
-@extends('emails.layout')
+@extends('emails.layout', ['title' => 'Status Kehadiran - WebBakti'])
 
-@section('content')
-<div class="section">
-    <p>Halo <strong>{{ $notifiable->name }}</strong>,</p>
-    <p>Status kehadiran Anda telah dikaji oleh admin sistem.</p>
-</div>
+@php
+    $title = $status === 'approved' ? '✅ Kehadiran Disetujui' : '⚠️ Kehadiran Ditolak';
+    $icon = $status === 'approved' ? '✓' : '✗';
+@endphp
+
+<div class="email-title">{{ $title }}</div>
+
+<p class="email-greeting">Halo {{ $notifiable->name }},</p>
+
+<p class="email-paragraph">
+    Status kehadiran Anda telah dikaji dan diverifikasi oleh sistem.
+</p>
 
 @if($status === 'approved')
-    <div class="alert alert-success">
-        <strong>✓ Kehadiran DISETUJUI</strong>
-        <p style="margin-top: 10px;">Kehadiran Anda pada tanggal tersebut telah diverifikasi dan diterima oleh sistem.</p>
+    <div class="email-alert email-alert-success">
+        <strong>{{ $icon }} Kehadiran Anda DISETUJUI</strong><br>
+        Kehadiran Anda pada tanggal tersebut telah diverifikasi dan diterima oleh sistem. Terima kasih telah menjalankan kehadiran dengan baik.
     </div>
 @else
-    <div class="alert alert-danger">
-        <strong>✗ Kehadiran DITOLAK</strong>
-        <p style="margin-top: 10px;">Kehadiran Anda pada tanggal tersebut tidak memenuhi kriteria verifikasi.</p>
+    <div class="email-alert email-alert-danger">
+        <strong>{{ $icon }} Kehadiran Anda DITOLAK</strong><br>
+        Kehadiran Anda pada tanggal tersebut tidak memenuhi kriteria verifikasi sistem.
         @if($attendance->rejection_reason)
-            <p style="margin-top: 10px;"><strong>Alasan Penolakan:</strong> {{ $attendance->rejection_reason }}</p>
+            <br><strong>Alasan:</strong> {{ $attendance->rejection_reason }}
         @endif
     </div>
 @endif
 
-<div class="section">
-    <div class="section-title">📋 Detail Kehadiran</div>
-    <div class="info-row">
-        <span class="info-label">Tanggal & Waktu:</span>
-        <span class="info-value">
-            {{ $attendance->check_in_time ? \Carbon\Carbon::parse($attendance->check_in_time)->format('d M Y, H:i') : 'N/A' }}
-        </span>
+<div class="email-section">
+    <div class="email-section-title">📋 Detail Kehadiran</div>
+    <div class="email-info-box">
+        <div class="email-info-row">
+            <div class="email-info-label">Tanggal & Waktu:</div>
+            <div class="email-info-value">
+                {{ $attendance->check_in_time ? \Carbon\Carbon::parse($attendance->check_in_time)->format('d M Y, H:i') : 'N/A' }}
+            </div>
+        </div>
+        <div class="email-info-row">
+            <div class="email-info-label">Lokasi:</div>
+            <div class="email-info-value">{{ $attendance->location ?? 'Tidak tercatat' }}</div>
+        </div>
+        <div class="email-info-row">
+            <div class="email-info-label">Verifikasi Lokasi:</div>
+            <div class="email-info-value">
+                {{ $attendance->location_verification_status ?? 'Belum diverifikasi' }}
+                @if($attendance->location_spoofing_score)
+                    (Skor: {{ $attendance->location_spoofing_score }})
+                @endif
+            </div>
+        </div>
+        @if($attendance->photo_exif_status)
+        <div class="email-info-row">
+            <div class="email-info-label">Status EXIF:</div>
+            <div class="email-info-value">{{ $attendance->photo_exif_status }}</div>
+        </div>
+        @endif
     </div>
-    <div class="info-row">
-        <span class="info-label">Lokasi:</span>
-        <span class="info-value">{{ $attendance->location ?? 'Tidak tercatat' }}</span>
-    </div>
-    <div class="info-row">
-        <span class="info-label">Verifikasi Lokasi:</span>
-        <span class="info-value">
-            {{ $attendance->location_verification_status ?? 'Belum diverifikasi' }}
-            @if($attendance->location_spoofing_score)
-                (Skor: {{ $attendance->location_spoofing_score }})
-            @endif
-        </span>
-    </div>
-    @if($attendance->photo_exif_status)
-    <div class="info-row">
-        <span class="info-label">Status EXIF:</span>
-        <span class="info-value">{{ $attendance->photo_exif_status }}</span>
-    </div>
-    @endif
 </div>
 
 @if($status === 'rejected')
-<div class="section">
-    <div class="section-title">💡 Informasi Penting</div>
-    <p>Kehadiran Anda ditolak karena tidak memenuhi kriteria verifikasi sistem. Hal ini bisa terjadi karena:</p>
-    <ul>
+<div class="email-section">
+    <div class="email-section-title">💡 Mengapa Kehadiran Ditolak?</div>
+    <p class="email-paragraph">Kehadiran ditolak karena tidak memenuhi kriteria verifikasi sistem. Kemungkinan penyebabnya:</p>
+    <ul class="email-list">
         <li>Lokasi tidak sesuai dengan zona yang ditentukan</li>
         <li>Data EXIF foto tidak valid atau tidak terbaca</li>
         <li>Terdapat indikasi manipulasi data lokasi</li>
         <li>Foto atau data yang dikirimkan tidak jelas atau tidak valid</li>
     </ul>
-    <p style="margin-top: 15px;">Jika Anda merasa ada kesalahan, Anda dapat mengajukan pengajuan exception dengan alasan yang jelas dan bukti pendukung.</p>
-</div>
-@else
-<div class="section">
-    <div class="section-title">✅ Terima Kasih</div>
-    <p>Terima kasih telah menjalankan tugas dengan baik. Kehadiran Anda telah tercatat dalam sistem dan diperhitungkan dalam evaluasi magang Anda.</p>
-</div>
-@endif
-
-<div class="divider"></div>
-
-<div class="section">
-    <p style="text-align: center;">
-        <a href="{{ url('/student/attendance') }}" class="button">
-            Lihat Riwayat Kehadiran
-        </a>
-    </p>
 </div>
 
-@if($status === 'rejected')
-<div class="alert alert-info">
-    <strong>ℹ️ Langkah Selanjutnya:</strong>
-    <ul style="margin-top: 10px; margin-left: 20px;">
+<div class="email-alert email-alert-info">
+    <strong>📌 Langkah Selanjutnya:</strong>
+    <ul class="email-list" style="margin-top: 10px;">
         <li>Tinjau kembali data yang Anda kirimkan</li>
-        <li>Jika yakin tidak ada kesalahan, ajukan pengajuan exception</li>
-        <li>Hubungi admin jika memerlukan bantuan: magang.baktikomdigi@gmail.com</li>
+        <li>Jika yakin tidak ada kesalahan, ajukan pengajuan exception dengan alasan yang jelas</li>
+        <li>Sertakan bukti pendukung jika diperlukan</li>
+        <li>Hubungi admin jika memerlukan bantuan</li>
     </ul>
 </div>
+@else
+<div class="email-section">
+    <div class="email-section-title">✅ Terima Kasih</div>
+    <p class="email-paragraph">
+        Kehadiran Anda telah tercatat dalam sistem dan akan diperhitungkan dalam evaluasi performa magang Anda.
+    </p>
+</div>
 @endif
 
-<div class="section">
-    <p>Apabila memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi admin sistem.</p>
+<div class="email-button-group">
+    <a href="{{ url('/student/attendance') }}" class="email-button">Lihat Riwayat Kehadiran</a>
 </div>
-@endsection
+
+<hr class="email-divider">
+
+<p class="email-paragraph">
+    Apabila memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi admin sistem melalui fitur support di aplikasi.
+</p>

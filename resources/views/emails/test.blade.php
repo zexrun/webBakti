@@ -1,34 +1,68 @@
-WebBakti Email Sandbox Test
+@extends('emails.layout', ['title' => 'Test Email - WebBakti'])
 
-Hello,
+<div class="email-title">✨ Selamat! Email Terkirim</div>
 
-{{ $message }}
+<p class="email-paragraph">
+    Email sandbox Anda berhasil dikonfigurasi dan bekerja dengan sempurna.
+</p>
 
----
+<div class="email-alert email-alert-success">
+    <strong>✓ Konfigurasi Email Berhasil</strong><br>
+    Email ini dikirim melalui mail driver Anda dan berhasil diterima.
+</div>
 
-Test Details:
-- Sent at: {{ now()->format('Y-m-d H:i:s') }}
-- Environment: {{ config('app.env') }}
-- Application: {{ config('app.name') }}
-- URL: {{ config('app.url') }}
+<div class="email-section">
+    <div class="email-section-title">📋 Detail Email</div>
+    <div class="email-info-box">
+        <div class="email-info-row">
+            <div class="email-info-label">Waktu Pengiriman:</div>
+            <div class="email-info-value">{{ now()->format('d M Y, H:i:s') }}</div>
+        </div>
+        <div class="email-info-row">
+            <div class="email-info-label">Environment:</div>
+            <div class="email-info-value">{{ config('app.env') }}</div>
+        </div>
+        <div class="email-info-row">
+            <div class="email-info-label">Aplikasi:</div>
+            <div class="email-info-value">{{ config('app.name') }}</div>
+        </div>
+        <div class="email-info-row">
+            <div class="email-info-label">URL:</div>
+            <div class="email-info-value">{{ config('app.url') }}</div>
+        </div>
+    </div>
+</div>
 
----
+<div class="email-section">
+    <div class="email-section-title">💬 Pesan Test</div>
+    <p class="email-paragraph">{{ $message ?? 'Ini adalah email test dari WebBakti' }}</p>
+</div>
 
-Success! This email was successfully sent through your mail driver.
+<p class="email-paragraph">
+    Email ini membuktikan bahwa sistem email Anda sudah siap untuk:
+</p>
 
-Next Steps:
-1. Check your Mailtrap inbox at https://mailtrap.io/dashboard
-2. Review the email content, headers, and formatting
-3. Test other email features (password reset, notifications, etc.)
+<ul class="email-list">
+    <li><strong>Email Notifikasi</strong> - Untuk berbagai event aplikasi</li>
+    <li><strong>Verifikasi Email</strong> - Untuk registrasi user</li>
+    <li><strong>Reset Password</strong> - Untuk pemulihan akun</li>
+    <li><strong>Laporan & Feedback</strong> - Untuk komunikasi user-supervisor</li>
+    <li><strong>Pengingat & Deadline</strong> - Untuk task dan deadline reminder</li>
+</ul>
 
-You can now test:
-- Email delivery
-- Email formatting
-- Attachments
-- HTML rendering
-- Email headers & metadata
+<div class="email-button-group">
+    <a href="{{ url('/') }}" class="email-button">Kembali ke Aplikasi</a>
+    <a href="https://mailtrap.io" class="email-button email-button-secondary" target="_blank">Buka Mailtrap Dashboard</a>
+</div>
 
----
+<hr class="email-divider">
 
-WebBakti System
-Email Sandbox Testing
+<div class="email-alert email-alert-info">
+    <strong>📚 Langkah Selanjutnya:</strong>
+    <ul class="email-list" style="margin-top: 10px;">
+        <li>Periksa inbox di Mailtrap untuk melihat email ini</li>
+        <li>Test fitur lain seperti reset password dan notifikasi</li>
+        <li>Verifikasi bahwa email terformat dengan baik di berbagai client</li>
+        <li>Sebelum production, ganti provider email ke SendGrid, AWS SES, atau Gmail</li>
+    </ul>
+</div>
