@@ -7,11 +7,13 @@ use App\Models\AttendanceException;
 use App\Models\AttendanceSetting;
 use App\Services\LocationVerificationService;
 use App\Services\FaceVerificationService;
+use App\Services\ServerFaceVerificationService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -129,19 +131,77 @@ class AttendanceController extends Controller
             $isLate = $now->gt($workStart->addMinutes($settings->late_tolerance_minutes));
             $status = $isLate ? 'late' : 'present';
 
-            $checkInDescriptor = null;
-            if ($request->filled('face_descriptor')) {
-                $decoded = json_decode($request->input('face_descriptor'), true);
-                if (is_array($decoded)) {
-                    $checkInDescriptor = $decoded;
+            // NEW: Server-side face verification
+            $faceResult = [
+                'status' => 'unverified',
+                'distance' => null,
+                'verification_status' => 'pending',
+            ];
+
+            $faceVerificationStatus = 'unverified';
+            $faceDistance = null;
+            $verificationStatus = 'pending';
+            $verifiedAt = null;
+
+            // Try server-side face verification if photo exists
+            if ($photoPath) {
+                try {
+                    // Convert stored photo to base64 for verification
+                    $photoContent = Storage::disk('public')->get($photoPath);
+                    $photoBase64 = 'data:image/jpeg;base64,' . base64_encode($photoContent);
+
+                    $serverVerification = ServerFaceVerificationService::verifyAttendance(
+                        $photoBase64,
+                        [
+                            'latitude' => $request->latitude,
+                            'longitude' => $request->longitude,
+                        ],
+                        $settings->office_latitude && $settings->office_longitude ? [
+                            'latitude' => $settings->office_latitude,
+                            'longitude' => $settings->office_longitude,
+                        ] : ServerFaceVerificationService::getOfficeLocation(),
+                        $settings->location_radius_meters ?? 50
+                    );
+
+                    if ($serverVerification['success']) {
+                        $faceVerificationStatus = 'verified';
+                        $faceDistance = $serverVerification['face_distance'];
+                        $verificationStatus = 'auto_verified';
+                        $verifiedAt = $serverVerification['verified_at'];
+                        $faceResult['status'] = 'match';
+                        $faceResult['distance'] = $faceDistance;
+                    } else {
+                        $faceVerificationStatus = 'rejected';
+                        $faceDistance = $serverVerification['distance'] ?? null;
+                        $verificationStatus = 'rejected';
+                        $faceResult['status'] = 'mismatch';
+                        $faceResult['distance'] = $faceDistance;
+                        $requiresManualReview = true;
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => $serverVerification['reason'],
+                            'code' => $serverVerification['code'],
+                        ], 403);
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('Server face verification failed', ['error' => $e->getMessage()]);
+                    // Fallback to old method
+                    $checkInDescriptor = null;
+                    if ($request->filled('face_descriptor')) {
+                        $decoded = json_decode($request->input('face_descriptor'), true);
+                        if (is_array($decoded)) {
+                            $checkInDescriptor = $decoded;
+                        }
+                    }
+
+                    $faceService = new FaceVerificationService();
+                    $faceResult = $faceService->verify($checkInDescriptor, $user->face_descriptor, $user->id);
+
+                    if ($faceResult['status'] === 'mismatch') {
+                        $requiresManualReview = true;
+                    }
                 }
-            }
-
-            $faceService = new FaceVerificationService();
-            $faceResult = $faceService->verify($checkInDescriptor, $user->face_descriptor, $user->id);
-
-            if ($faceResult['status'] === 'mismatch') {
-                $requiresManualReview = true;
             }
 
             $attendance = Attendance::updateOrCreate(
@@ -160,8 +220,10 @@ class AttendanceController extends Controller
                     'location_spoofing_score' => $spoofingScore,
                     'location_verification_details' => $verificationResult,
                     'requires_manual_review' => $requiresManualReview,
-                    'face_verification_status' => $faceResult['status'],
-                    'face_match_distance' => $faceResult['distance'],
+                    'face_verification_status' => $faceVerificationStatus,
+                    'face_match_distance' => $faceDistance,
+                    'verification_status' => $verificationStatus,
+                    'verified_at' => $verifiedAt,
                 ]
             );
 
