@@ -44,50 +44,55 @@
         /* Header */
         .email-header {
             background: linear-gradient(135deg, #2E5FDB 0%, #1E3FA0 100%);
-            padding: 50px 40px;
+            padding: 60px 40px;
             text-align: center;
             color: white;
         }
 
         .email-header-logo {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
         .email-header-subtitle {
-            font-size: 14px;
-            opacity: 0.95;
+            font-size: 15px;
+            opacity: 0.92;
             font-weight: 500;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
 
         /* Content */
         .email-body {
-            padding: 40px;
+            padding: 48px 40px;
         }
 
         .email-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: #1a202c;
-            margin-bottom: 24px;
-            line-height: 1.3;
+            margin-bottom: 28px;
+            line-height: 1.35;
+            letter-spacing: -0.3px;
         }
 
         .email-greeting {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
             color: #2d3748;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            line-height: 1.5;
         }
 
         .email-paragraph {
             font-size: 15px;
-            line-height: 1.7;
-            color: #4a5568;
-            margin-bottom: 16px;
+            line-height: 1.75;
+            color: #555a64;
+            margin-bottom: 20px;
+            letter-spacing: 0.2px;
         }
 
         .email-paragraph strong {
@@ -97,7 +102,7 @@
 
         /* Buttons */
         .email-button-group {
-            margin: 32px 0;
+            margin: 40px 0;
             text-align: center;
         }
 
@@ -105,22 +110,22 @@
             display: inline-block;
             background: linear-gradient(135deg, #2E5FDB 0%, #1E3FA0 100%);
             color: white;
-            padding: 14px 40px;
-            border-radius: 6px;
+            padding: 16px 48px;
+            border-radius: 5px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(46, 95, 219, 0.3);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(46, 95, 219, 0.2);
             margin: 0 8px;
-            display: inline-block;
             border: none;
             cursor: pointer;
+            letter-spacing: 0.3px;
         }
 
         .email-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(46, 95, 219, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 95, 219, 0.3);
         }
 
         .email-button-secondary {
@@ -135,18 +140,21 @@
 
         /* Sections */
         .email-section {
-            margin: 32px 0;
-            padding: 24px;
-            background: #f7fafc;
-            border-radius: 8px;
-            border-left: 4px solid #2E5FDB;
+            margin: 36px 0;
+            padding: 28px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #2E5FDB;
         }
 
         .email-section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: #1a202c;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.95;
         }
 
         /* Alert boxes */
@@ -191,8 +199,9 @@
 
         .email-info-row {
             display: flex;
-            padding: 12px 0;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 14px 0;
+            border-bottom: 1px solid #e8eaed;
+            gap: 20px;
         }
 
         .email-info-row:last-child {
@@ -201,14 +210,17 @@
 
         .email-info-label {
             font-weight: 600;
-            color: #4a5568;
-            width: 120px;
+            color: #555a64;
+            width: 110px;
             flex-shrink: 0;
+            font-size: 14px;
         }
 
         .email-info-value {
-            color: #2d3748;
+            color: #1a202c;
             word-break: break-word;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         /* Lists */
@@ -230,42 +242,48 @@
         .email-divider {
             border: 0;
             height: 1px;
-            background: #e2e8f0;
-            margin: 32px 0;
+            background: #e8eaed;
+            margin: 40px 0;
         }
 
         /* Footer */
         .email-footer {
-            background: #f7fafc;
-            padding: 32px 40px;
-            border-top: 1px solid #e2e8f0;
+            background: #fafbfc;
+            padding: 40px;
+            border-top: 1px solid #e8eaed;
             text-align: center;
         }
 
         .email-footer-content {
-            font-size: 13px;
-            color: #718096;
-            line-height: 1.8;
+            font-size: 12px;
+            color: #7a7f87;
+            line-height: 1.9;
+            letter-spacing: 0.2px;
         }
 
         .email-footer-content strong {
-            color: #4a5568;
+            color: #555a64;
+            font-weight: 600;
         }
 
         .email-footer-links {
-            margin-top: 16px;
+            margin-top: 20px;
+            border-top: 1px solid #e8eaed;
+            padding-top: 20px;
         }
 
         .email-footer-links a {
             color: #2E5FDB;
             text-decoration: none;
-            margin: 0 12px;
-            font-size: 13px;
+            margin: 0 16px;
+            font-size: 12px;
             font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         .email-footer-links a:hover {
             text-decoration: underline;
+            opacity: 0.8;
         }
 
         .email-footer-social {
