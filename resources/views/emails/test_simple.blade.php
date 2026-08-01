@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Test Email - WebBakti'])
 
+@section('content')
 <div class="email-category-label">Test Email</div>
 <div class="email-title">Test Email WebBakti</div>
 
@@ -20,3 +21,4 @@
 <p class="email-paragraph" style="text-align: center; margin-top: 16px;">
     Anda menerima email ini karena melakukan test pengiriman email melalui aplikasi WebBakti.
 </p>
+@endsection

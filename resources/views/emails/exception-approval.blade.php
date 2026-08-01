@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Status Pengajuan Exception - WebBakti'])
 
+@section('content')
 @php
     $categoryLabel = 'Status Pengajuan';
     $title = $status === 'approved' ? 'Pengajuan Disetujui' : 'Pengajuan Ditolak';
@@ -93,3 +94,4 @@
 <p class="email-paragraph">
     Terima kasih telah mengikuti prosedur pengajuan exception dengan baik dan mematuhi semua peraturan yang berlaku.
 </p>
+@endsection

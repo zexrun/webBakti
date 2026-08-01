@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Status Kehadiran - WebBakti'])
 
+@section('content')
 @php
     $categoryLabel = 'Status Kehadiran';
     $title = $status === 'approved' ? 'Kehadiran Disetujui' : 'Kehadiran Ditolak';
@@ -88,3 +89,4 @@
 <p class="email-paragraph">
     Apabila memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi admin sistem melalui fitur support di aplikasi.
 </p>
+@endsection

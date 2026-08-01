@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Test Email - WebBakti'])
 
+@section('content')
 <div class="email-category-label">Test Email</div>
 <div class="email-title">Selamat! Email Terkirim</div>
 
@@ -60,3 +61,4 @@
         <li>Sebelum production, ganti provider email ke SendGrid, AWS SES, atau Gmail</li>
     </ul>
 </div>
+@endsection

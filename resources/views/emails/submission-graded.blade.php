@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Tugas Dinilai - WebBakti'])
 
+@section('content')
 <div class="email-category-label">Penilaian Tugas</div>
 <div class="email-title">Tugas Anda Telah Dinilai</div>
 
@@ -49,3 +50,4 @@
 <p class="email-paragraph" style="text-align: center; font-weight: 600; color: #0F2A5C;">
     Semangat untuk tugas berikutnya!
 </p>
+@endsection

@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Feedback Logbook - WebBakti'])
 
+@section('content')
 <div class="email-category-label">Feedback Logbook</div>
 <div class="email-title">Feedback Baru Diterima</div>
 
@@ -37,3 +38,4 @@
 <p class="email-paragraph">
     Gunakan feedback ini sebagai pembelajaran untuk terus meningkatkan kualitas logbook dan pekerjaan Anda di magang. Jika ada pertanyaan terkait feedback, silakan hubungi pembimbing Anda melalui aplikasi.
 </p>
+@endsection

@@ -1,5 +1,6 @@
 @extends('emails.layout', ['title' => 'Pengingat Deadline Tugas - WebBakti'])
 
+@section('content')
 @php
     if ($daysUntilDeadline === 0) {
         $title = 'Tugas Berakhir Hari Ini';
@@ -100,3 +101,4 @@
 <p class="email-paragraph" style="text-align: center; font-weight: 600; color: #0F2A5C;">
     Semangat mengerjakan tugas!
 </p>
+@endsection
