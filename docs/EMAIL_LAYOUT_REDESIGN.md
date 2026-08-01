@@ -1,4 +1,7 @@
 # Email Layout Redesign - Minimalist & Spacious
+
+> **Superseded 1 Agustus 2026** — replaced by the Corporate/Formal navy design. See `docs/superpowers/specs/2026-08-01-email-template-corporate-redesign-design.md`.
+
 ## Design Upgrade Summary
 
 **Date:** 30 Juli 2026  
