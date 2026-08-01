@@ -1,42 +1,36 @@
 @extends('emails.layout', ['title' => 'Test Email - WebBakti'])
 
-<div class="email-title">✨ Selamat! Email Terkirim</div>
+<div class="email-category-label">Test Email</div>
+<div class="email-title">Selamat! Email Terkirim</div>
 
 <p class="email-paragraph">
     Email sandbox Anda berhasil dikonfigurasi dan bekerja dengan sempurna.
 </p>
 
 <div class="email-alert email-alert-success">
-    <strong>✓ Konfigurasi Email Berhasil</strong><br>
-    Email ini dikirim melalui mail driver Anda dan berhasil diterima.
+    <strong>Konfigurasi Email Berhasil.</strong> Email ini dikirim melalui mail driver Anda dan berhasil diterima.
 </div>
 
-<div class="email-section">
-    <div class="email-section-title">📋 Detail Email</div>
-    <div class="email-info-box">
-        <div class="email-info-row">
-            <div class="email-info-label">Waktu Pengiriman:</div>
-            <div class="email-info-value">{{ now()->format('d M Y, H:i:s') }}</div>
-        </div>
-        <div class="email-info-row">
-            <div class="email-info-label">Environment:</div>
-            <div class="email-info-value">{{ config('app.env') }}</div>
-        </div>
-        <div class="email-info-row">
-            <div class="email-info-label">Aplikasi:</div>
-            <div class="email-info-value">{{ config('app.name') }}</div>
-        </div>
-        <div class="email-info-row">
-            <div class="email-info-label">URL:</div>
-            <div class="email-info-value">{{ config('app.url') }}</div>
-        </div>
+<div class="email-info-box">
+    <div class="email-info-row">
+        <div class="email-info-label">Waktu Pengiriman</div>
+        <div class="email-info-value">{{ now()->format('d M Y, H:i:s') }}</div>
+    </div>
+    <div class="email-info-row">
+        <div class="email-info-label">Environment</div>
+        <div class="email-info-value">{{ config('app.env') }}</div>
+    </div>
+    <div class="email-info-row">
+        <div class="email-info-label">Aplikasi</div>
+        <div class="email-info-value">{{ config('app.name') }}</div>
+    </div>
+    <div class="email-info-row">
+        <div class="email-info-label">URL</div>
+        <div class="email-info-value">{{ config('app.url') }}</div>
     </div>
 </div>
 
-<div class="email-section">
-    <div class="email-section-title">💬 Pesan Test</div>
-    <p class="email-paragraph">{{ $message ?? 'Ini adalah email test dari WebBakti' }}</p>
-</div>
+<p class="email-paragraph"><strong>Pesan Test:</strong> {{ $message ?? 'Ini adalah email test dari WebBakti' }}</p>
 
 <p class="email-paragraph">
     Email ini membuktikan bahwa sistem email Anda sudah siap untuk:
@@ -58,8 +52,8 @@
 <hr class="email-divider">
 
 <div class="email-alert email-alert-info">
-    <strong>📚 Langkah Selanjutnya:</strong>
-    <ul class="email-list" style="margin-top: 10px;">
+    <strong>Langkah Selanjutnya:</strong>
+    <ul class="email-list" style="margin-top: 8px;">
         <li>Periksa inbox di Mailtrap untuk melihat email ini</li>
         <li>Test fitur lain seperti reset password dan notifikasi</li>
         <li>Verifikasi bahwa email terformat dengan baik di berbagai client</li>
