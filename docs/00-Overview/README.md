@@ -73,6 +73,19 @@ Documentation for planned enhancements
 - Optional feature implementations
 - Enhancement procedures
 
+### ✉️ [09-Email-System](../09-Email-System/)
+Email design and provider setup
+- Provider setup & testing (Mailtrap/Gmail/MailHog)
+- Design guide, components, and redesign history
+
+### 🎨 [10-Design-System](../10-Design-System/)
+UI design system reference
+- Design system & color palette reference
+- Project context for AI-assisted UI work
+
+### 🙂 [11-Face-Verification](../11-Face-Verification/)
+Server-side face verification implementation
+
 ---
 
 ## 📊 PROJECT COMPLETION SUMMARY

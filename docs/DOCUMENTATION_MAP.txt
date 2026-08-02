@@ -63,6 +63,26 @@
 │  CONTENT: 14 identified improvements, priority levels,
 │           effort estimates, implementation instructions
 │
+├─ 📁 09-Email-System/
+│  ├─ 📄 EMAIL_PROVIDER_SETUP.md .......... Mailtrap/Gmail/MailHog Setup & Testing
+│  ├─ 📄 EMAIL_DESIGN_GUIDE.md ............ Email Design System
+│  ├─ 📄 EMAIL_COMPONENTS_FOR_DESIGN.md ... Template Components & Architecture
+│  ├─ 📄 EMAIL_LARAVEL_DESIGN_ANALYSIS.md . Laravel Email Design Analysis
+│  ├─ 📄 EMAIL_LAYOUT_REDESIGN.md ......... Minimalist Layout (Superseded)
+│  └─ 📄 EMAIL_IMPLEMENTATION_COMPLETE.md . Implementation Completion Log
+│
+│  CONTENT: Email design/redesign history and provider setup guide.
+│           Current design: Corporate/Formal navy (see
+│           docs/superpowers/specs/2026-08-01-email-template-corporate-redesign-design.md)
+│
+├─ 📁 10-Design-System/
+│  ├─ 📄 DESIGN_SYSTEM.md ................. UI Design System Reference
+│  ├─ 📄 COLOR_PALETTE_REFERENCE.md ....... OKLch/Hex/RGB/HSL Palette
+│  └─ 📄 UI_CONTEXT_FOR_AI.md ............. Project Context for AI-Assisted UI Work
+│
+├─ 📁 11-Face-Verification/
+│  └─ 📄 FACE_VERIFICATION.md ............. Server-Side Face Verification Implementation
+│
 └─ 📄 DOCUMENTATION_MAP.txt ................. This File
 
 ═══════════════════════════════════════════════════════════════════
@@ -95,8 +115,8 @@ FOR PROJECT MANAGERS:
 📊 DOCUMENTATION STATISTICS
 ═══════════════════════════════════════════════════════════════════
 
-Total Folders:                9
-Total Documentation Files:    17
+Total Folders:                12
+Total Documentation Files:    27
 Total Documentation Lines:    2600+
 Test Scenarios Documented:    18
 Code Examples:                50+
