@@ -72,6 +72,13 @@ if [[ ! -f .env ]]; then
   exit 0
 fi
 
+echo "==> Regenerating resources/js/ziggy.js for this server's APP_URL"
+echo "    (the committed ziggy.js is baked with whatever APP_URL was set on"
+echo "    the machine that last ran ziggy:generate — usually a dev laptop's"
+echo "    localhost — and gets inlined into the JS bundle by the build below,"
+echo "    so it must be regenerated here before every build, not just once)"
+php artisan ziggy:generate
+
 echo "==> Installing Node dependencies and building frontend assets"
 echo "    (node_modules is kept after build: PDF rendering and face verification"
 echo "    call 'node' as a runtime child process from PHP, not just at build time)"
