@@ -105,16 +105,12 @@ class SubmissionController extends Controller
             'comments' => 'nullable|string|max:1000',
         ]);
 
-        $wasGraded = $submission->grade !== null;
-
         $submission->update([
             'grade' => $request->grade,
             'comments' => $request->comments,
         ]);
 
-        if (!$wasGraded) {
-            $submission->student->user->notify(new SubmissionGraded($submission));
-        }
+        $submission->student->user->notify(new SubmissionGraded($submission));
 
         return redirect()
             ->route('supervisor.submissions.index')
@@ -132,16 +128,12 @@ class SubmissionController extends Controller
             'comments' => 'nullable|string|max:1000',
         ]);
 
-        $wasGraded = $submission->grade !== null;
-
         $submission->update([
             'grade' => $request->grade,
             'comments' => $request->comments,
         ]);
 
-        if (!$wasGraded) {
-            $submission->student->user->notify(new SubmissionGraded($submission));
-        }
+        $submission->student->user->notify(new SubmissionGraded($submission));
 
         return response()->json([
             'success' => true,
