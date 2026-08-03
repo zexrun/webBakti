@@ -14,5 +14,7 @@ $lines = array_filter(explode("\n", trim($content)));
 $lines = array_values($lines);
 
 echo "Total lines after stripping: " . count($lines) . "\n";
-echo "---\n";
-echo implode("\n", array_slice($lines, -15)) . "\n";
+echo "--- First 15 lines (error message + top of stack trace) ---\n";
+echo implode("\n", array_slice($lines, 0, 15)) . "\n";
+echo "--- Last 10 lines ---\n";
+echo implode("\n", array_slice($lines, -10)) . "\n";
