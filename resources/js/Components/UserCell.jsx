@@ -8,14 +8,18 @@ const tones = {
 }
 
 /**
- * Avatar-initial + name + subtitle cell, the standard person identity
- * block inside tables and lists.
+ * Avatar (photo, falling back to initial) + name + subtitle cell, the
+ * standard person identity block inside tables and lists.
  */
-export default function UserCell({ name, subtitle, tone = 'blue' }) {
+export default function UserCell({ name, subtitle, tone = 'blue', photoUrl }) {
   return (
     <div className="flex items-center gap-3">
-      <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', tones[tone] ?? tones.blue)}>
-        <span className="text-sm font-medium">{name?.charAt(0)?.toUpperCase() ?? '?'}</span>
+      <div className={cn('flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full', tones[tone] ?? tones.blue)}>
+        {photoUrl ? (
+          <img src={photoUrl} alt={name} className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-sm font-medium">{name?.charAt(0)?.toUpperCase() ?? '?'}</span>
+        )}
       </div>
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-foreground">{name}</p>

@@ -54,6 +54,7 @@ export default function Show({ message, conversation }) {
                 <div className="mb-3 flex items-start justify-between gap-3">
                   <UserCell
                     name={msg.sender?.name}
+                    photoUrl={msg.sender?.profile_photo_url}
                     subtitle={new Date(msg.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   />
                   {msg.recipient_id === auth.user.id && msg.is_read && (

@@ -158,7 +158,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
                     {pendingAttendances.data.map((attendance) => (
                       <TableRow key={attendance.id}>
                         <TableCell>
-                          <UserCell name={attendance.user?.name} subtitle={attendance.user?.email} />
+                          <UserCell name={attendance.user?.name} photoUrl={attendance.user?.profile_photo_url} subtitle={attendance.user?.email} />
                         </TableCell>
                         <TableCell>
                           <p className="font-medium tabular-nums text-foreground">{shortDate(attendance.date)}</p>
@@ -233,7 +233,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
                   {pendingExceptions.data.map((exception) => (
                     <TableRow key={exception.id}>
                       <TableCell>
-                        <UserCell name={exception.user?.name} subtitle={exception.user?.email} />
+                        <UserCell name={exception.user?.name} photoUrl={exception.user?.profile_photo_url} subtitle={exception.user?.email} />
                       </TableCell>
                       <TableCell>
                         <p className="font-medium tabular-nums text-foreground">{shortDate(exception.date)}</p>

@@ -80,6 +80,7 @@ export default function StudentDetail({ student }) {
                 <div className="flex flex-col gap-3 rounded-lg border border-border bg-muted p-4 sm:flex-row sm:items-center sm:justify-between">
                   <UserCell
                     name={student.supervisor.user.name}
+                    photoUrl={student.supervisor.user.profile_photo_url}
                     subtitle={[
                       student.supervisor.user.email,
                       student.supervisor.employee_id && `NIP: ${student.supervisor.employee_id}`,

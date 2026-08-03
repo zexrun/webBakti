@@ -80,7 +80,7 @@ export default function Show({ logbook }) {
               </Badge>
               <h2 className="font-heading text-lg font-semibold text-foreground">{logbook.title}</h2>
               <div className="mt-3">
-                <UserCell name={logbook.student?.user?.name} subtitle={logbook.student?.nim ?? 'NIM belum diisi'} />
+                <UserCell name={logbook.student?.user?.name} photoUrl={logbook.student?.user?.profile_photo_url} subtitle={logbook.student?.nim ?? 'NIM belum diisi'} />
               </div>
             </div>
             <Badge variant="success">

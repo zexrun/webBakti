@@ -150,6 +150,7 @@ export default function Index({ students }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <UserCell
                             name={student.user.name}
+                            photoUrl={student.user.profile_photo_url}
                             subtitle={[student.nim ?? 'NIM belum diisi', student.university].filter(Boolean).join(' · ')}
                           />
                           {certificateGenerated && (

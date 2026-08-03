@@ -146,7 +146,7 @@ export default function Index({ attendances, stats, date, status }) {
                   {attendances.data.map((attendance) => (
                     <TableRow key={attendance.id}>
                       <TableCell>
-                        <UserCell name={attendance.user?.name} subtitle={attendance.user?.email} />
+                        <UserCell name={attendance.user?.name} photoUrl={attendance.user?.profile_photo_url} subtitle={attendance.user?.email} />
                       </TableCell>
                       <TableCell>
                         <span className="font-medium tabular-nums text-foreground">{time(attendance.check_in)}</span>

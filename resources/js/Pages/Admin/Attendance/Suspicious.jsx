@@ -77,7 +77,7 @@ export default function Suspicious({ suspiciousAttendances }) {
                 {suspiciousAttendances.data.map((attendance) => (
                   <TableRow key={attendance.id}>
                     <TableCell>
-                      <UserCell name={attendance.user?.name} subtitle={attendance.user?.email} tone="red" />
+                      <UserCell name={attendance.user?.name} photoUrl={attendance.user?.profile_photo_url} subtitle={attendance.user?.email} tone="red" />
                     </TableCell>
                     <TableCell className="tabular-nums text-muted-foreground">
                       {new Date(attendance.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}

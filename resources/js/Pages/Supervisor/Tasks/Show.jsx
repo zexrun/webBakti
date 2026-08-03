@@ -152,6 +152,7 @@ export default function Show({ task, assignedStudents, submissions }) {
                   <div className="flex flex-col gap-3 border-b border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
                     <UserCell
                       name={student.user?.name}
+                      photoUrl={student.user?.profile_photo_url}
                       subtitle={[student.nim ?? 'NIM belum diisi', student.user?.email].filter(Boolean).join(' · ')}
                     />
                     {isGraded ? (

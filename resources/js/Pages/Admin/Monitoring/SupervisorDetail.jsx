@@ -88,6 +88,7 @@ export default function SupervisorDetail({ supervisor }) {
                   <div key={student.id} className="flex flex-col gap-3 px-4 py-3.5 transition-colors duration-150 hover:bg-muted sm:flex-row sm:items-center sm:justify-between">
                     <UserCell
                       name={student.user.name}
+                      photoUrl={student.user.profile_photo_url}
                       subtitle={[student.user.email, student.nim && `NIM: ${student.nim}`, student.study_program].filter(Boolean).join(' · ')}
                       tone="green"
                     />

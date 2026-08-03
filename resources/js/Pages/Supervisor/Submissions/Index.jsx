@@ -127,7 +127,7 @@ export default function Index({ submissions, tasks, students, totalSubmissions, 
                   {submissions.data.map((submission) => (
                     <TableRow key={submission.id}>
                       <TableCell>
-                        <UserCell name={submission.student.user.name} subtitle={submission.student.user.email} />
+                        <UserCell name={submission.student.user.name} photoUrl={submission.student.user.profile_photo_url} subtitle={submission.student.user.email} />
                       </TableCell>
                       <TableCell className="whitespace-normal">
                         <p className="text-sm font-medium text-foreground">{submission.task.title}</p>

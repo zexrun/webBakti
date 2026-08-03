@@ -99,10 +99,14 @@ export default function Plotting({ students, supervisors }) {
                   <TableRow key={student.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-500/15">
-                          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                            {student.user.name.charAt(0).toUpperCase()}
-                          </span>
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-100 dark:bg-blue-500/15">
+                          {student.user.profile_photo_url ? (
+                            <img src={student.user.profile_photo_url} alt={student.user.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                              {student.user.name.charAt(0).toUpperCase()}
+                            </span>
+                          )}
                         </div>
                         <div>
                           <div className="font-medium text-foreground">{student.user.name}</div>

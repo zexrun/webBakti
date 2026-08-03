@@ -117,7 +117,7 @@ export default function Index({ logbooks, students, filters }) {
                         </p>
                       </TableCell>
                       <TableCell>
-                        <UserCell name={entry.student?.user?.name} subtitle={entry.student?.nim ?? 'NIM belum diisi'} />
+                        <UserCell name={entry.student?.user?.name} photoUrl={entry.student?.user?.profile_photo_url} subtitle={entry.student?.nim ?? 'NIM belum diisi'} />
                       </TableCell>
                       <TableCell className="whitespace-normal">
                         <p className="text-sm font-medium text-foreground">{entry.title}</p>
