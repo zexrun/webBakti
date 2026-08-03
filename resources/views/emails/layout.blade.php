@@ -54,7 +54,7 @@
 
         .email-header-logo {
             font-size: 19px;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: 0.3px;
             line-height: 1.2;
         }
@@ -332,7 +332,7 @@
                 <table class="email-header-table" role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td style="vertical-align: middle;" width="60%">
-                            <div class="email-header-logo">WebBakti</div>
+                            <div class="email-header-logo">Magang BAKTI</div>
                             <div class="email-header-subtitle">Sistem Manajemen Magang</div>
                         </td>
                         <td style="vertical-align: middle; text-align: right;" width="40%">
@@ -354,7 +354,7 @@
             <!-- Footer -->
             <div class="email-footer">
                 <div class="email-footer-content">
-                    <strong>WebBakti System</strong><br>
+                    <strong>Magang BAKTI</strong><br>
                     Badan Aksesibilitas Telekomunikasi dan Informasi (BAKTI)<br>
                     Kementerian Komunikasi dan Digital Republik Indonesia
                 </div>

@@ -18,7 +18,7 @@ export default function GuestLayout({ children }) {
               <a href="#" className="text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">Kontak</a>
               <a href="#" className="text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">Privasi</a>
             </div>
-            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">© {new Date().getFullYear()} Sistem Monitoring Magang</p>
+            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">© {new Date().getFullYear()} Magang BAKTI</p>
           </footer>
         </div>
       </div>

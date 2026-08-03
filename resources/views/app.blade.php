@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title inertia>{{ config('app.name', 'webBakti') }}</title>
+        <title inertia>{{ config('app.name', 'Magang BAKTI') }}</title>
 
         <!-- Set theme class before first paint to avoid flash of wrong theme -->
         <script>

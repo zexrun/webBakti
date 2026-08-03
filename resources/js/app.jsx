@@ -9,7 +9,7 @@ import { route as ziggyRoute } from 'ziggy-js'
 import { Ziggy } from './ziggy'
 import { ConfirmDialogProvider } from '@/hooks/useConfirm'
 
-const appName = import.meta.env.VITE_APP_NAME || 'webBakti'
+const appName = import.meta.env.VITE_APP_NAME || 'Magang BAKTI'
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,

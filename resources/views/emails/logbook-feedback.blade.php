@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Feedback Logbook - WebBakti'])
+@extends('emails.layout', ['title' => 'Feedback Logbook - Magang BAKTI'])
 
 @section('content')
 <div class="email-category-label">Feedback Logbook</div>

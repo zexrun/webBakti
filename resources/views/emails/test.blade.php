@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Test Email - WebBakti'])
+@extends('emails.layout', ['title' => 'Test Email - Magang BAKTI'])
 
 @section('content')
 <div class="email-category-label">Test Email</div>
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<p class="email-paragraph"><strong>Pesan Test:</strong> {{ $message ?? 'Ini adalah email test dari WebBakti' }}</p>
+<p class="email-paragraph"><strong>Pesan Test:</strong> {{ $message ?? 'Ini adalah email test dari Magang BAKTI' }}</p>
 
 <p class="email-paragraph">
     Email ini membuktikan bahwa sistem email Anda sudah siap untuk:

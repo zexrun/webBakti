@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 
 class TestEmailCommand extends Command
 {
-    protected $signature = 'email:test {--to=admin@webbakti.local : Email recipient} {--message="Test email from WebBakti" : Custom message}';
+    protected $signature = 'email:test {--to=admin@webbakti.local : Email recipient} {--message="Test email from Magang BAKTI" : Custom message}';
 
     protected $description = 'Send a test email via configured mail driver (Mailtrap, Gmail, etc)';
 
@@ -30,7 +30,7 @@ class TestEmailCommand extends Command
             $this->line('📌 Check your email inbox:');
             $this->line('   If using Mailtrap: https://mailtrap.io → Demo Inbox');
             $this->line('   If using Gmail: Gmail inbox');
-            $this->line('   Subject: WebBakti Email Sandbox Test - ' . now()->format('Y-m-d H:i:s'));
+            $this->line('   Subject: Magang BAKTI Email Sandbox Test - ' . now()->format('Y-m-d H:i:s'));
 
             return Command::SUCCESS;
         } catch (\Exception $e) {

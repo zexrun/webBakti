@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Pengingat Deadline Tugas - WebBakti'])
+@extends('emails.layout', ['title' => 'Pengingat Deadline Tugas - Magang BAKTI'])
 
 @section('content')
 @php
@@ -71,7 +71,7 @@
 <p class="email-paragraph"><strong>Deskripsi Singkat:</strong> {{ Str::limit($task->description, 300) }}</p>
 
 @if($task->file_path)
-<p class="email-paragraph">File lampiran tersedia untuk tugas ini. Silakan download dari aplikasi WebBakti untuk melihat detail lengkap.</p>
+<p class="email-paragraph">File lampiran tersedia untuk tugas ini. Silakan download dari aplikasi Magang BAKTI untuk melihat detail lengkap.</p>
 @endif
 
 <p class="email-paragraph"><strong>Langkah-Langkah Menyelesaikan:</strong></p>

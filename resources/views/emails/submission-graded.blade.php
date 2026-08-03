@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Tugas Dinilai - WebBakti'])
+@extends('emails.layout', ['title' => 'Tugas Dinilai - Magang BAKTI'])
 
 @section('content')
 <div class="email-category-label">Penilaian Tugas</div>
