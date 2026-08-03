@@ -3,19 +3,16 @@
 $logPath = __DIR__ . '/../storage/logs/laravel.log';
 $content = file_get_contents($logPath);
 
-// Find the last "Face descriptor extraction failed" entry and print only
-// the first line of its error message plus the final line (which usually
-// contains the actual thrown error, after the huge minified-JS context line).
-$entries = preg_split('/^\[\d{4}-\d{2}-\d{2}/m', $content);
-$last = trim(end($entries));
+// The face-api.node.js source is minified onto ONE line, so a Node stack
+// trace that points into it embeds that entire (tens-of-thousands-of-chars)
+// line inline. Strip anything that looks like minified JS (long runs with
+// no spaces around common minifier tokens) before splitting into lines, so
+// what's left is just the actual prose error message / real stack frames.
+$content = preg_replace('/\/var\/www\/webbakti\/node_modules\/[^\n]{200,}/', '[[minified source line stripped]]', $content);
 
-if (!$last) {
-    echo "No log entries found.\n";
-    exit;
-}
+$lines = array_filter(explode("\n", trim($content)));
+$lines = array_values($lines);
 
-$lines = explode("\n", $last);
-echo "First line: " . ($lines[0] ?? '') . "\n";
+echo "Total lines after stripping: " . count($lines) . "\n";
 echo "---\n";
-echo "Last 5 lines:\n";
-echo implode("\n", array_slice($lines, -5)) . "\n";
+echo implode("\n", array_slice($lines, -15)) . "\n";
