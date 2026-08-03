@@ -1,21 +1,25 @@
 # 📋 REMAINING IMPROVEMENTS & MISSING FEATURES
 
-**Date:** 17 August 2026  
+**Date:** 17 August 2026 (originally) — **re-verified against code on 03 August 2026**  
 **Analysis:** Post-Sprint Code Review  
-**Status:** Identified for Phase 4
+**Status:** ✅ **All 14 items resolved.** Kept for historical record only — see re-verification note per item below.
 
 ---
 
 ## 🔍 FINDINGS SUMMARY
 
-While core security, performance, and feature completeness (CRUD) have been addressed in Phases 1-3, there are still several improvements and missing features that should be tackled for a production-ready system.
+While core security, performance, and feature completeness (CRUD) have been addressed in Phases 1-3, there were several improvements and missing features identified below for a production-ready system.
+
+**Re-verification result:** all 14 items were checked directly against the current codebase and are confirmed fixed/implemented. None of the fixes described below still need to be applied — this document is retained as a record of what was found and resolved, not as an active TODO list.
 
 **Total Items Identified:** 14  
-**Priority Breakdown:** 4 HIGH, 6 MEDIUM, 4 LOW
+**Priority Breakdown:** 4 HIGH, 6 MEDIUM, 4 LOW — **14/14 DONE**
 
 ---
 
 ## 🟠 HIGH PRIORITY IMPROVEMENTS
+
+> ✅ **RESOLVED (verified 2026-08-03):** `index2()`, `showStudent2()` and the other dead methods listed below no longer exist in `MonitoringController.php` / `SupervisorController.php`.
 
 ### 1. **Duplicate/Dead Code in Controllers**
 **Files:** 
@@ -40,6 +44,8 @@ While core security, performance, and feature completeness (CRUD) have been addr
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** No duplicate `hasFile('file')` / `dd()` block remains in `TaskController.php`.
+
 ### 2. **Logic Error in Supervisor TaskController**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php` (line 54-56)
 
@@ -63,6 +69,8 @@ if ($request->hasFile('file')) {
 **Priority:** HIGH (logic error)
 
 ---
+
+> ✅ **RESOLVED (verified 2026-08-03):** `TaskController::show()` now checks `$task->supervisor_id !== Auth::user()->supervisor->id` and aborts 403 — the IDOR gap and the `Auth::user() === 'admin'` object/string bug are gone.
 
 ### 3. **Missing Authorization Check in Supervisor TaskController**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php` (line 83-91)
@@ -100,6 +108,8 @@ public function show(Task $task)
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** `TaskController` now has `edit()`, `update()`, and `destroy()`, each with the same supervisor-ownership authorization check.
+
 ### 4. **Missing Task Edit/Update/Delete Methods**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php`
 
@@ -124,6 +134,8 @@ public function destroy(Task $task) { ... }
 ---
 
 ## 🟡 MEDIUM PRIORITY IMPROVEMENTS
+
+> ✅ **RESOLVED (verified 2026-08-03):** `MonitoringController::index()` now supports `search`, `directorate`, and `position` query filters with pagination.
 
 ### 5. **Missing Search/Filter on Monitoring Page**
 **File:** `app/Http/Controllers/Admin/MonitoringController.php`
@@ -155,6 +167,8 @@ public function index(Request $request)
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** `due_date` validation in `TaskController::store()`/`update()` is `nullable|date|after_or_equal:today`.
+
 ### 6. **Missing Validation on Task Due Date**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php` (line 40-49)
 
@@ -174,6 +188,8 @@ public function index(Request $request)
 **Priority:** MEDIUM (data validation)
 
 ---
+
+> ✅ **RESOLVED (verified 2026-08-03):** `TaskController::grade()` checks `$submission->task->supervisor_id !== Auth::user()->supervisor->id` before updating.
 
 ### 7. **Missing Authorization in Task Grade Method**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php` (line 106-121)
@@ -205,6 +221,8 @@ public function grade(Request $request, Submission $submission)
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** Grading now happens through `Supervisor/SubmissionController` (not `TaskController::grade()`), which calls `$submission->student->user->notify(new SubmissionGraded($submission))` in both its grading paths, plus a bulk path in `BulkOperationController`.
+
 ### 8. **Missing Notification on Task Grade**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php`
 
@@ -230,6 +248,8 @@ public function grade(Request $request, Submission $submission)
 **Priority:** MEDIUM (UX/notifications)
 
 ---
+
+> ✅ **RESOLVED (verified 2026-08-03):** `TaskController::destroy()` deletes `$task->file_path` from `Storage::disk('public')` before deleting the task, and blocks deletion entirely if submissions already exist.
 
 ### 9. **Missing File Cleanup on Task Delete**
 **File:** `app/Http/Controllers/Supervisor/TaskController.php`
@@ -257,6 +277,8 @@ protected static function boot()
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** `Student/ProfileController::update()` validates `nim`, `university`, and `semester` (plus other profile fields).
+
 ### 10. **Missing Student Profile Editing**
 **File:** `app/Http/Controllers/Student/ProfileController.php`
 
@@ -274,6 +296,8 @@ protected static function boot()
 
 ## 🟢 MEDIUM-LOW PRIORITY
 
+> ✅ **RESOLVED (verified 2026-08-03):** `Admin/AttendanceController::exportCsv()` streams a CSV export with `detail`/`summary` modes.
+
 ### 11. **No Attendance Status Export (CSV/PDF)**
 **File:** `app/Http/Controllers/Admin/AttendanceController.php`
 
@@ -288,6 +312,8 @@ protected static function boot()
 **Priority:** MEDIUM-LOW (reporting)
 
 ---
+
+> ✅ **RESOLVED (verified 2026-08-03):** `AttendanceController` validates exception submissions with `'type' => 'required|in:sick,leave,permit,official'` plus a required `reason`.
 
 ### 12. **No Attendance Exception Types**
 **File:** `app/Http/Controllers/AttendanceController.php`
@@ -308,6 +334,8 @@ protected static function boot()
 
 ---
 
+> ✅ **RESOLVED (verified 2026-08-03):** `Supervisor/BulkOperationController` implements bulk operations (including bulk grading, which also fires `SubmissionGraded` notifications).
+
 ### 13. **No Batch Operations (Admin)**
 **Issue:**
 - Admin can only approve 1 attendance at a time
@@ -319,6 +347,8 @@ protected static function boot()
 **Priority:** LOW (admin convenience)
 
 ---
+
+> ✅ **RESOLVED (verified 2026-08-03):** `SupervisorController::dashboardData()` returns `totalStudents`, `totalTasks`, `pendingAssessments`, `completedInternships`, `recentStudents`, and `unreadMessages` to the React dashboard.
 
 ### 14. **No Dashboard Statistics for Supervisors**
 **File:** `app/Http/Controllers/Supervisor/SupervisorController.php`
@@ -366,24 +396,26 @@ public function dashboard()
 
 | Item | Type | Priority | Effort | Status |
 |------|------|----------|--------|--------|
-| Duplicate code in MonitoringController | Code Quality | HIGH | 30m | ❌ TODO |
-| Logic error in TaskController | Bug | HIGH | 5m | ❌ TODO |
-| Missing auth in Task.show() | Security | HIGH | 15m | ❌ TODO |
-| Missing Task edit/update/delete | Feature | HIGH | 2h | ❌ TODO |
-| Missing search on Monitoring | UX | MEDIUM | 1h | ❌ TODO |
-| Task due_date validation | Validation | MEDIUM | 15m | ❌ TODO |
-| Missing auth in Task.grade() | Security | MEDIUM | 15m | ❌ TODO |
-| Missing grade notification | Feature | MEDIUM | 30m | ❌ TODO |
-| Missing file cleanup on task delete | Cleanup | MEDIUM | 30m | ❌ TODO |
-| Student profile completeness check | Feature | MEDIUM | 1-2h | ❌ TODO |
-| Attendance export (CSV/PDF) | Feature | LOW | 2-3h | ❌ TODO |
-| Attendance exception types | UX | LOW | 1-2h | ❌ TODO |
-| Batch operations | Admin | LOW | 2-3h | ❌ TODO |
-| Supervisor dashboard stats | UX | LOW | 2-3h | ❌ TODO |
+| Duplicate code in MonitoringController | Code Quality | HIGH | 30m | ✅ DONE |
+| Logic error in TaskController | Bug | HIGH | 5m | ✅ DONE |
+| Missing auth in Task.show() | Security | HIGH | 15m | ✅ DONE |
+| Missing Task edit/update/delete | Feature | HIGH | 2h | ✅ DONE |
+| Missing search on Monitoring | UX | MEDIUM | 1h | ✅ DONE |
+| Task due_date validation | Validation | MEDIUM | 15m | ✅ DONE |
+| Missing auth in Task.grade() | Security | MEDIUM | 15m | ✅ DONE |
+| Missing grade notification | Feature | MEDIUM | 30m | ✅ DONE (via SubmissionController) |
+| Missing file cleanup on task delete | Cleanup | MEDIUM | 30m | ✅ DONE |
+| Student profile completeness check | Feature | MEDIUM | 1-2h | ✅ DONE |
+| Attendance export (CSV/PDF) | Feature | LOW | 2-3h | ✅ DONE (CSV) |
+| Attendance exception types | UX | LOW | 1-2h | ✅ DONE |
+| Batch operations | Admin | LOW | 2-3h | ✅ DONE |
+| Supervisor dashboard stats | UX | LOW | 2-3h | ✅ DONE |
+
+*Re-verified directly against the codebase on 2026-08-03 — see the ✅ notes inline above for what each fix looks like now.*
 
 ---
 
-## 🎯 RECOMMENDED NEXT PHASE
+## 🎯 RECOMMENDED NEXT PHASE (historical — completed)
 
 ### **Phase 4: CODE CLEANUP & HIGH-PRIORITY FIXES (1-2 days)**
 
@@ -405,21 +437,23 @@ public function dashboard()
 
 ---
 
-## 📝 IMPLEMENTATION ROADMAP
+## 📝 IMPLEMENTATION ROADMAP (historical)
 
-### **Week 1 (Current)**
+### **Week 1**
 - [x] Phase 1-3: Security, Performance, Completeness
-- [ ] Phase 4: Code cleanup + HIGH priority fixes
+- [x] Phase 4: Code cleanup + HIGH priority fixes
 
 ### **Week 2**
-- [ ] Additional features (search, dashboard)
+- [x] Additional features (search, dashboard)
 - [ ] QA testing full suite
 - [ ] Production deployment
 
 ### **Week 3+**
 - [ ] UI improvements
-- [ ] Additional reporting features
+- [x] Additional reporting features (CSV export)
 - [ ] Performance monitoring
+
+*Items still unchecked above were out of scope for this 14-item list and were not part of the 2026-08-03 re-verification.*
 
 ---
 
@@ -450,5 +484,5 @@ public function dashboard()
 
 ---
 
-**Recommendation:** Include Phase 4 in this sprint before QA testing to ensure code quality is top-notch.
+**Recommendation:** ~~Include Phase 4 in this sprint before QA testing to ensure code quality is top-notch.~~ Superseded — all items above are implemented; see the ✅ notes for what to check if you need to confirm behavior for QA.
 
