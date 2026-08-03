@@ -28,11 +28,17 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
+# Earlier runs chown the whole app dir to www-data, which makes Git refuse
+# to operate on it as any other user ("dubious ownership"). Whitelist it
+# globally so both root and the deploying user can run git here.
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+
 if [[ "$REPO_URL" == "--update" ]]; then
   APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
   echo "==> Updating existing deployment at $APP_DIR"
   cd "$APP_DIR"
-  sudo -u "$SUDO_USER" git pull
+  git pull
 elif [[ -n "$REPO_URL" ]]; then
   if [[ -d "$APP_DIR/.git" ]]; then
     echo "==> $APP_DIR already exists, pulling latest instead of cloning"
