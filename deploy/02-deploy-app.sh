@@ -86,7 +86,10 @@ php artisan storage:link || true
 
 echo "==> Fixing ownership and permissions"
 chown -R "$WEB_USER":"$WEB_USER" "$APP_DIR"
-find "$APP_DIR" -type f -exec chmod 644 {} \;
+# Exclude node_modules/.bin and vendor/bin: chmod 644 on every file would
+# strip the executable bit from Node/Composer binaries (e.g. node_modules/.bin/vite),
+# breaking `npm run build` on every subsequent deploy with "Permission denied".
+find "$APP_DIR" -type f -not -path "*/node_modules/.bin/*" -not -path "*/vendor/bin/*" -exec chmod 644 {} \;
 find "$APP_DIR" -type d -exec chmod 755 {} \;
 chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
 
