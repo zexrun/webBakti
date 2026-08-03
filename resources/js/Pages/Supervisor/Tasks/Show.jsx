@@ -69,7 +69,7 @@ export default function Show({ task, assignedStudents, submissions }) {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Tag className="h-4 w-4" />
                   <span className="font-medium">Tipe:</span>
-                  <Badge variant="secondary">{task.type === 'harian' ? 'Harian' : 'Akhir'}</Badge>
+                  <Badge variant="secondary">{task.type === 'daily' ? 'Harian' : 'Akhir'}</Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />

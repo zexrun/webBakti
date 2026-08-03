@@ -57,7 +57,7 @@ export default function Edit({ submission }) {
                   <div>
                     <p className="text-sm text-muted-foreground">Tugas</p>
                     <p className="text-lg font-medium text-foreground">{submission.task.title}</p>
-                    <p className="text-xs text-muted-foreground">{submission.task.type === 'harian' ? 'Tugas Harian' : 'Laporan Akhir'}</p>
+                    <p className="text-xs text-muted-foreground">{submission.task.type === 'daily' ? 'Tugas Harian' : 'Laporan Akhir'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Disubmit</p>

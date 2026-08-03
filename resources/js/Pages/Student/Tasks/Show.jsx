@@ -205,7 +205,7 @@ export default function Show({ task, submission }) {
                   <p className="text-sm font-medium text-foreground">{task.supervisor?.user?.name}</p>
                 </InfoTile>
                 <InfoTile icon={Tag} label="Tipe Tugas">
-                  <p className="text-sm font-medium text-foreground">{task.type === 'harian' ? 'Harian' : 'Laporan Akhir'}</p>
+                  <p className="text-sm font-medium text-foreground">{task.type === 'daily' ? 'Harian' : 'Laporan Akhir'}</p>
                 </InfoTile>
                 <InfoTile icon={Clock} label="Deadline">
                   {task.due_date ? (

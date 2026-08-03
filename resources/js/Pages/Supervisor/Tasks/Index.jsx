@@ -108,8 +108,8 @@ export default function Index({ students }) {
                               <p className="max-w-xs truncate text-sm text-muted-foreground">{task.description}</p>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={task.type === 'harian' ? 'default' : 'secondary'}>
-                                {task.type === 'harian' ? 'Harian' : 'Akhir'}
+                              <Badge variant={task.type === 'daily' ? 'default' : 'secondary'}>
+                                {task.type === 'daily' ? 'Harian' : 'Akhir'}
                               </Badge>
                             </TableCell>
                             <TableCell>

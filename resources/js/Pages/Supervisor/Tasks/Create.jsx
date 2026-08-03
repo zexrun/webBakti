@@ -14,7 +14,7 @@ export default function Create({ students }) {
   const { data, setData, post, processing, errors } = useForm({
     title: '',
     description: '',
-    type: 'harian',
+    type: 'daily',
     due_date: '',
     file: null,
     student_ids: [],
@@ -75,8 +75,8 @@ export default function Create({ students }) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="harian">Tugas Harian</SelectItem>
-                      <SelectItem value="akhir" disabled>
+                      <SelectItem value="daily">Tugas Harian</SelectItem>
+                      <SelectItem value="final" disabled>
                         Laporan Akhir
                       </SelectItem>
                     </SelectContent>

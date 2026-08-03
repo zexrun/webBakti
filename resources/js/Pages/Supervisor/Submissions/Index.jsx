@@ -131,7 +131,7 @@ export default function Index({ submissions, tasks, students, totalSubmissions, 
                       </TableCell>
                       <TableCell className="whitespace-normal">
                         <p className="text-sm font-medium text-foreground">{submission.task.title}</p>
-                        <p className="text-xs text-muted-foreground">{submission.task.type === 'harian' ? 'Harian' : 'Akhir'}</p>
+                        <p className="text-xs text-muted-foreground">{submission.task.type === 'daily' ? 'Harian' : 'Akhir'}</p>
                       </TableCell>
                       <TableCell>
                         <p className="tabular-nums text-foreground">

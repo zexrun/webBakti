@@ -75,8 +75,8 @@ export default function Edit({ task, students, assignedStudents }) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="harian">Tugas Harian</SelectItem>
-                      <SelectItem value="akhir">Laporan Akhir</SelectItem>
+                      <SelectItem value="daily">Tugas Harian</SelectItem>
+                      <SelectItem value="final">Laporan Akhir</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.type && <p className="text-sm text-destructive">{errors.type}</p>}

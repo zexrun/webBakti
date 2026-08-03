@@ -53,7 +53,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:harian,akhir',
+            'type' => 'required|in:daily,final',
             'due_date' => 'nullable|date|after_or_equal:today',
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
@@ -126,7 +126,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:harian,akhir',
+            'type' => 'required|in:daily,final',
             'due_date' => 'nullable|date|after_or_equal:today',
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
