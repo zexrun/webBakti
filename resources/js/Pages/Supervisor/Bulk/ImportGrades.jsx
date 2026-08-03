@@ -17,7 +17,7 @@ export default function ImportGrades() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    post(r('supervisor.bulk.import-grades'), { forceFormData: true })
+    post(r('supervisor.bulk.import-grades.submit'), { forceFormData: true })
   }
 
   return (

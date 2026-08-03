@@ -31,7 +31,7 @@ export default function AutomationSettings({ settings }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    post(r('supervisor.bulk.automation-settings'))
+    post(r('supervisor.bulk.automation-settings.submit'))
   }
 
   return (

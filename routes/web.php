@@ -176,11 +176,11 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
         Route::get('/create-task', [BulkOperationController::class, 'createBulkTaskForm'])->name('create-task');
         Route::post('/store-task', [BulkOperationController::class, 'storeBulkTask'])->name('store-task');
         Route::get('/send-notification', [BulkOperationController::class, 'bulkNotificationForm'])->name('send-notification');
-        Route::post('/send-notification', [BulkOperationController::class, 'sendBulkNotification'])->name('send-notification');
+        Route::post('/send-notification', [BulkOperationController::class, 'sendBulkNotification'])->name('send-notification.submit');
         Route::get('/import-grades', [BulkOperationController::class, 'gradeImportForm'])->name('import-grades');
-        Route::post('/import-grades', [BulkOperationController::class, 'importGrades'])->name('import-grades');
+        Route::post('/import-grades', [BulkOperationController::class, 'importGrades'])->name('import-grades.submit');
         Route::get('/automation-settings', [BulkOperationController::class, 'automationSettingsForm'])->name('automation-settings');
-        Route::post('/automation-settings', [BulkOperationController::class, 'saveAutomationSettings'])->name('automation-settings');
+        Route::post('/automation-settings', [BulkOperationController::class, 'saveAutomationSettings'])->name('automation-settings.submit');
     });
 
     Route::prefix('pdf')->name('pdf.')->group(function () {

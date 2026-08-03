@@ -32,7 +32,7 @@ export default function SendNotification({ students }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    post(r('supervisor.bulk.send-notification'))
+    post(r('supervisor.bulk.send-notification.submit'))
   }
 
   return (
