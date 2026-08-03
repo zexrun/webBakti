@@ -178,6 +178,7 @@ Route::middleware(['auth', 'role:supervisor'])->prefix('supervisor')->name('supe
         Route::get('/send-notification', [BulkOperationController::class, 'bulkNotificationForm'])->name('send-notification');
         Route::post('/send-notification', [BulkOperationController::class, 'sendBulkNotification'])->name('send-notification.submit');
         Route::get('/import-grades', [BulkOperationController::class, 'gradeImportForm'])->name('import-grades');
+        Route::get('/import-grades/template', [BulkOperationController::class, 'downloadGradeTemplate'])->name('import-grades.template');
         Route::post('/import-grades', [BulkOperationController::class, 'importGrades'])->name('import-grades.submit');
         Route::get('/automation-settings', [BulkOperationController::class, 'automationSettingsForm'])->name('automation-settings');
         Route::post('/automation-settings', [BulkOperationController::class, 'saveAutomationSettings'])->name('automation-settings.submit');

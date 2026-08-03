@@ -123,6 +123,42 @@ class BulkOperationController extends Controller
         return Inertia::render('Supervisor/Bulk/ImportGrades');
     }
 
+    public function downloadGradeTemplate()
+    {
+        $supervisor = Auth::user()->supervisor;
+
+        $submissions = \App\Models\Submission::with(['student.user', 'task'])
+            ->whereHas('task', fn($q) => $q->where('supervisor_id', $supervisor->id))
+            ->latest()
+            ->get();
+
+        $filename = 'template_nilai_' . now()->format('Y-m-d_His') . '.csv';
+
+        return response()->streamDownload(function () use ($submissions) {
+            $handle = fopen('php://output', 'w');
+
+            // BOM so the CSV opens with correct UTF-8 accents/names in Excel
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            fputcsv($handle, ['submission_id', 'grade', 'feedback', '# nama_siswa', '# judul_tugas', '# nilai_saat_ini']);
+
+            foreach ($submissions as $submission) {
+                fputcsv($handle, [
+                    $submission->id,
+                    '',
+                    '',
+                    $submission->student->user->name,
+                    $submission->task->title,
+                    $submission->grade ?? '-',
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+        ]);
+    }
+
     public function importGrades(Request $request)
     {
         $supervisor = Auth::user()->supervisor;
@@ -174,7 +210,7 @@ class BulkOperationController extends Controller
 
                 $submission->update([
                     'grade' => $grade,
-                    'feedback' => $feedback,
+                    'comments' => $feedback,
                 ]);
 
                 // Send grade notification

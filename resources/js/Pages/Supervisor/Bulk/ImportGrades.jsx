@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Link, useForm, usePage } from '@inertiajs/react'
-import { ArrowLeft, UploadCloud, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Download, UploadCloud, CheckCircle2 } from 'lucide-react'
 import SupervisorLayout from '@/Layouts/SupervisorLayout'
 import PageHeader from '@/Components/PageHeader'
 import FlashBanner from '@/Components/FlashBanner'
@@ -92,6 +92,12 @@ export default function ImportGrades() {
               <CardTitle>Panduan Format CSV</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-6">
+              <Button asChild variant="outline" className="w-full">
+                <a href={r('supervisor.bulk.import-grades.template')}>
+                  <Download /> Download Template Nilai
+                </a>
+              </Button>
+
               <div>
                 <p className="mb-2 text-sm font-medium text-foreground">Struktur File</p>
                 <pre className="overflow-x-auto rounded-lg bg-muted p-3 font-mono text-xs text-foreground">{`submission_id,grade,feedback
@@ -110,7 +116,9 @@ export default function ImportGrades() {
               </div>
 
               <FlashBanner type="info" className="font-normal">
-                <strong>Tips:</strong> Submission ID bisa dilihat di halaman penilaian atau dari detail submission.
+                <strong>Tips:</strong> Klik "Download Template Nilai" untuk mendapatkan file CSV yang sudah
+                terisi submission_id, nama siswa, dan judul tugas dari seluruh submission Anda saat ini —
+                tinggal isi kolom grade dan feedback, lalu upload kembali.
               </FlashBanner>
             </CardContent>
           </Card>
