@@ -137,7 +137,9 @@ class ServerFaceVerificationService
         }
 
         // Step 2: Get stored descriptor dari user profile
-        $storedDescriptor = json_decode($user->face_descriptor ?? '[]', true);
+        // face_descriptor is cast to 'array' on the User model, so it's
+        // already decoded here — do not json_decode() it again.
+        $storedDescriptor = $user->face_descriptor ?? [];
 
         if (empty($storedDescriptor)) {
             return [
