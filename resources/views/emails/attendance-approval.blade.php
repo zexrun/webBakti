@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Status Kehadiran - WebBakti'])
+@extends('emails.layout', ['title' => 'Status Kehadiran - Magang BAKTI'])
 
 @section('content')
 @php
@@ -22,8 +22,8 @@
 @else
     <div class="email-alert email-alert-danger">
         <strong>Ditolak.</strong> Kehadiran Anda pada tanggal tersebut tidak memenuhi kriteria verifikasi sistem.
-        @if($attendance->rejection_reason)
-            <br><strong>Alasan:</strong> {{ $attendance->rejection_reason }}
+        @if($attendance->supervisor_notes)
+            <br><strong>Alasan:</strong> {{ $attendance->supervisor_notes }}
         @endif
     </div>
 @endif
@@ -32,12 +32,8 @@
     <div class="email-info-row">
         <div class="email-info-label">Tanggal & Waktu</div>
         <div class="email-info-value">
-            {{ $attendance->check_in_time ? \Carbon\Carbon::parse($attendance->check_in_time)->format('d M Y, H:i') : 'N/A' }}
+            {{ $attendance->check_in ? $attendance->check_in->format('d M Y, H:i') : 'N/A' }}
         </div>
-    </div>
-    <div class="email-info-row">
-        <div class="email-info-label">Lokasi</div>
-        <div class="email-info-value">{{ $attendance->location ?? 'Tidak tercatat' }}</div>
     </div>
     <div class="email-info-row">
         <div class="email-info-label">Verifikasi Lokasi</div>

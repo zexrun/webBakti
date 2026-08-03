@@ -1,4 +1,4 @@
-@extends('emails.layout', ['title' => 'Status Pengajuan Exception - WebBakti'])
+@extends('emails.layout', ['title' => 'Status Pengajuan Exception - Magang BAKTI'])
 
 @section('content')
 @php
@@ -22,8 +22,8 @@
 @else
     <div class="email-alert email-alert-danger">
         <strong>Ditolak.</strong> Pengajuan exception Anda tidak memenuhi kriteria persetujuan.
-        @if($exception->admin_notes)
-            <br><strong>Alasan:</strong> {{ $exception->admin_notes }}
+        @if($exception->supervisor_notes)
+            <br><strong>Alasan:</strong> {{ $exception->supervisor_notes }}
         @endif
     </div>
 @endif
@@ -60,7 +60,7 @@
     </div>
 </div>
 
-@if($exception->supporting_document)
+@if($exception->attachment)
 <p class="email-paragraph">Dokumen pendukung telah dicatat dan diverifikasi dalam sistem.</p>
 @endif
 
@@ -75,7 +75,7 @@
 </div>
 @else
 <p class="email-paragraph">
-    Status kehadiran Anda telah diperbarui dan sesuai dengan persetujuan exception ini. Anda dapat melihat detail di aplikasi WebBakti.
+    Status kehadiran Anda telah diperbarui dan sesuai dengan persetujuan exception ini. Anda dapat melihat detail di aplikasi Magang BAKTI.
 </p>
 @endif
 

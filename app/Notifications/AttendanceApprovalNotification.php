@@ -33,7 +33,7 @@ class AttendanceApprovalNotification extends Notification
             : '✗ Kehadiran Ditolak';
 
         return (new MailMessage)
-            ->subject($subject . ' - ' . ($this->attendance->check_in_time ? \Carbon\Carbon::parse($this->attendance->check_in_time)->format('d M Y') : 'N/A'))
+            ->subject($subject . ' - ' . ($this->attendance->check_in ? $this->attendance->check_in->format('d M Y') : 'N/A'))
             ->view('emails.attendance-approval', [
                 'attendance' => $this->attendance,
                 'status' => $this->status,
@@ -46,9 +46,8 @@ class AttendanceApprovalNotification extends Notification
         return [
             'attendance_id' => $this->attendance->id,
             'status' => $this->status,
-            'check_in_time' => $this->attendance->check_in_time,
-            'location' => $this->attendance->location,
-            'message' => 'Kehadiran Anda pada ' . ($this->attendance->check_in_time ? \Carbon\Carbon::parse($this->attendance->check_in_time)->format('d M Y H:i') : 'N/A') . ' telah ' . ($this->status === 'approved' ? 'DISETUJUI' : 'DITOLAK'),
+            'check_in' => $this->attendance->check_in,
+            'message' => 'Kehadiran Anda pada ' . ($this->attendance->check_in ? $this->attendance->check_in->format('d M Y H:i') : 'N/A') . ' telah ' . ($this->status === 'approved' ? 'DISETUJUI' : 'DITOLAK'),
             'action_url' => url('/student/attendance/' . $this->attendance->id),
             'type' => 'attendance_' . $this->status,
             'priority' => $this->status === 'rejected' ? 'high' : 'normal',
