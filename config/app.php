@@ -142,9 +142,6 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     */
-    
-    // Tambahkan ini
-    App\Providers\ViewServiceProvider::class,
 ])->toArray(),
 
 ];
