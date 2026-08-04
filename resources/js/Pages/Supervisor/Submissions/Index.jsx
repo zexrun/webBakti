@@ -36,7 +36,7 @@ export default function Index({ submissions, tasks, students, totalSubmissions, 
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Dashboard Penilaian"
+          title="Dasbor Penilaian"
           description="Kelola dan nilai semua submission dari mahasiswa bimbingan"
         />
 

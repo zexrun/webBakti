@@ -46,7 +46,7 @@ export default function Create() {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <PageHeader title="Buat Laporan Harian" description="Catat kegiatan magang Anda hari ini" />
+        <PageHeader title="Buat Laporan Kegiatan Harian" description="Catat kegiatan magang Anda hari ini" />
 
         <Card>
           <CardContent className="p-6">

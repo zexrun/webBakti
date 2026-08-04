@@ -34,7 +34,7 @@ export default function Index({ supervisors, directorates, positions, search, di
     <AdminLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Monitoring Aktivitas"
+          title="Pemantauan Aktivitas"
           description="Pantau aktivitas supervisor dan mahasiswa bimbingan"
           actions={
             <Button asChild variant="outline" size="sm">

@@ -38,7 +38,7 @@ export default function Index({ students }) {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Daftar Penugasan"
+          title="Daftar Tugas"
           description="Kelola tugas untuk setiap mahasiswa bimbingan"
           actions={
             <Button asChild>

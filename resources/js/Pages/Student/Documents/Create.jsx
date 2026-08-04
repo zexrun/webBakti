@@ -26,7 +26,7 @@ export default function Create() {
     <StudentLayout>
       <div className="mx-auto max-w-2xl space-y-6">
         <PageHeader
-          title="Upload Dokumen Baru"
+          title="Unggah Dokumen"
           description="Tambahkan dokumen magang baru"
           actions={
             <Button asChild variant="outline" size="sm">

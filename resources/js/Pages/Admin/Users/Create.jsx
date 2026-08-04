@@ -39,7 +39,7 @@ export default function Create() {
   return (
     <AdminLayout>
       <div className="mx-auto max-w-2xl space-y-6">
-        <PageHeader title="Tambah Pengguna Baru" description="Buat akun pengguna baru untuk sistem" />
+        <PageHeader title="Tambah Pengguna" description="Buat akun pengguna baru untuk sistem" />
 
         <Card>
           <CardHeader className="border-b">

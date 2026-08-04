@@ -51,7 +51,7 @@ export default function Show({ logbook }) {
     <SupervisorLayout>
       <div className="mx-auto max-w-3xl space-y-6">
         <PageHeader
-          title="Detail Logbook"
+          title="Detail Laporan Kegiatan Harian"
           description="Aktivitas harian mahasiswa bimbingan"
           actions={
             <>

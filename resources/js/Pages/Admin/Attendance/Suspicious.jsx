@@ -35,8 +35,8 @@ export default function Suspicious({ suspiciousAttendances }) {
     <AdminLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Kehadiran Mencurigakan"
-          description="Kehadiran yang memerlukan review manual karena anomali terdeteksi"
+          title="Presensi Mencurigakan"
+          description="Presensi yang memerlukan review manual karena anomali terdeteksi"
           actions={
             <Button asChild variant="outline" size="sm">
               <Link href={r('admin.attendance.index')}>

@@ -41,7 +41,7 @@ export default function StudentReport({
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Laporan Performa Mahasiswa"
+          title="Analitik Kinerja Mahasiswa"
           description={`${studentInfo.name} · ${studentInfo.nim}`}
           actions={
             <Button asChild variant="outline" size="sm">
@@ -87,13 +87,13 @@ export default function StudentReport({
 
           <Card>
             <CardHeader className="border-b">
-              <CardTitle>Statistik Kehadiran (Bulan Ini)</CardTitle>
+              <CardTitle>Statistik Presensi (Bulan Ini)</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-3 pt-6">
               <MetricRow label="Hadir" value={attendanceStats.present} tone="text-green-700 dark:text-green-400" />
               <MetricRow label="Terlambat" value={attendanceStats.late} tone="text-amber-700 dark:text-amber-400" />
               <MetricRow label="Tidak Hadir" value={attendanceStats.absent} tone="text-red-700 dark:text-red-400" />
-              <MetricRow label="Kehadiran Rate" value={`${attendanceStats.rate}%`} tone="text-blue-700 dark:text-blue-400" />
+              <MetricRow label="Tingkat Presensi" value={`${attendanceStats.rate}%`} tone="text-blue-700 dark:text-blue-400" />
             </CardContent>
           </Card>
         </div>

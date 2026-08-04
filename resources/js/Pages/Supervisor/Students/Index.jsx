@@ -118,7 +118,7 @@ export default function Index({ students }) {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Daftar Mahasiswa Bimbingan"
+          title="Mahasiswa Bimbingan"
           description="Kelola dan pantau progress mahasiswa yang Anda bimbing"
         />
 

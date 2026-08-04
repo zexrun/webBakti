@@ -56,7 +56,7 @@ export default function History({ attendances, exceptions, month, year }) {
     <StudentLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Riwayat Absensi"
+          title="Riwayat Presensi"
           description={`Periode ${monthNames[month - 1]} ${year}`}
         />
 
@@ -104,7 +104,7 @@ export default function History({ attendances, exceptions, month, year }) {
 
         <Card>
           <div className="flex items-center justify-between border-b border-border px-4 py-3.5">
-            <h3 className="text-base font-semibold text-foreground">Data Absensi</h3>
+            <h3 className="text-base font-semibold text-foreground">Data Presensi</h3>
             <span className="text-sm tabular-nums text-muted-foreground">{attendances.total} total</span>
           </div>
           {attendances.data.length ? (
@@ -117,7 +117,7 @@ export default function History({ attendances, exceptions, month, year }) {
                     <TableHead className="hidden md:table-cell">Check Out</TableHead>
                     <TableHead className="hidden text-right lg:table-cell">Durasi</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="hidden sm:table-cell">Approval</TableHead>
+                    <TableHead className="hidden sm:table-cell">Persetujuan</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

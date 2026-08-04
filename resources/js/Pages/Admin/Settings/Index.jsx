@@ -248,7 +248,7 @@ export default function Index({ directorates, positions, universities, activeTab
     <AdminLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Konfigurasi Sistem"
+          title="Pengaturan Sistem"
           description="Kelola data direktorat, jabatan, dan universitas untuk sistem"
         />
 

@@ -46,7 +46,7 @@ export default function Edit({ logbook }) {
   return (
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
-        <PageHeader title="Edit Laporan Harian" description="Perbarui laporan kegiatan magang Anda" />
+        <PageHeader title="Edit Laporan Kegiatan Harian" description="Perbarui laporan kegiatan magang Anda" />
 
         <Card>
           <CardContent className="p-6">

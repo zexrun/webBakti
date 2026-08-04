@@ -46,7 +46,7 @@ export default function Settings({ settings }) {
     <AdminLayout>
       <div className="mx-auto max-w-4xl space-y-6">
         <PageHeader
-          title="Pengaturan Absensi"
+          title="Pengaturan Presensi"
           description="Kelola pengaturan sistem absensi dan konfigurasi operasional"
         />
 

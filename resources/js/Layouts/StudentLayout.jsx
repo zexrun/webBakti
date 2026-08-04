@@ -13,9 +13,9 @@ import AppShell from '@/Layouts/AppShell'
 const nav = [
   {
     items: [
-      { label: 'Dashboard', icon: LayoutDashboard, route: 'student.dashboard', match: 'student.dashboard' },
-      { label: 'Tugas', icon: ClipboardList, route: 'student.tasks.index', match: 'student.tasks.*' },
-      { label: 'Logbook', icon: NotebookPen, route: 'student.logbooks.index', match: 'student.logbooks.*' },
+      { label: 'Dasbor', icon: LayoutDashboard, route: 'student.dashboard', match: 'student.dashboard' },
+      { label: 'Daftar Tugas', icon: ClipboardList, route: 'student.tasks.index', match: 'student.tasks.*' },
+      { label: 'Laporan Kegiatan Harian', icon: NotebookPen, route: 'student.logbooks.index', match: 'student.logbooks.*' },
       { label: 'Informasi Magang', icon: Info, route: 'student.info.edit', match: 'student.info.*' },
       { label: 'Presensi', icon: CalendarCheck, route: 'student.attendance.index', match: 'student.attendance.*' },
       { label: 'Dokumen', icon: FileText, route: 'student.documents.index', match: 'student.documents.*' },

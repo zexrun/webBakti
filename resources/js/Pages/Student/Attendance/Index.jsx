@@ -115,7 +115,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
     <StudentLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Absensi Harian"
+          title="Presensi"
           description={now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           actions={
             <div className="flex items-center gap-2 pb-1 font-mono text-lg tabular-nums text-muted-foreground">

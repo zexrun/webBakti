@@ -24,8 +24,8 @@ export default function ImportGrades() {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Import Nilai Massal"
-          description="Upload file CSV untuk mengimport nilai multiple submission sekaligus"
+          title="Impor Nilai"
+          description="Impor file CSV untuk memasukkan nilai banyak submission sekaligus"
           actions={
             <Button asChild variant="outline" size="sm">
               <Link href={r('supervisor.submissions.index')}>
@@ -52,7 +52,7 @@ export default function ImportGrades() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader className="border-b">
-                <CardTitle>Upload File CSV</CardTitle>
+                <CardTitle>Impor File CSV</CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -81,7 +81,7 @@ export default function ImportGrades() {
                     {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
                   </div>
 
-                  <Button type="submit" disabled={processing} className="w-full">Import Nilai</Button>
+                  <Button type="submit" disabled={processing} className="w-full">Impor Nilai</Button>
                 </form>
               </CardContent>
             </Card>
@@ -94,7 +94,7 @@ export default function ImportGrades() {
             <CardContent className="space-y-4 pt-6">
               <Button asChild variant="outline" className="w-full">
                 <a href={r('supervisor.bulk.import-grades.template')}>
-                  <Download /> Download Template Nilai
+                  <Download /> Unduh Template Nilai
                 </a>
               </Button>
 
@@ -116,7 +116,7 @@ export default function ImportGrades() {
               </div>
 
               <FlashBanner type="info" className="font-normal">
-                <strong>Tips:</strong> Klik "Download Template Nilai" untuk mendapatkan file CSV yang sudah
+                <strong>Tips:</strong> Klik "Unduh Template Nilai" untuk mendapatkan file CSV yang sudah
                 terisi submission_id, nama siswa, dan judul tugas dari seluruh submission Anda saat ini —
                 tinggal isi kolom grade dan feedback, lalu upload kembali.
               </FlashBanner>

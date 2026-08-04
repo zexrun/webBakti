@@ -96,7 +96,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
   }
 
   const tabs = [
-    { id: 'attendance', label: `Absensi Pending (${pendingAttendances.total})` },
+    { id: 'attendance', label: `Presensi Pending (${pendingAttendances.total})` },
     { id: 'exceptions', label: `Pengajuan Izin (${pendingExceptions.total})` },
   ]
 
@@ -104,7 +104,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Persetujuan Absensi"
+          title="Persetujuan Presensi"
           description="Kelola persetujuan absensi dan pengajuan izin mahasiswa bimbingan Anda"
           actions={
             <Button asChild variant="outline" size="sm">
@@ -116,7 +116,7 @@ export default function Approvals({ pendingAttendances, pendingExceptions }) {
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <StatCard icon={Clock} label="Pending Absensi" value={pendingAttendances.total} tone="amber" index={0} />
+          <StatCard icon={Clock} label="Presensi Pending" value={pendingAttendances.total} tone="amber" index={0} />
           <StatCard icon={FileText} label="Pending Izin" value={pendingExceptions.total} tone="blue" index={1} />
         </div>
 

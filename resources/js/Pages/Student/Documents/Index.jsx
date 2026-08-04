@@ -66,7 +66,7 @@ export default function Index({ documents }) {
     <StudentLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Manajemen Dokumen"
+          title="Dokumen"
           description="Kelola dokumen magang Anda"
           actions={<Badge variant="secondary">Total: {documents.length}</Badge>}
         />

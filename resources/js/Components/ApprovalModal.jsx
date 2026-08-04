@@ -96,7 +96,7 @@ export default function ApprovalModal({ open, onClose, type, item, notesRequired
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">
-                      {type === 'suspicious' ? 'Review Kehadiran Mencurigakan' : 'Detail Persetujuan'}
+                      {type === 'suspicious' ? 'Review Presensi Mencurigakan' : 'Detail Persetujuan'}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {item.userName} &middot; {item.date}

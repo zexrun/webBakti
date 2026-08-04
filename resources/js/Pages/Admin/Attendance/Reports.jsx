@@ -61,7 +61,7 @@ export default function Reports({ summary, users, month, year, userId }) {
     <AdminLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Laporan Kehadiran"
+          title="Laporan Presensi"
           description="Export dan analisis data kehadiran mahasiswa"
           actions={
             <>

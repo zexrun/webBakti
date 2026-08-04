@@ -55,7 +55,7 @@ export default function TaskAnalytics({
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Analisis Tugas"
+          title="Analitik Kinerja Tugas"
           description={taskInfo.title}
           actions={
             <Button asChild variant="outline" size="sm">

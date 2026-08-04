@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, usePage, router } from '@inertiajs/react'
 import { AnimatePresence, motion } from 'motion/react'
-import { LogOut, Menu } from 'lucide-react'
+import { ChevronDown, LogOut, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import ThemeToggle from '@/Components/ThemeToggle'
 import NotificationBell from '@/Components/NotificationBell'
 import { useConfirm } from '@/hooks/useConfirm'
+
+const COLLAPSE_STORAGE_KEY = 'sidebar-collapsed-sections'
 
 const roleLabels = {
   admin: 'Administrator',
@@ -39,6 +41,39 @@ function NavItem({ href, icon: Icon, label, active }) {
   )
 }
 
+function NavSection({ label, items, isActive, r, open, onToggle }) {
+  if (!label) {
+    return (
+      <div className="space-y-1">
+        {items.map((item) => (
+          <NavItem key={item.route} href={r(item.route, item.params)} icon={item.icon} label={item.label} active={isActive(item.match)} />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="mb-2 flex w-full items-center justify-between px-3 text-[11px] font-medium uppercase tracking-wider text-sidebar-muted transition-colors duration-150 hover:text-sidebar-foreground"
+        aria-expanded={open}
+      >
+        <span>{label}</span>
+        <ChevronDown className={cn('h-3.5 w-3.5 shrink-0 transition-transform duration-150', open ? 'rotate-0' : '-rotate-90')} />
+      </button>
+      {open && (
+        <div className="space-y-1">
+          {items.map((item) => (
+            <NavItem key={item.route} href={r(item.route, item.params)} icon={item.icon} label={item.label} active={isActive(item.match)} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 /**
  * Shared application shell for all authenticated roles: full-height navy
  * sidebar (brand → sectioned flat nav → user block) plus a slim sticky
@@ -54,6 +89,53 @@ export default function AppShell({ nav, homeRoute, children }) {
   function isActive(pattern) {
     if (typeof window === 'undefined' || !window.route) return false
     return window.route().current(pattern)
+  }
+
+  function sectionHasActiveItem(section) {
+    return section.items.some((item) => isActive(item.match))
+  }
+
+  const [openSections, setOpenSections] = useState(() => {
+    const initial = {}
+    nav.forEach((section) => {
+      if (section.label) {
+        initial[section.label] = sectionHasActiveItem(section)
+      }
+    })
+    return initial
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(COLLAPSE_STORAGE_KEY) ?? '{}')
+      setOpenSections((prev) => {
+        const merged = { ...prev }
+        nav.forEach((section) => {
+          if (section.label && Object.prototype.hasOwnProperty.call(stored, section.label)) {
+            merged[section.label] = stored[section.label] || sectionHasActiveItem(section)
+          }
+        })
+        return merged
+      })
+    } catch {
+      // Ignore malformed/unavailable localStorage — fall back to computed defaults.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function toggleSection(label) {
+    setOpenSections((prev) => {
+      const next = { ...prev, [label]: !prev[label] }
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(COLLAPSE_STORAGE_KEY, JSON.stringify(next))
+        } catch {
+          // Storage unavailable (e.g. private mode) — state still works in-memory.
+        }
+      }
+      return next
+    })
   }
 
   const confirm = useConfirm()
@@ -80,24 +162,15 @@ export default function AppShell({ nav, homeRoute, children }) {
 
         <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
           {nav.map((section, i) => (
-            <div key={section.label ?? i}>
-              {section.label && (
-                <p className="mb-2 px-3 text-[11px] font-medium uppercase tracking-wider text-sidebar-muted">
-                  {section.label}
-                </p>
-              )}
-              <div className="space-y-1">
-                {section.items.map((item) => (
-                  <NavItem
-                    key={item.route}
-                    href={r(item.route, item.params)}
-                    icon={item.icon}
-                    label={item.label}
-                    active={isActive(item.match)}
-                  />
-                ))}
-              </div>
-            </div>
+            <NavSection
+              key={section.label ?? i}
+              label={section.label}
+              items={section.items}
+              isActive={isActive}
+              r={r}
+              open={section.label ? !!openSections[section.label] : true}
+              onToggle={() => section.label && toggleSection(section.label)}
+            />
           ))}
         </nav>
 

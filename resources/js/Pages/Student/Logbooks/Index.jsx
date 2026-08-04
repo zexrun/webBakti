@@ -16,7 +16,7 @@ export default function Index({ logbook }) {
     <StudentLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Logbook Harian"
+          title="Laporan Kegiatan Harian"
           description="Kelola laporan kegiatan magang Anda"
           actions={
             <>
@@ -32,7 +32,7 @@ export default function Index({ logbook }) {
 
         <Card>
           <div className="border-b border-border px-4 py-3.5">
-            <h3 className="text-base font-semibold text-foreground">Daftar Laporan Harian</h3>
+            <h3 className="text-base font-semibold text-foreground">Daftar Laporan Kegiatan Harian</h3>
           </div>
           {logbook.data.length ? (
             <>

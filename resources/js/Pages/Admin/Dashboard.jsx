@@ -74,7 +74,7 @@ export default function Dashboard({
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <PageHeader title="Dashboard Admin" description="Statistik sistem secara real-time" />
+        <PageHeader title="Dasbor Admin" description="Statistik sistem secara real-time" />
 
         {studentWithoutSupervisor > 0 && (
           <div className="flex items-center gap-3 rounded-lg border border-orange-200 bg-orange-50 p-4 dark:border-orange-500/30 dark:bg-orange-500/10">
@@ -124,7 +124,7 @@ export default function Dashboard({
             <CardContent className="space-y-2.5">
               <MetricRow label="Presensi" value={todayAttendance} />
               <MetricRow label="Submission" value={todaySubmissions} />
-              <MetricRow label="Approval" value={todayApprovals} />
+              <MetricRow label="Persetujuan" value={todayApprovals} />
             </CardContent>
           </Card>
 

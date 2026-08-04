@@ -67,7 +67,7 @@ export default function Index({ attendances, stats, date, status }) {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Monitoring Absensi"
+          title="Presensi"
           description="Pantau absensi mahasiswa bimbingan Anda secara real-time"
           actions={
             <>
@@ -119,7 +119,7 @@ export default function Index({ attendances, stats, date, status }) {
         <Card>
           <div className="border-b border-border px-4 py-3.5">
             <h3 className="text-base font-semibold text-foreground">
-              Data Absensi — {new Date(date).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
+              Data Presensi — {new Date(date).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
             </h3>
           </div>
           {attendances.data.length ? (
@@ -132,7 +132,7 @@ export default function Index({ attendances, stats, date, status }) {
                     <TableHead className="hidden md:table-cell">Check Out</TableHead>
                     <TableHead className="hidden text-right lg:table-cell">Durasi</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="hidden sm:table-cell">Approval</TableHead>
+                    <TableHead className="hidden sm:table-cell">Persetujuan</TableHead>
                     <TableHead className="hidden lg:table-cell">Foto</TableHead>
                     <TableHead>Aksi</TableHead>
                   </TableRow>

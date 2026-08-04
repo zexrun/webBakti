@@ -39,7 +39,7 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
     <SupervisorLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Dashboard Pembimbing"
+          title="Dasbor Pembimbing"
           description={new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         />
 
@@ -73,14 +73,14 @@ export default function Dashboard({ stats, recentStudents, unreadMessages }) {
               <QuickAction
                 href={r('supervisor.students.index')}
                 icon={Users}
-                title="Daftar Mahasiswa"
+                title="Mahasiswa Bimbingan"
                 description="Lihat semua mahasiswa bimbingan"
                 tone="blue"
               />
               <QuickAction
                 href={r('supervisor.submissions.index')}
                 icon={ClipboardList}
-                title="Dashboard Penilaian"
+                title="Dasbor Penilaian"
                 description="Nilai submission mahasiswa"
                 tone="orange"
               />

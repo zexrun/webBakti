@@ -26,7 +26,7 @@ export default function Show({ logbook }) {
     <StudentLayout>
       <div className="mx-auto max-w-3xl space-y-6">
         <PageHeader
-          title="Detail Logbook"
+          title="Detail Laporan Kegiatan Harian"
           description="Laporan kegiatan harian Anda"
           actions={
             <>

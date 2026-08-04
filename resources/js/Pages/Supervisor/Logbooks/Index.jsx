@@ -46,7 +46,7 @@ export default function Index({ logbooks, students, filters }) {
   return (
     <SupervisorLayout>
       <div className="space-y-6">
-        <PageHeader title="Logbook Mahasiswa" description="Pantau aktivitas harian mahasiswa bimbingan" />
+        <PageHeader title="Laporan Kegiatan Harian Mahasiswa" description="Pantau aktivitas harian mahasiswa bimbingan" />
 
         <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-3">
           <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function Index({ logbooks, students, filters }) {
         </form>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={NotebookPen} label="Total Logbook" value={logbooks.total} tone="blue" index={0} />
+          <StatCard icon={NotebookPen} label="Total Laporan" value={logbooks.total} tone="blue" index={0} />
           <StatCard icon={CheckCircle2} label="Telah Dilihat" value={verifiedCount} hint="halaman ini" tone="green" index={1} />
           <StatCard icon={Clock} label="Belum Dilihat" value={unverifiedCount} hint="halaman ini" tone="amber" index={2} />
           <StatCard icon={CalendarDays} label="Hari Ini" value={todayCount} hint="halaman ini" tone="purple" index={3} />
@@ -90,7 +90,7 @@ export default function Index({ logbooks, students, filters }) {
 
         <Card>
           <div className="border-b border-border px-4 py-3.5">
-            <h3 className="text-base font-semibold text-foreground">Daftar Logbook</h3>
+            <h3 className="text-base font-semibold text-foreground">Daftar Laporan Kegiatan Harian</h3>
           </div>
           {logbooks.data.length ? (
             <>

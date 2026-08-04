@@ -94,7 +94,7 @@ export default function Dashboard({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <NotebookPen className="h-4 w-4 text-muted-foreground" /> Logbook Bulan Ini
+                <NotebookPen className="h-4 w-4 text-muted-foreground" /> Laporan Kegiatan Bulan Ini
               </CardTitle>
             </CardHeader>
             <CardContent>

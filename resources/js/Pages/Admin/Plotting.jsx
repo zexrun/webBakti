@@ -67,7 +67,7 @@ export default function Plotting({ students, supervisors }) {
     <AdminLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Plotting Pembimbing"
+          title="Penugasan Pembimbing"
           description="Pilih dosen pembimbing untuk setiap mahasiswa yang tersedia"
         />
 

@@ -110,7 +110,7 @@ export default function Edit({ student, universities, certificateProgress }) {
     <StudentLayout>
       <div className="space-y-6">
         <PageHeader
-          title="Informasi Magang Saya"
+          title="Informasi Magang"
           description="Kelola informasi dan data magang Anda"
           actions={<Badge variant="success">Status: Aktif</Badge>}
         />
