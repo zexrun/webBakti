@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Concerns;
 
 use App\Models\Attendance;
 use App\Models\AttendanceException;
+use App\Notifications\AttendanceApprovalNotification;
+use App\Notifications\ExceptionApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -41,6 +43,8 @@ trait HandlesAttendanceActions
                 'approved_by' => Auth::id(),
                 'approved_at' => now(),
             ]);
+
+            $item->user->notify(new AttendanceApprovalNotification($item, $request->action === 'approve' ? 'approved' : 'rejected'));
         } else {
             $item = AttendanceException::with('user.student')->findOrFail($id);
 
@@ -54,6 +58,8 @@ trait HandlesAttendanceActions
                 'approved_by' => Auth::id(),
                 'approved_at' => now(),
             ]);
+
+            $item->user->notify(new ExceptionApprovalNotification($item, $request->action === 'approve' ? 'approved' : 'rejected'));
         }
 
         $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
@@ -81,6 +87,8 @@ trait HandlesAttendanceActions
             'approved_by' => Auth::id(),
             'approved_at' => now(),
         ]);
+
+        $attendance->user->notify(new AttendanceApprovalNotification($attendance, $request->action === 'approve' ? 'approved' : 'rejected'));
 
         $message = $request->action === 'approve' ? 'disetujui' : 'ditolak';
         return back()->with('success', "Kehadiran berhasil di-review dan {$message}!");
