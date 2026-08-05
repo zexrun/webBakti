@@ -7,6 +7,7 @@ use Database\Seeders\DirectorateSeeder;
 use Database\Seeders\PositionSeeder;
 use Database\Seeders\SupervisorSeeder;
 use Database\Seeders\StudentSeeder;
+use Database\Seeders\BulkUserSeeder;
 use Database\Seeders\StudentSupervisorAssignmentSeeder;
 use Database\Seeders\TaskSeeder;
 use Database\Seeders\UniversitySeeder;
@@ -36,6 +37,7 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             SupervisorSeeder::class,
             StudentSeeder::class,
+            BulkUserSeeder::class,
             StudentSupervisorAssignmentSeeder::class,
             UniversitySeeder::class,
             AttendanceSettingSeeder::class,
