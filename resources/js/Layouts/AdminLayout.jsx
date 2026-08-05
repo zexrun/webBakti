@@ -13,6 +13,7 @@ import {
   Megaphone,
   SquarePen,
   MessageSquare,
+  TestTube2,
 } from 'lucide-react'
 import AppShell from '@/Layouts/AppShell'
 
@@ -48,6 +49,12 @@ const nav = [
       { label: 'Pesan', icon: MessageSquare, route: 'messages.inbox', match: 'messages.*' },
       { label: 'Daftar Pengumuman', icon: Megaphone, route: 'admin.announcements.index', match: 'admin.announcements.index' },
       { label: 'Buat Pengumuman', icon: SquarePen, route: 'admin.announcements.create', match: 'admin.announcements.create' },
+    ],
+  },
+  {
+    label: 'Alat Pengembang',
+    items: [
+      { label: 'Uji Notifikasi', icon: TestTube2, route: 'admin.notification-test.index', match: 'admin.notification-test.*' },
     ],
   },
 ]

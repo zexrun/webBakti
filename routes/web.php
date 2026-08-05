@@ -39,6 +39,7 @@ use App\Http\Controllers\Supervisor\BulkOperationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\NotificationTestController;
 use App\Http\Controllers\AnnouncementViewController;
 use App\Http\Controllers\InertiaTestController;
 
@@ -96,6 +97,9 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/monitoring/student/{student}', [MonitoringController::class, 'showStudent'])->name('monitoring.student.show');
     Route::get('/monitoring/supervisor/{supervisor}', [MonitoringController::class, 'showSupervisor'])->name('monitoring.supervisor.show');
     Route::get('/monitoring/export-csv', [MonitoringController::class, 'exportCsv'])->name('monitoring.export-csv');
+
+    Route::get('/notification-test', [NotificationTestController::class, 'index'])->name('notification-test.index');
+    Route::post('/notification-test', [NotificationTestController::class, 'send'])->name('notification-test.send');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings/directorates', [SettingController::class, 'storeDirectorate'])->name('settings.storeDirectorate');
