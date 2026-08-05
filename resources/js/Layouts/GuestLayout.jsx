@@ -6,7 +6,7 @@ export default function GuestLayout({ children }) {
       <div className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
 
-      <ThemeToggle className="absolute right-4 top-4" />
+      <ThemeToggle className="absolute right-4 top-4 z-10" />
 
       <div className="relative flex min-h-screen flex-col items-center justify-center p-4">
         <div className="w-full max-w-sm">
