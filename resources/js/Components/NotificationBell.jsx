@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, router, usePage } from '@inertiajs/react'
 import { Bell } from 'lucide-react'
 import NotificationIcon from '@/Components/NotificationIcon'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 const POLL_INTERVAL_MS = 30000
@@ -32,6 +33,7 @@ export default function NotificationBell() {
   const [items, setItems] = useState([])
   const [loaded, setLoaded] = useState(false)
   const containerRef = useRef(null)
+  const seenIdsRef = useRef(null) // null until the first fetch resolves
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
 
@@ -39,11 +41,29 @@ export default function NotificationBell() {
     setCount(unreadNotificationsCount ?? 0)
   }, [unreadNotificationsCount])
 
-  function fetchRecent() {
+  function fetchRecent({ announceNew = false } = {}) {
     window.axios
       .get(r('notifications.recent'))
       .then(({ data }) => {
-        setItems(data.notifications ?? [])
+        const notifications = data.notifications ?? []
+
+        // Toast only for unread notifications not present in the previous
+        // fetch, and only when triggered by the background poll (not when
+        // the user just opened the dropdown themselves - they're already
+        // looking at the list, a toast on top would be redundant).
+        // seenIdsRef starts as null so the very first fetch (page load)
+        // just records what's already there instead of toasting a
+        // backlog of old notifications the user hasn't seen this session.
+        if (announceNew && seenIdsRef.current) {
+          for (const notification of notifications) {
+            if (!notification.read_at && !seenIdsRef.current.has(notification.id)) {
+              toast.info(notification.data.message ?? 'Anda memiliki notifikasi baru')
+            }
+          }
+        }
+        seenIdsRef.current = new Set(notifications.map((n) => n.id))
+
+        setItems(notifications)
         setCount(data.unread_count ?? 0)
         setLoaded(true)
       })
@@ -54,7 +74,11 @@ export default function NotificationBell() {
   }
 
   useEffect(() => {
-    const interval = setInterval(fetchRecent, POLL_INTERVAL_MS)
+    // Establishes the seenIdsRef baseline immediately on mount, rather
+    // than leaving it null (and therefore unable to toast) until the
+    // first 30-second poll fires.
+    fetchRecent()
+    const interval = setInterval(() => fetchRecent({ announceNew: true }), POLL_INTERVAL_MS)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
