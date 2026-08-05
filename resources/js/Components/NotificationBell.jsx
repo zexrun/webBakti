@@ -5,7 +5,10 @@ import NotificationIcon from '@/Components/NotificationIcon'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
-const POLL_INTERVAL_MS = 30000
+// 10s trades more server/DB load for snappier updates - fine at demo
+// scale (a handful of concurrent users), but revisit before scaling to
+// hundreds of concurrent users polling this endpoint continuously.
+const POLL_INTERVAL_MS = 10000
 
 function relativeTime(value) {
   const diffMs = Date.now() - new Date(value).getTime()
