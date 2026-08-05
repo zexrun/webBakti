@@ -36,11 +36,34 @@ class AttendanceSeeder extends Seeder
         $day = Carbon::now()->subDays(90);
         $today = Carbon::today();
 
+        // Collect worked-day dates first so the two most recent ones can
+        // be forced into 'pending'/'rejected' supervisor_approval - the
+        // factory default is always 'approved' and nothing else in this
+        // seeder overrides it, so without this every attendance row ends
+        // up 'approved' and the approvals page has no pending/rejected
+        // rows to demo at all.
+        $workedDays = [];
+        $cursor = $day->copy();
+        while ($cursor->lte($today)) {
+            if (!$cursor->isWeekend()) {
+                $workedDays[] = $cursor->toDateString();
+            }
+            $cursor->addDay();
+        }
+        $recentWorkedDays = array_slice($workedDays, -2);
+
         while ($day->lte($today)) {
             if ($day->isWeekend()) {
                 $day->addDay();
                 continue;
             }
+
+            $dateString = $day->toDateString();
+            $approvalOverride = match (array_search($dateString, $recentWorkedDays, true)) {
+                0 => 'pending',
+                1 => 'rejected',
+                default => null,
+            };
 
             $roll = fake()->numberBetween(1, 100);
 
@@ -48,9 +71,9 @@ class AttendanceSeeder extends Seeder
             if ($roll <= 8) {
                 $this->createAbsent($userId, $day->copy());
             } elseif ($roll <= 23) {
-                $this->createWorkedDay($userId, $day->copy(), $settings, late: true);
+                $this->createWorkedDay($userId, $day->copy(), $settings, late: true, approvalOverride: $approvalOverride);
             } else {
-                $this->createWorkedDay($userId, $day->copy(), $settings, late: false);
+                $this->createWorkedDay($userId, $day->copy(), $settings, late: false, approvalOverride: $approvalOverride);
             }
 
             $day->addDay();
@@ -71,7 +94,7 @@ class AttendanceSeeder extends Seeder
         ]);
     }
 
-    private function createWorkedDay(int $userId, Carbon $date, AttendanceSetting $settings, bool $late): void
+    private function createWorkedDay(int $userId, Carbon $date, AttendanceSetting $settings, bool $late, ?string $approvalOverride = null): void
     {
         [$startHour, $startMinute] = explode(':', $settings->work_start_time);
         $checkIn = $date->copy()->setTime((int) $startHour, (int) $startMinute)
@@ -89,6 +112,7 @@ class AttendanceSeeder extends Seeder
             'check_in' => $checkIn,
             'check_out' => $checkOut,
             'requires_manual_review' => $suspicious,
+            'supervisor_approval' => $approvalOverride ?? 'approved',
         ], $this->suspiciousAttributes($suspiciousReason)));
     }
 

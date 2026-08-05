@@ -12,9 +12,22 @@ use App\Models\Task;
  * task_student pivot - TaskFactory alone never does this, so without
  * this step every Task would have zero assigned students and
  * SubmissionSeeder would have nothing to iterate.
+ *
+ * due_date is forced through a fixed rotation (overdue / due soon /
+ * due later) instead of TaskFactory's random future-only range, so
+ * every supervisor has at least one overdue task to demo "Terlambat"
+ * status on - a plain random range could otherwise land every task in
+ * the future across an entire run.
  */
 class TaskSeeder extends Seeder
 {
+    private const DUE_DATE_ROTATION = [
+        '-1 week',   // overdue
+        '+2 days',   // due soon
+        '+3 weeks',  // due later
+        '+6 weeks',  // due later still
+    ];
+
     public function run(): void
     {
         $supervisors = Supervisor::with('students')->get();
@@ -28,12 +41,16 @@ class TaskSeeder extends Seeder
 
             $taskCount = fake()->numberBetween(3, 4);
 
-            Task::factory()
-                ->count($taskCount)
-                ->create(['supervisor_id' => $supervisor->id])
-                ->each(function (Task $task) use ($studentIds) {
-                    $task->students()->attach($studentIds);
-                });
+            for ($i = 0; $i < $taskCount; $i++) {
+                $dueDate = now()->modify(self::DUE_DATE_ROTATION[$i % count(self::DUE_DATE_ROTATION)]);
+
+                $task = Task::factory()->create([
+                    'supervisor_id' => $supervisor->id,
+                    'due_date' => $dueDate,
+                ]);
+
+                $task->students()->attach($studentIds);
+            }
         }
     }
 }

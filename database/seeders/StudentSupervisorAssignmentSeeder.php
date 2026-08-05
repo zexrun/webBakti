@@ -52,6 +52,12 @@ class StudentSupervisorAssignmentSeeder extends Seeder
      * FinalAssessment/Message) can rely on every student having a
      * supervisor - without hardcoding which supervisor gets which
      * leftover student.
+     *
+     * The last unassigned student is deliberately skipped (left with
+     * supervisor_id = null) so the "belum ada pembimbing" state has an
+     * example to demo. FinalAssessmentSeeder and MessageSeeder both
+     * already null-check/whereNotNull the supervisor relation, so this
+     * doesn't break either of them.
      */
     private function backfillUnassigned(): void
     {
@@ -64,7 +70,17 @@ class StudentSupervisorAssignmentSeeder extends Seeder
 
         $unassigned = Student::whereNull('supervisor_id')->get();
 
+        if ($unassigned->isEmpty()) {
+            return;
+        }
+
+        $leaveUnassigned = $unassigned->last();
+
         foreach ($unassigned as $index => $student) {
+            if ($student->is($leaveUnassigned)) {
+                continue;
+            }
+
             $supervisorId = $supervisorIds[$index % $supervisorIds->count()];
             $student->update(['supervisor_id' => $supervisorId]);
         }
