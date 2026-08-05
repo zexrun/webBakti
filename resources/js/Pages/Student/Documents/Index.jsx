@@ -5,6 +5,7 @@ import StudentLayout from '@/Layouts/StudentLayout'
 import PageHeader from '@/Components/PageHeader'
 import EmptyState from '@/Components/EmptyState'
 import FlashBanner from '@/Components/FlashBanner'
+import UploadProgress from '@/Components/UploadProgress'
 import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -25,7 +26,7 @@ export default function Index({ documents }) {
   const fileInputRef = useRef(null)
   const [filePreview, setFilePreview] = useState(null)
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, progress, errors, reset } = useForm({
     document_name: '',
     type: '',
     file: null,
@@ -125,9 +126,11 @@ export default function Index({ documents }) {
                 </div>
               </div>
 
+              <UploadProgress progress={progress} />
+
               <div className="flex justify-end">
                 <Button type="submit" disabled={processing}>
-                  <Upload /> Upload Dokumen
+                  <Upload /> Unggah Dokumen
                 </Button>
               </div>
             </form>

@@ -7,12 +7,13 @@ import FlashBanner from '@/Components/FlashBanner'
 import { Card, CardHeader, CardTitle, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 import { cn } from '@/lib/utils'
 
 export default function ImportGrades() {
   const { flash } = usePage().props
   const fileInputRef = useRef(null)
-  const { data, setData, post, processing, errors } = useForm({ file: null })
+  const { data, setData, post, processing, progress, errors } = useForm({ file: null })
   const r = (name) => (window.route ? window.route(name) : '#')
 
   function handleSubmit(e) {
@@ -80,6 +81,8 @@ export default function ImportGrades() {
                     </p>
                     {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
                   </div>
+
+                  <UploadProgress progress={progress} />
 
                   <Button type="submit" disabled={processing} className="w-full">Impor Nilai</Button>
                 </form>

@@ -5,6 +5,7 @@ import Cropper from 'react-easy-crop'
 import { Camera, RefreshCw, UserRound, Upload, Check, X } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/Components/ui/card'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 import { useCamera } from '@/hooks/useCamera'
 import { useFaceDetection } from '@/hooks/useFaceDetection'
 import { getCroppedImg } from '@/lib/cropImage'
@@ -41,6 +42,7 @@ export default function ProfilePhotoCard({ profilePhotoUrl }) {
   const [uploadPreviewUrl, setUploadPreviewUrl] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [statusMessage, setStatusMessage] = useState('')
+  const [uploadProgress, setUploadProgress] = useState(null)
 
   const [cropSource, setCropSource] = useState(null) // data/object URL being cropped, or null
   const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -137,8 +139,12 @@ export default function ProfilePhotoCard({ profilePhotoUrl }) {
 
       router.post(route('profile.photo.update'), formData, {
         preserveScroll: true,
+        onProgress: (event) => {
+          if (event?.percentage != null) setUploadProgress({ percentage: event.percentage })
+        },
         onFinish: () => {
           setSubmitting(false)
+          setUploadProgress(null)
           closeModal()
         },
       })
@@ -252,6 +258,7 @@ export default function ProfilePhotoCard({ profilePhotoUrl }) {
 
                   {camera.error && <p className="text-sm text-destructive">{camera.error}</p>}
                   {statusMessage && <p className="text-sm text-muted-foreground">{statusMessage}</p>}
+                  <UploadProgress progress={uploadProgress} />
 
                   <div className="flex flex-wrap gap-2">
                     {camera.phase === 'streaming' && !cropSource && (

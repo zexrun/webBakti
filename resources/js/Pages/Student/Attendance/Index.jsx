@@ -65,6 +65,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
   const [checkOutOpen, setCheckOutOpen] = useState(false)
   const [exceptionOpen, setExceptionOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(null)
 
   const r = (name) => (window.route ? window.route(name) : '#')
 
@@ -88,7 +89,13 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
     }
 
     try {
-      const { data } = await window.axios.post(endpoint, formData)
+      const { data } = await window.axios.post(endpoint, formData, {
+        onUploadProgress: (event) => {
+          if (event.total) {
+            setUploadProgress({ percentage: Math.round((event.loaded / event.total) * 100) })
+          }
+        },
+      })
 
       if (data.success) {
         setCheckInOpen(false)
@@ -105,6 +112,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
       toast.error(err.response?.data?.message ?? 'Terjadi kesalahan saat memproses absensi.')
     } finally {
       setSubmitting(false)
+      setUploadProgress(null)
     }
   }
 
@@ -287,6 +295,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         subtitle="Lakukan absensi masuk"
         notesPlaceholder={{ optional: true, text: 'Tulis aktivitas atau catatan hari ini...' }}
         submitting={submitting}
+        uploadProgress={uploadProgress}
         onSubmit={(payload) => submitAttendance(r('student.attendance.check-in'), payload)}
         requireFaceCheck
       />
@@ -299,6 +308,7 @@ export default function Index({ todayAttendance, recentAttendances, pendingExcep
         destructive
         notesPlaceholder={{ optional: false, text: 'Ringkasan kegiatan yang telah dikerjakan hari ini...' }}
         submitting={submitting}
+        uploadProgress={uploadProgress}
         onSubmit={(payload) => submitAttendance(r('student.attendance.check-out'), payload)}
         requireFaceCheck
       />

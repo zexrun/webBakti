@@ -9,6 +9,7 @@ import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 import StudentPicker from './StudentPicker'
 
 function toDatetimeLocal(value) {
@@ -19,7 +20,7 @@ function toDatetimeLocal(value) {
 }
 
 export default function Edit({ task, students, assignedStudents }) {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, progress, errors } = useForm({
     _method: 'put',
     title: task.title,
     description: task.description,
@@ -123,6 +124,8 @@ export default function Edit({ task, students, assignedStudents }) {
                 />
                 {errors.student_ids && <p className="text-sm text-destructive">{errors.student_ids}</p>}
               </div>
+
+              <UploadProgress progress={progress} />
 
               <div className="flex flex-col justify-end gap-2 border-t border-border pt-5 sm:flex-row">
                 <Button asChild type="button" variant="outline" className="w-full sm:w-auto">

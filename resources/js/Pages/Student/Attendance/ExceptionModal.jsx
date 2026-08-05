@@ -6,9 +6,10 @@ import { Input } from '@/Components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 
 export default function ExceptionModal({ open, onClose }) {
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, progress, errors, reset } = useForm({
     date: new Date().toISOString().slice(0, 10),
     type: '',
     reason: '',
@@ -105,6 +106,8 @@ export default function ExceptionModal({ open, onClose }) {
                 <p className="text-xs text-muted-foreground">Format: JPG, PNG, PDF (Max: 2MB)</p>
                 {errors.attachment && <p className="text-sm text-destructive">{errors.attachment}</p>}
               </div>
+
+              <UploadProgress progress={progress} />
 
               <Button type="submit" disabled={processing} className="w-full">
                 <Send /> Ajukan Permohonan

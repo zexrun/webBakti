@@ -4,6 +4,7 @@ import { Camera, RefreshCw, X, MapPin } from 'lucide-react'
 import { Button } from '@/Components/ui/button'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
+import UploadProgress from '@/Components/UploadProgress'
 import { useCamera } from '@/hooks/useCamera'
 import { useGeolocation } from '@/hooks/useGeolocation'
 import { useFaceDetection } from '@/hooks/useFaceDetection'
@@ -18,7 +19,7 @@ const locationStyles = {
   idle: 'border-border bg-muted text-muted-foreground',
 }
 
-export default function AttendanceModal({ open, onClose, title, subtitle, destructive, notesPlaceholder, onSubmit, submitting, requireFaceCheck = false }) {
+export default function AttendanceModal({ open, onClose, title, subtitle, destructive, notesPlaceholder, onSubmit, submitting, uploadProgress, requireFaceCheck = false }) {
   const camera = useCamera()
   const geo = useGeolocation()
   const face = useFaceDetection()
@@ -172,6 +173,7 @@ export default function AttendanceModal({ open, onClose, title, subtitle, destru
                   </div>
 
                   {faceCheckMessage && <p className="text-sm text-muted-foreground">{faceCheckMessage}</p>}
+                  <UploadProgress progress={uploadProgress} />
 
                   <Button
                     type="submit"

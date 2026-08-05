@@ -9,6 +9,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Label } from '@/Components/ui/label'
 import { Textarea } from '@/Components/ui/textarea'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 import { formatDeadline, deadlineToneClass } from '@/lib/deadline'
 import { cn } from '@/lib/utils'
 
@@ -29,7 +30,7 @@ export default function Show({ task, submission }) {
   const fileInputRef = useRef(null)
   const [fileName, setFileName] = useState(null)
 
-  const { data, setData, post, processing, errors } = useForm({ content: '', file: null })
+  const { data, setData, post, processing, progress, errors } = useForm({ content: '', file: null })
 
   const r = (name, params) => (window.route ? window.route(name, params) : '#')
   const isSubmitted = Boolean(submission)
@@ -183,6 +184,8 @@ export default function Show({ task, submission }) {
                       {fileName && <p className="text-xs text-primary">{fileName}</p>}
                       {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
                     </div>
+
+                    <UploadProgress progress={progress} />
 
                     <div className="flex justify-end border-t border-border pt-5">
                       <Button type="submit" disabled={processing}>

@@ -2,6 +2,7 @@ import { Link, useForm } from '@inertiajs/react'
 import { ArrowLeft, Upload } from 'lucide-react'
 import StudentLayout from '@/Layouts/StudentLayout'
 import PageHeader from '@/Components/PageHeader'
+import UploadProgress from '@/Components/UploadProgress'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
@@ -9,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/Components/ui/button'
 
 export default function Create() {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, progress, errors } = useForm({
     document_name: '',
     type: 'proposal',
     file: null,
@@ -78,9 +79,11 @@ export default function Create() {
                 {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
               </div>
 
+              <UploadProgress progress={progress} />
+
               <div className="flex justify-end border-t border-border pt-5">
                 <Button type="submit" disabled={processing}>
-                  <Upload /> Upload
+                  <Upload /> Unggah
                 </Button>
               </div>
             </form>

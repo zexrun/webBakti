@@ -9,11 +9,12 @@ import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
+import UploadProgress from '@/Components/UploadProgress'
 
 export default function Edit({ logbook }) {
   const [imagePreview, setImagePreview] = useState(null)
 
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, progress, errors } = useForm({
     _method: 'put',
     title: logbook.title,
     activity_date: logbook.activity_date.slice(0, 10),
@@ -148,6 +149,8 @@ export default function Edit({ logbook }) {
                 )}
                 {errors.file && <p className="text-sm text-destructive">{errors.file}</p>}
               </div>
+
+              <UploadProgress progress={progress} />
 
               <div className="flex justify-end gap-2 border-t border-border pt-5">
                 <Button asChild type="button" variant="outline">
