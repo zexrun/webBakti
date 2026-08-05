@@ -2,14 +2,12 @@ import { Link, useForm } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
 import RoleLayout from '@/Layouts/RoleLayout'
 import PageHeader from '@/Components/PageHeader'
+import RecipientPicker from '@/Components/RecipientPicker'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Textarea } from '@/Components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
-
-const roleLabel = { admin: 'Admin', supervisor: 'Pembimbing', student: 'Mahasiswa' }
 
 export default function Create({ recipients }) {
   const { data, setData, post, processing, errors } = useForm({
@@ -45,18 +43,11 @@ export default function Create({ recipients }) {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="recipient_id">Penerima</Label>
-                <Select value={data.recipient_id} onValueChange={(v) => setData('recipient_id', v)}>
-                  <SelectTrigger id="recipient_id" className="w-full">
-                    <SelectValue placeholder="Pilih penerima..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {recipients.map((user) => (
-                      <SelectItem key={user.id} value={String(user.id)}>
-                        {user.name} ({roleLabel[user.role] ?? user.role})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <RecipientPicker
+                  recipients={recipients}
+                  value={data.recipient_id}
+                  onChange={(id) => setData('recipient_id', id)}
+                />
                 {errors.recipient_id && <p className="text-sm text-destructive">{errors.recipient_id}</p>}
               </div>
 
